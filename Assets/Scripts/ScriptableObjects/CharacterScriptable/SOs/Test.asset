@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c48856c5b772ef24ba821410565d88b2, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  characterData:
+    curHp: 5
+    baseHP: 5
+    curAtk: 5
+    baseAtk: 5
+    curDef: 5
+    baseDef: 5
+    curStamina: 5
+    baseStamina: 5
+    CharacterName: Dummy
+    CharacterDescription: What a dummy!
+  charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}
