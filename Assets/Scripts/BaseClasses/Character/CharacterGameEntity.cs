@@ -13,6 +13,7 @@ public class CharacterGameEntity : MonoBehaviour
     public RuntimeAnimatorController characterAnimations; // <-- currently playing character animations. interacts with ^^
     public CharacterBase characterData; //  <-- Use this when communicating with other gameObjects.
     public CharacterScriptable characterScriptable; // <-- Whenever default or saved values from character scriptable are needed, use this.
+    public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public GameManager currentManager;
 
     void Awake()

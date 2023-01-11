@@ -47,6 +47,8 @@
      <Compile Include="Assets\Scripts\BaseClasses\Character\CharacterGameEntity.cs" />
      <Compile Include="Assets\Utils\BeriUtils.cs" />
      <Compile Include="Assets\Scripts\BaseClasses\ATKScript\ATKScript.cs" />
+     <Compile Include="Assets\Scripts\BattleSpecific\ATKScripts\ATKScript-Beri_TossUp.cs" />
+     <Compile Include="Assets\InputSets\PrimaryControls.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -738,6 +740,10 @@
     <ProjectReference Include="Unity.2D.SpriteShape.Runtime.csproj">
       <Project>{67e0e3eb-5a8d-fd1f-841f-d4dcd1c9b0a2}</Project>
       <Name>Unity.2D.SpriteShape.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="com.unity.quicksearch.csproj">
+      <Project>{1e112376-c591-fd6b-215e-4b80188ab5f3}</Project>
+      <Name>com.unity.quicksearch</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

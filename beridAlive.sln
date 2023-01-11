@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Mathematics.Editor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.InternalAPIEditorBridge.001", "Unity.InternalAPIEditorBridge.001.csproj", "{a58f9674-56b8-7ec7-2898-4898ed7cd2c5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.unity.quicksearch", "com.unity.quicksearch.csproj", "{1e112376-c591-fd6b-215e-4b80188ab5f3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +144,8 @@ Global
 		{580502c2-5452-be98-3a91-23f45fc27292}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{a58f9674-56b8-7ec7-2898-4898ed7cd2c5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{a58f9674-56b8-7ec7-2898-4898ed7cd2c5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1e112376-c591-fd6b-215e-4b80188ab5f3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1e112376-c591-fd6b-215e-4b80188ab5f3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AtkScript : MonoBehaviour
+public class ATKScript : MonoBehaviour
 {
     /*
         Script from which all battle moves' attack script field should be placed. These scripts are responsible for instantiating the

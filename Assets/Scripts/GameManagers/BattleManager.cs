@@ -8,7 +8,7 @@ public class BattleManager : GameManager
     {
         CharacterGameObjects = new List<CharacterGameEntity>(FindObjectsOfType<CharacterGameEntity>());
         CentralManager.SetStateManager(this);
-        CentralManager.CurrentContext = CentralManager.Context.OVERWORLD; 
+        CentralManager.CurrentContext = CentralManager.Context.BATTLE; 
     }
     public void Tester()
     {
