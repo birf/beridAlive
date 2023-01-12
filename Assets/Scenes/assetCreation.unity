@@ -180,7 +180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: woo
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -531,12 +531,12 @@ MonoBehaviour:
   - {fileID: 300342797}
   - {fileID: 1762223758}
   - {fileID: 585653972}
-  currentlyActiveUIElements: []
+  currentActiveUIElements: []
   currentActiveUIElement: {fileID: 0}
   playerActionIconDisplayText: {fileID: 268244202}
   _uiElementMoveTimeLimit: 0.25
   _uiElementMovementTimer: 0
-  _actionIconXScale: 0.5
+  _actionIconXScale: 0.75
 --- !u!4 &661635219
 Transform:
   m_ObjectHideFlags: 0

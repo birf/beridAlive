@@ -9,7 +9,7 @@ public class PlayerTurnUI : MonoBehaviour
         Class for managing the player's UI when it is currently their turn in battle. 
     */
     public List<UISelectable> playerActionIcons = new List<UISelectable>();
-    public List<UISelectable> currentlyActiveUIElements = new List<UISelectable>();
+    public List<UISelectable> currentActiveUIElements = new List<UISelectable>();
     public UISelectable currentActiveUIElement;
     public TextMeshPro playerActionIconDisplayText;
     
@@ -21,38 +21,77 @@ public class PlayerTurnUI : MonoBehaviour
     PrimaryControls controls;
     const float THETA = 2 * Mathf.PI;
     string _currentState;
-    string[] _playerTurnUIState = 
+    string[] _playerTurnUIStates = 
     {
         "ActionSelect",
-        "Attack"
+        "Attack",
+        "Items",
+        "Tactics"
     };
     void Awake() 
     {
         controls = new PrimaryControls();
         controls.Enable();
         SetupActionIcons();
-        _currentState = _playerTurnUIState[0];
+        _currentState = _playerTurnUIStates[0];
     }
 
     void Update()
     {
+        // start incrementing the ui movement couner.
         _uiElementMovementTimer += Time.deltaTime;
         if (_uiElementMovementTimer >= _uiElementMoveTimeLimit)
             _uiElementMovementTimer = _uiElementMoveTimeLimit;
 
+        // switch statement for current ui state. 
         switch (_currentState)
         {
             case ("ActionSelect") :
             {
                 ActionSelect();
                 break;
-            }   
+            }
+            default :
+            {
+                Test();
+                break;
+            }
+        }
+        
+    }
+    void Test()
+    {
+        if (controls.Battle.Primary.triggered)
+        {
+            _currentState = _playerTurnUIStates[0];
+            SetupActionIcons();
         }
     }
+    void InstantiateList(List<UISelectable> ListEntries) // create a list of selectable items from the input list
+    {
+        
+    }
+    void ClearCurrentSubMenu()
+    {
+        for (int i = 0; i < currentActiveUIElements.Count; i++)
+            currentActiveUIElements[i].gameObject.SetActive(false);
+        _uiElementMovementTimer = 0;
+    }
+        void Navigate(int shift) // Navigate through the current list of active UI elements. 
+    {
+        int i;
+        for (i = 0; i < currentActiveUIElements.Count; i++)
+        {
+            currentActiveUIElements[i].ShiftCycle(shift);
+            if (currentActiveUIElements[i].cycle == 0) { currentActiveUIElement = currentActiveUIElements[i]; }
+        }
+    }
+    
+#region ActionSelect Methods
     void ActionSelect() // Method for moving the actionIcons.
     {
         playerActionIconDisplayText.text = currentActiveUIElement.gameObject.name;
-        currentlyActiveUIElements = playerActionIcons;
+        currentActiveUIElements = playerActionIcons;
         if (controls.Battle.Direction.triggered)
         {
             _uiElementMovementTimer = 0;
@@ -61,14 +100,31 @@ public class PlayerTurnUI : MonoBehaviour
         for (int i = 0; i < playerActionIcons.Count; i++)
             SmoothMoveActionIcon(i);
         
-    }
-    void Navigate(int shift) // Navigate through the input list. 
-    {
-        int i;
-        for (i = 0; i < currentlyActiveUIElements.Count; i++)
+        if (controls.Battle.Primary.triggered)
         {
-            currentlyActiveUIElements[i].ShiftCycle(shift);
-            if (currentlyActiveUIElements[i].cycle == 0) { currentActiveUIElement = currentlyActiveUIElements[i]; }
+            switch (currentActiveUIElement.name)
+            {
+                case "Attack" :
+                {
+                    Debug.Log("Attack!");
+                    _currentState = _playerTurnUIStates[1];
+                    break;
+                }
+                case "Items" :
+                {
+                    Debug.Log("Items!");
+                    _currentState = _playerTurnUIStates[2];
+                    break;
+                }
+                case "Tactics" :
+                {
+                    Debug.Log("Tactics!");
+                    _currentState = _playerTurnUIStates[3];
+                    break;
+                }
+            }
+            playerActionIconDisplayText.gameObject.SetActive(false); // stop displaying the text under the active icon
+            ClearCurrentSubMenu();
         }
     }
     void SetupActionIcons() // initialize action icons. 
@@ -80,9 +136,11 @@ public class PlayerTurnUI : MonoBehaviour
             playerActionIcons[i].cycle = i;
             playerActionIcons[i].cyclableElements = playerActionIcons.Count;
         }
+        _uiElementMovementTimer = 0;
+        playerActionIconDisplayText.gameObject.SetActive(true);
         currentActiveUIElement = playerActionIcons[0];
     }
-    void SmoothMoveActionIcon(int i) // smoothly move the player icon at index i to appropriate position. 
+    void SmoothMoveActionIcon(int i) // smoothly move the player icon at index i to appropriate position. [explicitly for actionselection menu] 
     {
         UISelectable icon = playerActionIcons[i];
 
@@ -94,3 +152,4 @@ public class PlayerTurnUI : MonoBehaviour
         icon.transform.position = Vector2.Lerp(icon.transform.position,targetPosition,percentage);
     }
 }
+#endregion 

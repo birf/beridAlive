@@ -25,6 +25,10 @@ public class UISelectable : MonoBehaviour
         cursorTarget += transform.position;
         initialPosition = transform.position;
     }
+    void OnDisable()
+    {
+        transform.position = initialPosition;
+    }
     public void ShiftCycle(int shift) // move up or down this ui element in the cycle. 
     {
         if (shift < 0)
