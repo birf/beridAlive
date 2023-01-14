@@ -9,7 +9,7 @@ public interface IDisplayable
     ///
     ///     Sprite[] sprites | lower indicies represent smaller sprites, grows larger as index increases. ||
     ///
-    ///           int[] ints | order indicates importance. 0 -> Primary, 1-> Secondary, 2 -> Tertiary etc. ||
+    ///           int[] ints | order indicates importance. 0 -> Primary, 1-> Secondary, 2 -> Tertiary etc. -1 at first index should indicate to not use this data.||
     ///
     ///     string[] strings | order indicates imporance. 0 -> Display name, 1 -> Display description, etc. ||
     ///

@@ -15,8 +15,8 @@ public class CharacterScriptable : ScriptableObject , IDisplayable
     public CharacterBase characterData;
     public RuntimeAnimatorController charAnimations;
 
-    public List<BattleMove> moves = new List<BattleMove>();
-    // public List<ItemData> items = new List<ItemData>();
+    public List<BattleMove> characterMoves = new List<BattleMove>();
+    public List<ItemData> characterItems = new List<ItemData>();
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
         sprites = characterSprites;

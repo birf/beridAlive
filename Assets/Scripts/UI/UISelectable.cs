@@ -16,18 +16,39 @@ public class UISelectable : MonoBehaviour
     public int cycle = 0; // what cycle this selectable is currently on. 
     public int cyclableElements = 0; // how many elements should this selectable be concerned with. 
                                      // i.e., if there is a list of 4 items, there are 4 to keep track of. 
-    public bool isDestroyable = true;
-    public bool cursorIsHovering = false;
-    public bool canBeDisabled = true;
+    public bool isDestroyable = true; // can we destroy this object?
+    public bool cursorIsHovering = false; // is the cursor (if one is active) hovering over this object?
+    public bool canBeDisabled = true; // can this object be disabled?
+    public bool bobbable = false;
+
 
     void Awake()
     {
-        cursorTarget += transform.position;
-        initialPosition = transform.position;
+        if (initialPosition == Vector3.zero)
+            initialPosition = transform.position;
     }
     void OnDisable()
     {
-        transform.position = initialPosition;
+        transform.position = initialPosition == null ? transform.position : initialPosition;
+    }
+    ///<summary>
+    ///Set up the integer and boolean values for this selectable.
+    ///</summary>
+    public void InitializeValues(int initCycle, int divisions, bool destroyable, bool hovering, bool disable)
+    {
+        cycle = initCycle;
+        cyclableElements = divisions;
+        isDestroyable = destroyable;
+        cursorIsHovering = hovering;
+        canBeDisabled = disable;
+    }
+    ///<summary>
+    ///Set up the initial and target positions for this selectable.
+    ///</summary>
+    public void InitializePositions(Vector3 initial, Vector3 target)
+    {
+        initialPosition = initial;
+        targetPosition = target;
     }
     public void ShiftCycle(int shift) // move up or down this ui element in the cycle. 
     {

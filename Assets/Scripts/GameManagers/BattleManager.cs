@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class BattleManager : GameManager
 {
-    void OnEnable()
+    public List<ItemData> playerItems = new List<ItemData>();
+    public List<BattleMove> playerMoves = new List<BattleMove>();
+    void Awake()
     {
-        CharacterGameObjects = new List<CharacterGameEntity>(FindObjectsOfType<CharacterGameEntity>());
         CentralManager.SetStateManager(this);
+        CharacterGameObjects = new List<CharacterGameEntity>(FindObjectsOfType<CharacterGameEntity>());
         CentralManager.CurrentContext = CentralManager.Context.BATTLE; 
-    }
-    public void Tester()
-    {
-        Debug.Log("Battle Manager woohoo");
+        
+        for (int i = 0; i < CharacterGameObjects.Count; i++)
+        {
+            if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
+            {
+                playerItems = new List<ItemData>(CharacterGameObjects[i].characterScriptable.characterItems);
+                playerMoves = new List<BattleMove>(CharacterGameObjects[i].characterScriptable.characterMoves);
+                break;
+            }
+        }
     }
 }

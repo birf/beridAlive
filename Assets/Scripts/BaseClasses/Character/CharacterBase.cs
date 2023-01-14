@@ -16,7 +16,7 @@ public class CharacterBase
         PLAYER,
         ENEMY
     }
-    public CharacterType CharType {get;set;}
+    public CharacterType CharType;
     public int curHp;
     public int baseHP;
     public int curAtk;
