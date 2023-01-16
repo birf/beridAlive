@@ -10,8 +10,11 @@ public class ItemData : ScriptableObject , IDisplayable
     public int potency;
     public string itemName;
     public string itemDesc;
-    public string[] itemType = {
-    };
+    public ItemType itemType;
+    public enum ItemType
+    {
+        HELPER
+    }
 
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {

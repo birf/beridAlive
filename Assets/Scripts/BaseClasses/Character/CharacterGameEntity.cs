@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(UISelectable))]
+
 public class CharacterGameEntity : MonoBehaviour
 {
     /*
@@ -14,6 +16,7 @@ public class CharacterGameEntity : MonoBehaviour
     public CharacterBase characterData; //  <-- Use this when communicating with other gameObjects.
     public CharacterScriptable characterScriptable; // <-- Whenever default or saved values from character scriptable are needed, use this.
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
+    public UISelectable characterSelectable; // <-- The selectable for this character.
     public GameManager currentManager;
     void Awake()
     {
@@ -21,7 +24,9 @@ public class CharacterGameEntity : MonoBehaviour
         if (CentralManager.GetStateManager() != null)
             currentManager = CentralManager.GetStateManager();
         GetCorrectContext();
-        
+
+        characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(3.5f,2.0f,0) : new Vector3(-3.5f,2.0f,0);
+        characterSelectable.cursorTarget += transform.position;
     }
 
     // Initialize character data from the character scriptable. 
@@ -33,12 +38,18 @@ public class CharacterGameEntity : MonoBehaviour
         characterAnimations = characterScriptable.charAnimations;
         characterAnimator.runtimeAnimatorController = characterAnimations;
 
+        // if the character is on the left side or the right, make sure the correct offset is used.
+        characterSelectable = GetComponent<UISelectable>();
+        characterSelectable.isDestroyable = false;
+
+
     }
     // Check current context of the game, and change states accordingly.
     void GetCorrectContext()
     {
         switch (CentralManager.CurrentContext)
         {
+            // testing purposes. just to play test animations.
             case (CentralManager.Context.BATTLE) :
             {
                 // testing
@@ -53,5 +64,8 @@ public class CharacterGameEntity : MonoBehaviour
             }
         }
     }
-
+    void Update()
+    {
+        GetCorrectContext();
+    }
 }

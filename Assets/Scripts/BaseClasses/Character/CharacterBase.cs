@@ -52,7 +52,12 @@ public class CharacterBase
         this.baseAtk = inputData.baseAtk;
         this.baseDef = inputData.baseDef;
         this.baseHP = inputData.baseHP;
-        this.baseStamina = inputData.baseHP;
+        this.baseStamina = inputData.baseStamina;
+        this.curAtk = inputData.curAtk;
+        this.curDef = inputData.curDef;
+        this.curHp = inputData.curHp;
+        this.curStamina = inputData.curStamina;
+
         CharType = inputData.CharType;
     }
 }

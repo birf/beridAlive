@@ -33,6 +33,14 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Secondary"",
+                    ""type"": ""Button"",
+                    ""id"": ""143a1ca6-f11c-417e-bd20-19c9e781ca0f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -156,6 +164,17 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                     ""action"": ""Primary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""883a12a3-5d1a-4e21-b76d-296b7c4389a9"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Secondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +246,7 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         m_Battle = asset.FindActionMap("Battle", throwIfNotFound: true);
         m_Battle_Direction = m_Battle.FindAction("Direction", throwIfNotFound: true);
         m_Battle_Primary = m_Battle.FindAction("Primary", throwIfNotFound: true);
+        m_Battle_Secondary = m_Battle.FindAction("Secondary", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -278,12 +298,14 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
     private IBattleActions m_BattleActionsCallbackInterface;
     private readonly InputAction m_Battle_Direction;
     private readonly InputAction m_Battle_Primary;
+    private readonly InputAction m_Battle_Secondary;
     public struct BattleActions
     {
         private @PrimaryControls m_Wrapper;
         public BattleActions(@PrimaryControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Direction => m_Wrapper.m_Battle_Direction;
         public InputAction @Primary => m_Wrapper.m_Battle_Primary;
+        public InputAction @Secondary => m_Wrapper.m_Battle_Secondary;
         public InputActionMap Get() { return m_Wrapper.m_Battle; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -299,6 +321,9 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                 @Primary.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnPrimary;
                 @Primary.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnPrimary;
                 @Primary.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnPrimary;
+                @Secondary.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSecondary;
+                @Secondary.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSecondary;
+                @Secondary.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSecondary;
             }
             m_Wrapper.m_BattleActionsCallbackInterface = instance;
             if (instance != null)
@@ -309,6 +334,9 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                 @Primary.started += instance.OnPrimary;
                 @Primary.performed += instance.OnPrimary;
                 @Primary.canceled += instance.OnPrimary;
+                @Secondary.started += instance.OnSecondary;
+                @Secondary.performed += instance.OnSecondary;
+                @Secondary.canceled += instance.OnSecondary;
             }
         }
     }
@@ -362,5 +390,6 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
     {
         void OnDirection(InputAction.CallbackContext context);
         void OnPrimary(InputAction.CallbackContext context);
+        void OnSecondary(InputAction.CallbackContext context);
     }
 }

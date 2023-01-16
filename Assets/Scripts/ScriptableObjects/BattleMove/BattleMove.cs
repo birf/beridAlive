@@ -18,11 +18,8 @@ public class BattleMove : ScriptableObject, IDisplayable
     ///<summary>
     ///The launch velocity that this move should send the opponent. (If applicable.)
     ///</summary>
-    public Vector3 moveVelocity;
-    ///<summary>
-    ///The animations used for this move.
-    ///</summary>
-    public RuntimeAnimatorController animations;
+    public Vector3 launchVelocity;
+    public RuntimeAnimatorController animations; // <-- to be removed. to circumvent the issue of generality, every enemy gets a fixed, maximum amount of moves.
     public Sprite moveSpriteSmall;
     public int damage;
     public int staminaCost;

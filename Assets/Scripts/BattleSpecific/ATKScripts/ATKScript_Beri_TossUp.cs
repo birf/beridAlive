@@ -151,7 +151,24 @@ public class ATKScript_Beri_TossUp : ATKScript
 
     public override void BeginMove()
     {
-        targetEnemyPosition = targetEnemy.transform.position;
+        bool flag = false;
+        if (battleManager == null)
+        {
+            Debug.Log("Error : battleManager never initialized! On : " + gameObject.name);
+            flag = true;
+        } 
+        if (targetEnemy == null)
+        {
+            Debug.Log("Error : targetEnemy never initialized! On : " + gameObject.name);
+            flag = true;
+        }
+        if (parentMove == null)
+        {
+            Debug.Log("Error : parentMove never initialized! On : " + gameObject.name);
+            flag = true;
+        }
+        if (flag)
+            Destroy(gameObject);
     }
     public override void OnSuccess()
     {

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class AtkScript_Uppercut : ATKScript
+
+public class ATKScript_Beri_Uppercut : ATKScript
 {
     public BoxCollider2D puncher;
 

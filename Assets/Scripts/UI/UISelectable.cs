@@ -14,12 +14,13 @@ public class UISelectable : MonoBehaviour
     public Vector3 initialPosition; // initial position of this selectable. useful for icons that move.
     public Vector3 targetPosition; // target position of this selectable (if applicable).
     public int cycle = 0; // what cycle this selectable is currently on. 
+    public int index = 0; // what index in a list is this selectable currently in?
     public int cyclableElements = 0; // how many elements should this selectable be concerned with. 
                                      // i.e., if there is a list of 4 items, there are 4 to keep track of. 
     public bool isDestroyable = true; // can we destroy this object?
     public bool cursorIsHovering = false; // is the cursor (if one is active) hovering over this object?
     public bool canBeDisabled = true; // can this object be disabled?
-    public bool bobbable = false;
+    public bool flipCursor = false; // should this selectable when selected flip the cursor around?
 
 
     void Awake()
@@ -29,7 +30,6 @@ public class UISelectable : MonoBehaviour
     }
     void OnDisable()
     {
-        transform.position = initialPosition == null ? transform.position : initialPosition;
     }
     ///<summary>
     ///Set up the integer and boolean values for this selectable.
@@ -37,6 +37,7 @@ public class UISelectable : MonoBehaviour
     public void InitializeValues(int initCycle, int divisions, bool destroyable, bool hovering, bool disable)
     {
         cycle = initCycle;
+        index = initCycle;
         cyclableElements = divisions;
         isDestroyable = destroyable;
         cursorIsHovering = hovering;

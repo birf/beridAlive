@@ -13,7 +13,7 @@ public class ATKScript : MonoBehaviour
     public CharacterGameEntity targetEnemy;
     public BattleManager battleManager;
 
-    public virtual void BeginMove(){}
+    public virtual void BeginMove(){} // MAKE SURE THAT THE MOVE IS PROPERLY INITIALIZED BEFORE CALLING !! May potentially lead to a null reference exception if not done so. 
     public virtual void OnSuccess(){}
     public virtual void OnFailure(){}
 }

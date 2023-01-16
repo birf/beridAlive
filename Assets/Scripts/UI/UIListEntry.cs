@@ -21,7 +21,7 @@ public class UIListEntry : MonoBehaviour
         displayText.sortingOrder = 100 - selectable.cycle; // -----\
         displayNumber.sortingOrder = 100 - selectable.cycle; // ---->-- ensure that every element is sorted correctly when created.
         displaySprite.sortingOrder = 100 - selectable.cycle; // ---/
-        background.sortingOrder = 100 - selectable.cycle; //------/
+        background.sortingOrder = 50 - selectable.cycle; //------/
     }
     void Update()
     {
