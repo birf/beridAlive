@@ -20,6 +20,7 @@ public class UISelectable : MonoBehaviour
     public bool isDestroyable = true; // can we destroy this object?
     public bool cursorIsHovering = false; // is the cursor (if one is active) hovering over this object?
     public bool canBeDisabled = true; // can this object be disabled?
+    public bool isSelectable = true; // can this object be selected?
     public bool flipCursor = false; // should this selectable when selected flip the cursor around?
 
 
@@ -27,9 +28,6 @@ public class UISelectable : MonoBehaviour
     {
         if (initialPosition == Vector3.zero)
             initialPosition = transform.position;
-    }
-    void OnDisable()
-    {
     }
     ///<summary>
     ///Set up the integer and boolean values for this selectable.

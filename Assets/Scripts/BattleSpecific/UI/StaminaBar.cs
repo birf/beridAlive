@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class StaminaBar : MonoBehaviour
 {
@@ -9,9 +10,12 @@ public class StaminaBar : MonoBehaviour
     public List<SpriteRenderer> fillBarClones = new List<SpriteRenderer>(); 
     public Vector3 targetPosition;
     public int staminaCount = 1;
-    [SerializeField][Range(0.5f,6.0f)] float lerpSpeed = 1.0f;
     public float currentLerpTime = 0f;
 
+    [SerializeField][Range(0.5f,6.0f)] float lerpSpeed = 1.0f;
+    [SerializeField] GameObject goButtonObject;
+    [SerializeField] TextMeshPro goButtonText;
+    [SerializeField] SpriteRenderer goButtonBackground;
 
     void OnEnable()
     {
@@ -22,6 +26,21 @@ public class StaminaBar : MonoBehaviour
     {
         Move();
         GOButton.cursorTarget = GOButton.transform.position + new Vector3(3f,0,0);
+        UpdateGoButton();
+    }
+    void UpdateGoButton()
+    {        
+        if (!GOButton.isSelectable)
+        {
+            goButtonBackground.color = new Color(0,1,0,0.5f);
+            goButtonText.color = new Color(1,1,1,0.5f);
+        }
+        else
+        {
+            goButtonBackground.color = new Color(0,1,0,1);
+            goButtonText.color = new Color(1,1,1,1);
+        }
+    
     }
     void OnDisable()
     {

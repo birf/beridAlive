@@ -14,7 +14,7 @@ public class BattleMove : ScriptableObject, IDisplayable
     ///<summary>
     ///The main GameObject that is to be spawned that will be responsible for all behavior associated with this move. 
     ///</summary>
-    public GameObject mainMoveSpawn;
+    public GameObject mainMoveGameObject;
     ///<summary>
     ///The launch velocity that this move should send the opponent. (If applicable.)
     ///</summary>

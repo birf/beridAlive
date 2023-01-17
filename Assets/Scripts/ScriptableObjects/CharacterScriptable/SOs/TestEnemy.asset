@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48856c5b772ef24ba821410565d88b2, type: 3}
   m_Name: TestEnemy
   m_EditorClassIdentifier: 
+  characterSprites: []
   characterData:
+    CharType: 2
     curHp: 2
     baseHP: 2
     curAtk: 2
@@ -24,3 +26,5 @@ MonoBehaviour:
     CharacterName: Dummy but Bad
     CharacterDescription: What a(n evil) dummy!
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}
+  characterMoves: []
+  characterItems: []

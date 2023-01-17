@@ -188,7 +188,7 @@ MonoBehaviour:
   isDestroyable: 0
   cursorIsHovering: 0
   canBeDisabled: 1
-  canBeSelected: 0
+  isSelectable: 0
   flipCursor: 1
 --- !u!1 &6968247453954506809
 GameObject:
@@ -457,8 +457,11 @@ MonoBehaviour:
   fillBarClones: []
   targetPosition: {x: 0, y: 0, z: 0}
   staminaCount: 2
-  lerpSpeed: 6
   currentLerpTime: 0
+  lerpSpeed: 6
+  goButtonObject: {fileID: 2015395175735093186}
+  goButtonText: {fileID: 2747466717931815154}
+  goButtonBackground: {fileID: 7486623551308355153}
 --- !u!1 &7119476348968402955
 GameObject:
   m_ObjectHideFlags: 0

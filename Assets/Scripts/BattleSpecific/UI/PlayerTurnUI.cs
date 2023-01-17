@@ -6,7 +6,7 @@ using TMPro;
 public class PlayerTurnUI : MonoBehaviour
 {
     /*
-        Class for managing the player's UI when it is currently their turn in battle. 
+        Class for managing the player's UI when it is currently their turn in battle.
     */
     public Vector3[] listSpawnerOrigins = {new Vector3(1.5f,4.0f,0)}; // offsets for spawning list entries.
     public StaminaBar staminaBar;
@@ -28,15 +28,19 @@ public class PlayerTurnUI : MonoBehaviour
 
     PrimaryControls controls;
     const float THETA = 2 * Mathf.PI;
-    string _currentState;
-    string[] _playerTurnUIStates = 
+    [SerializeField]string _currentState;
+    [SerializeField]string[] _playerTurnUIStates = 
     {
-        "ActionSelect",
-        "Attack",
-        "Items",
-        "Tactics",
-        "ItemUseSelection"
+        "ActionSelect",             // 0
+        "Attack",                   // 1
+        "Items",                    // 2
+        "Tactics",                  // 3
+        "ItemUseSelection",         // 4
+        "AttackTargetSelection",    // 5
+        "NOSTATE"                   // n - 1
     };
+
+#region MonoBehaviour Routines
     void Awake() 
     {
         controls = new PrimaryControls();
@@ -47,9 +51,11 @@ public class PlayerTurnUI : MonoBehaviour
 
     void Update()
     {
+        // make absolutely sure that there exists a state manager for this object.
         if (CentralManager.GetStateManager() != null)
             battleManager = (BattleManager)CentralManager.GetStateManager();
-        // start incrementing the ui movement couner.
+        
+        // start incrementing the ui movement counter.
         _uiElementMovementTimer += Time.deltaTime;
         if (_uiElementMovementTimer >= _uiElementMoveTimeLimit)
             _uiElementMovementTimer = _uiElementMoveTimeLimit;
@@ -74,15 +80,24 @@ public class PlayerTurnUI : MonoBehaviour
                 ItemSelection();
                 break;
             }
+            case ("Tactics") :
+            {
+                TacticsSelection();
+                break;
+            }
             default :
             {
-                
+                ClearCurrentSubMenu();
+                SetupActionIcons();
                 break;
             }
         }
+        // safeguard. probably should remove.
         if (cursor.enabled)
             cursor.cursorSelectable = currentActiveUIElement;
     }
+#endregion
+#region General Functions
     void EnableCursor(Vector3 startPosition)
     {
         cursor.cursorSelectable = currentActiveUIElement;
@@ -94,14 +109,13 @@ public class PlayerTurnUI : MonoBehaviour
         cursor.cursorSelectable = null;
         cursor.gameObject.SetActive(false);
     }
-
     void InstantiateList(List<IDisplayable> ListEntries, Vector3 spawnerOrigin) // create a list of selectable items from the input list
     {
         if (listEntryPrefab == null)
             Debug.Log("No entry prefab loaded!");
         else
         {
-            float yOffset = transform.localScale.y;
+            float yOffset = transform.localScale.y; // spawn each list element in the correct location
             for (int i = 0; i < ListEntries.Count; i++)
             {
                 Vector3 target = spawnerOrigin;
@@ -117,22 +131,30 @@ public class PlayerTurnUI : MonoBehaviour
             EnableCursor(currentActiveUIElements[0].cursorTarget + spawnerOrigin);
         }   
     }
-
     void ClearCurrentSubMenu()
     {
-        for (int i = 0; i < currentActiveUIElements.Count; i++)
+        if (currentActiveUIElements.Count > 0)
         {
-            if (currentActiveUIElements[i].isDestroyable)
-                Destroy(currentActiveUIElements[i].gameObject);
-            if (currentActiveUIElements[i].canBeDisabled)
-                currentActiveUIElements[i].gameObject.SetActive(false);
+            for (int i = 0; i < currentActiveUIElements.Count; i++)
+            {
+                if (currentActiveUIElements[i].isDestroyable)
+                    Destroy(currentActiveUIElements[i].gameObject);
+                if (currentActiveUIElements[i].canBeDisabled)
+                    currentActiveUIElements[i].gameObject.SetActive(false);
+            }
         }
+        
         currentActiveUIElements.Clear();
         _uiElementMovementTimer = 0;
+
         if (playerActionIconDisplayText.IsActive())
             playerActionIconDisplayText.gameObject.SetActive(false); // stop displaying the text under the active icon
         if (staminaBar.gameObject.activeSelf)
             { staminaBar.gameObject.SetActive(false);  staminaBar.currentLerpTime = 0;}
+        
+        if (_currentState == _playerTurnUIStates[0])
+            foreach(UISelectable icon in playerActionIcons)
+                icon.transform.position = icon.initialPosition;
     }
     void Navigate(int shift) // Navigate through the current list of active UI elements. 
     {
@@ -143,7 +165,7 @@ public class PlayerTurnUI : MonoBehaviour
             if (currentActiveUIElements[i].cycle == 0) { currentActiveUIElement = currentActiveUIElements[i]; }
         }
     }
-    
+#endregion
 #region ActionSelect Methods
     void ActionSelect() // Method for moving the actionIcons.
     {
@@ -160,7 +182,7 @@ public class PlayerTurnUI : MonoBehaviour
         for (int i = 0; i < playerActionIcons.Count; i++)
             SmoothMoveActionIcon(i);
         
-        if (controls.Battle.Primary.triggered)
+        if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
         {
             switch (currentActiveUIElement.name)
             {
@@ -180,7 +202,6 @@ public class PlayerTurnUI : MonoBehaviour
                 }
                 case "Items" :
                 {
-
                     if (battleManager.playerItems.Count == 0)
                         break;
                     ClearCurrentSubMenu();
@@ -190,14 +211,16 @@ public class PlayerTurnUI : MonoBehaviour
                 }
                 case "Tactics" :
                 {
+                    ClearCurrentSubMenu();
                     _currentState = _playerTurnUIStates[3];
-                    Debug.Log("Get prank'd nerd");
                     break;
                 }
             }
         }
     }
-    void SetupActionIcons() // initialize action icons. 
+    
+    // initialize action icons. 
+    void SetupActionIcons() 
     {
         int i;
         for (i = 0; i < playerActionIcons.Count; i++)
@@ -211,7 +234,8 @@ public class PlayerTurnUI : MonoBehaviour
         currentActiveUIElement = playerActionIcons[0];
     }
 
-    void SmoothMoveActionIcon(int i) // smoothly move the player icon at index i to appropriate position. [explicitly for actionselection menu] 
+    // smoothly move the player icon at index i to appropriate position. [explicitly for actionselection menu] 
+    void SmoothMoveActionIcon(int i) 
     {
         UISelectable icon = playerActionIcons[i];
 
@@ -222,17 +246,36 @@ public class PlayerTurnUI : MonoBehaviour
         targetPosition.x = icon.initialPosition.x + _actionIconXScale * (Mathf.Sin((THETA * icon.cycle)/icon.cyclableElements));
         float percentage = _uiElementMovementTimer/_uiElementMoveTimeLimit;
         icon.transform.position = Vector2.Lerp(icon.transform.position,targetPosition,percentage);
-
     }
 #endregion 
-#region AttackMenu
+#region AttackMenu Methods
 
     void AttackSelection()
     {
-        staminaBar.staminaCount = battleManager.currentActiveCharacter.characterData.baseStamina;
-        goButton.gameObject.SetActive(true);
-        staminaBar.gameObject.SetActive(true);
-        staminaBar.targetPosition = transform.position + new Vector3(-10,0,0);
+        int curStamina = battleManager.currentActiveCharacter.characterData.curStamina;
+
+        if (_currentState == _playerTurnUIStates[1])
+        {
+            staminaBar.staminaCount = battleManager.currentActiveCharacter.characterData.baseStamina;
+            goButton.gameObject.SetActive(true);
+            staminaBar.gameObject.SetActive(true);
+            staminaBar.targetPosition = transform.position + new Vector3(-10,0,0);
+        }
+
+        // draw the stamina bar
+        {
+            if (staminaBar.gameObject.activeSelf)
+            {
+                for (int i = 0; i < staminaBar.fillBarClones.Count; i++) // grey out first
+                    staminaBar.fillBarClones[i].color = new Color(1,1,1,0.5f);
+                for (int j = 0; j < curStamina - playerMoveQueue.Count; j++) // fill in any bars not used yet
+                    staminaBar.fillBarClones[j].color = new Color(1,1,1,1);
+            }
+        }
+
+        if(playerMoveQueue.Count > 0)
+            goButton.isSelectable = true;
+
         if (controls.Battle.Direction.triggered)
         {
             _uiElementMovementTimer = 0;
@@ -240,20 +283,63 @@ public class PlayerTurnUI : MonoBehaviour
         }
         switch(_currentState)
         {
-            case ("Attack") :
+            case ("Attack") : // player is selecting what moves they are going to attack with
             {
-                if (controls.Battle.Primary.triggered)
+                if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                 {
-                    if (currentActiveUIElement.displayable != null && playerMoveQueue.Count < battleManager.currentActiveCharacter.characterData.curStamina)
+                    if (currentActiveUIElement.displayable != null && playerMoveQueue.Count < curStamina)
                     {
                         playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
+                    }
+                    // player selected moves to perform, select target.
+                    if (currentActiveUIElement.gameObject.name == "GO!" && playerMoveQueue.Count > 0) 
+                    {
+                        _currentState = _playerTurnUIStates[5];
+                        ClearCurrentSubMenu();
+                        for (int i = 0; i < battleManager.enemyCharacters.Count; i++)
+                            currentActiveUIElements.Add(battleManager.enemyCharacters[i].characterSelectable);
+                        currentActiveUIElement = currentActiveUIElements[0];
                     }
                 }
                 if (controls.Battle.Secondary.triggered)
                 {
-                    _currentState = _playerTurnUIStates[0];
+                    if (playerMoveQueue.Count > 0)
+                    {
+                        playerMoveQueue.RemoveAt(playerMoveQueue.Count - 1);
+                        if (playerMoveQueue.Count == 0)
+                            goButton.isSelectable = false;
+                    }
+                    else if (playerMoveQueue.Count == 0)
+                    {
+                        _currentState = _playerTurnUIStates[0];
+                        
+                        ClearCurrentSubMenu();
+                        SetupActionIcons();
+                    }
+                }
+                break;
+            }
+            case("AttackTargetSelection") :
+            {
+                if (controls.Battle.Primary.triggered) // player has selected their moves and is ready to start.
+                {
+                    battleManager.FeedPlayerMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameEntity   >());
+                    battleManager.currentBattleManagerState = BattleManager.BattleManagerState.PLAYERATTACK;
                     ClearCurrentSubMenu();
-                    SetupActionIcons();
+                    _currentState = _playerTurnUIStates[6];
+                    gameObject.SetActive(false);
+                }
+                if (controls.Battle.Secondary.triggered) // cancel enemy selection
+                {
+                    _currentState = _playerTurnUIStates[1];
+                    playerMoveQueue.Clear();
+                    ClearCurrentSubMenu();
+                    InstantiateList(new List<IDisplayable>(battleManager.playerMoves),listSpawnerOrigins[0] + transform.position);
+
+                    currentActiveUIElements.Add(goButton);
+                    goButton.InitializeValues(currentActiveUIElements.Count - 1,currentActiveUIElements.Count,false,false,true);
+
+                    currentActiveUIElement = currentActiveUIElements[0];
                 }
                 break;
             }
@@ -272,9 +358,14 @@ public class PlayerTurnUI : MonoBehaviour
         {
             case ("Items") : // Menu selections for selecting an item. 
             {
-                if (controls.Battle.Primary.triggered) // if the player selected an item, setup the next menu.
+                if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable) // if the player selected an item, setup the next menu.
                 {
-                    currentSelectedItem = currentActiveUIElement; // <-- probably better way to do this. since the active ui element serve two purposes, we can't remove the item after using it by getting the index of the currently active selectable. this is just to store the index. 
+                    // -----------------------------------------------------------------------------------------------------------------------------
+                    // | there's probably a better way to do this. since the active ui element would need to serve two purposes, we can't remove   |
+                    // V the item after using it by getting the index of the currently active selectable. thus, the selected item must be stored.  V
+                    // -----------------------------------------------------------------------------------------------------------------------------
+                    currentSelectedItem = currentActiveUIElement; 
+                    // -----------------------------------------------------------------------------------------------------------------------------
                     ClearCurrentSubMenu();
                     _currentState = _playerTurnUIStates[4];
                     for (int i = 0; i < battleManager.playerCharacters.Count; i++)
@@ -293,7 +384,7 @@ public class PlayerTurnUI : MonoBehaviour
             }
             case ("ItemUseSelection") : // player selected an item to use.
             {
-                if (controls.Battle.Primary.triggered)
+                if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                 {
                     battleManager.playerItems.RemoveAt(currentSelectedItem.index);
                     ClearCurrentSubMenu();
@@ -312,4 +403,19 @@ public class PlayerTurnUI : MonoBehaviour
         }
     }
 #endregion
+#region TacticsMenu Methods
+    
+    // Nothing yet.
+    
+    void TacticsSelection()
+    {
+        if (controls.Battle.Secondary.triggered)
+        {
+            _currentState = _playerTurnUIStates[0];
+            ClearCurrentSubMenu();
+            SetupActionIcons();
+        }
+    }
+#endregion
 }
+

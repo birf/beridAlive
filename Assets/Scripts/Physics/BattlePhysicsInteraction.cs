@@ -58,8 +58,6 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void GetState()
     {
         _internalPosition = transform.position;
-        if (_internalPosition.x < -12F) _internalPosition.x = 12F;
-        if (_internalPosition.x > 12F) _internalPosition.x = -12F;
 
         if (_internalVelocity == Vector2.zero)
             transform.position = startPosition;

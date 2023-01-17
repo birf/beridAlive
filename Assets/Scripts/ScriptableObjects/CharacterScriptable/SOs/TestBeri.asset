@@ -22,7 +22,7 @@ MonoBehaviour:
     curDef: 0
     baseDef: 0
     curStamina: 2
-    baseStamina: 3
+    baseStamina: 2
     CharacterName: Beri
     CharacterDescription: Living legend, minus the living. (and the legend)
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}
