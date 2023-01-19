@@ -12,6 +12,7 @@ public static class CentralManager
 
     public enum Context
     {
+        NONE,
         OVERWORLD,
         BATTLE
     }

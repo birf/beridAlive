@@ -15,14 +15,16 @@ MonoBehaviour:
   characterSprites: []
   characterData:
     CharType: 2
-    curHp: 2
+    curHP: 2
     baseHP: 2
-    curAtk: 2
-    baseAtk: 2
-    curDef: 2
-    baseDef: 2
-    curStamina: 2
-    baseStamina: 2
+    curATK: 1
+    baseATK: 1
+    curDEF: 0
+    baseDEF: 0
+    curSPEED: 1
+    baseSPEED: 1
+    curSTAMINA: 1
+    baseSTAMINA: 1
     CharacterName: Dummy but Bad
     CharacterDescription: What a(n evil) dummy!
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}

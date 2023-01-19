@@ -35,5 +35,8 @@ public class ATKScript : MonoBehaviour
             Destroy(gameObject);
     }  
     public virtual void OnSuccess(){}
-    public virtual void OnFailure(){}
+    public virtual void OnFailure()
+    {
+        BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ENEMYTURN;
+    }
 }

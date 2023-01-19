@@ -15,13 +15,12 @@ public class CharacterScriptable : ScriptableObject , IDisplayable
     public CharacterBase characterData;
     public RuntimeAnimatorController charAnimations;
     public Vector2 battleHitBoxSize;
-
     public List<BattleMove> characterMoves = new List<BattleMove>();
     public List<ItemData> characterItems = new List<ItemData>();
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
         sprites = characterSprites;
-        ints = new int[] {characterData.baseHP, characterData.baseAtk, characterData.baseDef, characterData.baseStamina};
+        ints = new int[] {characterData.baseHP, characterData.baseATK, characterData.baseDEF, characterData.baseSTAMINA};
         strings = new string[] {characterData.CharacterName, characterData.CharacterDescription};
     }
 }

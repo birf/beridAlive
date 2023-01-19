@@ -17,14 +17,16 @@ public class CharacterBase
         ENEMY
     }
     public CharacterType CharType;
-    public int curHp;
+    public int curHP;
     public int baseHP;
-    public int curAtk;
-    public int baseAtk;
-    public int curDef;
-    public int baseDef;
-    public int curStamina;
-    public int baseStamina;
+    public int curATK;
+    public int baseATK;
+    public int curDEF;
+    public int baseDEF;
+    public int curSPEED;
+    public int baseSPEED;
+    public int curSTAMINA;
+    public int baseSTAMINA;
     public string CharacterName;
     public string CharacterDescription;
 
@@ -36,27 +38,31 @@ public class CharacterBase
     {
         CharacterName = name;
         this.baseHP = baseHP;
-        this.baseDef = baseDef;
-        this.baseStamina = baseStamina;
+        this.baseDEF = baseDef;
+        this.baseSTAMINA = baseStamina;
         CharType = CharacterType.DEFAULT;
 
-        this.curHp = baseHP;
-        this.curAtk = baseAtk;
-        this.curDef = baseDef;
-        this.curStamina = baseStamina;
+        this.curHP = baseHP;
+        this.curATK = baseATK;
+        this.curDEF = baseDef;
+        this.curSTAMINA = baseStamina;
     }
     public CharacterBase(CharacterScriptable input)
     {
         CharacterBase inputData = input.characterData;
         CharacterName = inputData.CharacterName;
-        this.baseAtk = inputData.baseAtk;
-        this.baseDef = inputData.baseDef;
+        CharacterDescription = inputData.CharacterDescription;
         this.baseHP = inputData.baseHP;
-        this.baseStamina = inputData.baseStamina;
-        this.curAtk = inputData.curAtk;
-        this.curDef = inputData.curDef;
-        this.curHp = inputData.curHp;
-        this.curStamina = inputData.curStamina;
+        this.baseATK = inputData.baseATK;
+        this.baseDEF = inputData.baseDEF;
+        this.baseSPEED = inputData.baseSPEED;
+        this.baseSTAMINA = inputData.baseSTAMINA;
+        
+        this.curHP = inputData.curHP;
+        this.curATK = inputData.curATK;
+        this.curDEF = inputData.curDEF;
+        this.curSTAMINA = inputData.curSTAMINA;
+        this.curSPEED = inputData.curSPEED;
 
         CharType = inputData.CharType;
     }

@@ -57,7 +57,8 @@ public class ATKScript_Beri_Uppercut : ATKScript
             OnFailure();
         else
         {
-            int hits = Physics2D.OverlapBoxNonAlloc(transform.position + (Vector3)puncher.offset,puncher.size,0f,_hitBuffer,validLayers);
+            // check to see if enemy is in hitbox this frame.
+            int hits = Physics2D.OverlapBoxNonAlloc(puncher.transform.position + (Vector3)puncher.offset, puncher.size,0f,_hitBuffer,validLayers);
             if (hits > 0)
             {
                 for (int i = 0; i < _hitBuffer.Length; i++)
@@ -66,6 +67,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
                         if( _hitBuffer[i].gameObject.layer == 8 && _hitBuffer[i].gameObject == targetEnemy.gameObject)
                         {
                             targetEnemy.characterBattlePhysics.SetVelocity(parentMove.launchVelocity);
+                            targetEnemy.UpdateStat("Health", -parentMove.damage);
                             OnSuccess();
                             Destroy(gameObject);
                         }
@@ -80,15 +82,16 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnFailure()
     {
-        Debug.Log("uh oh");
         controls.Disable();
         battleManager.PlayerAttackFailure();
+        base.OnFailure();
         Destroy(gameObject);
     }
     public override void OnSuccess()
     {
         controls.Disable();
         battleManager.PlayerAttackSuccess();
+        base.OnSuccess();
         Destroy(gameObject);
     }
 }

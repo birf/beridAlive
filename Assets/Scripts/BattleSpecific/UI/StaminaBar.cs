@@ -54,7 +54,7 @@ public class StaminaBar : MonoBehaviour
         int height = 12;
         Vector3 startingPosition = transform.position + new Vector3(0,-6,0);
         
-        height /= staminaCount == 0 ? staminaCount : 1;
+        height /= staminaCount == 0 ? 1 : staminaCount;
 
         for (int i = 0; i < staminaCount; i++)
         {

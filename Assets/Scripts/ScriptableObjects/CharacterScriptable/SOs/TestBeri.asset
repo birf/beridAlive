@@ -15,14 +15,16 @@ MonoBehaviour:
   characterSprites: []
   characterData:
     CharType: 1
-    curHp: 5
+    curHP: 5
     baseHP: 5
-    curAtk: 1
-    baseAtk: 1
-    curDef: 0
-    baseDef: 0
-    curStamina: 3
-    baseStamina: 3
+    curATK: 1
+    baseATK: 1
+    curDEF: 0
+    baseDEF: 0
+    curSPEED: 2
+    baseSPEED: 2
+    curSTAMINA: 3
+    baseSTAMINA: 3
     CharacterName: Beri
     CharacterDescription: Living legend, minus the living. (and the legend)
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}

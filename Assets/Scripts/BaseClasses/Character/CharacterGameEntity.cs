@@ -21,11 +21,9 @@ public class CharacterGameEntity : MonoBehaviour
     void Awake()
     {
         CharacterSetup();   
-        if (CentralManager.GetStateManager() != null)
-            currentManager = CentralManager.GetStateManager();
         GetCorrectContext();
 
-        characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(3.5f,2.0f,0) : new Vector3(-3.5f,2.0f,0);
+        characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f,1f,0) : new Vector3(-2f,1.0f,0);
         characterSelectable.cursorTarget += transform.position;
     }
 
@@ -75,15 +73,29 @@ public class CharacterGameEntity : MonoBehaviour
                 characterAnimator.Play("battle_idle");
                 break;
             }
-            case (CentralManager.Context.OVERWORLD) :
-            {
-                Debug.Log("some other thing");
-                break;
-            }
+            // this would be where to place behaviour for other contexts / states
         }
     }
     void Update()
     {
+        if (CentralManager.GetStateManager() != null)
+            currentManager = CentralManager.GetStateManager();
+
         GetCorrectContext();
+    }
+    public void UpdateStat(string statistic, int modifier)
+    {
+        switch(statistic) 
+        {
+            case("Health") :
+            {
+                characterData.curHP += modifier;
+                if (characterData.curHP <= 0)
+                    characterData.curHP = 0;
+                if (characterData.curHP > characterData.baseHP)
+                    characterData.curHP = characterData.baseHP;
+                break;
+            }
+        }
     }
 }

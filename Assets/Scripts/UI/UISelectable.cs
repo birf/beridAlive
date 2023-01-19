@@ -11,7 +11,7 @@ public class UISelectable : MonoBehaviour
 
     public IDisplayable displayable;
     public Vector3 cursorTarget; // position in space where a cursor object should move to.
-    public Vector3 initialPosition; // initial position of this selectable. useful for icons that move.
+    public Vector3 initialPosition; // initial position of this selectable. (if applicable)
     public Vector3 targetPosition; // target position of this selectable (if applicable).
     public int cycle = 0; // what cycle this selectable is currently on. 
     public int index = 0; // what index in a list is this selectable currently in?

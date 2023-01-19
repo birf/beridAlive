@@ -14,7 +14,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
 #region Primitives
     public bool isGrounded = true;
     public bool isHit = false;
-    public float moveSpeed = 5.0f;
+    [Range(0.1f,50.0f)] public float moveSpeed = 10.0f;
     int _groundBounces = 5;
     float _gravity = 9.81f;
     float _lerpTime;
@@ -101,7 +101,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     }
     void MoveToInitialPosition()
     {
-        transform.position = Vector3.Lerp(transform.position, startPosition, Time.deltaTime * moveSpeed);
+        transform.position = Vector3.MoveTowards(transform.position, startPosition, Time.deltaTime * moveSpeed);
         if (Vector3.Distance(transform.position,(Vector3)startPosition) < 0.05f)
         {
             isHit = false;

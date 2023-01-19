@@ -9,12 +9,16 @@ public class BattleManager : GameManager
     public List<CharacterGameEntity> playerCharacters = new List<CharacterGameEntity>();
     public List<CharacterGameEntity> enemyCharacters = new List<CharacterGameEntity>();
     public CharacterGameEntity currentActiveCharacter;
-
-    [SerializeField] List<BattleMove> _playerMoveQueueBM = new List<BattleMove>();
+    
+    public Queue<CharacterGameEntity> characterTurnQueue = new Queue<CharacterGameEntity>();
+    
+    [SerializeField] GameObject _relativeGround;
+    [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
 
     public enum BattleManagerState
     {
         DEFAULT,
+        ANALYSIS, // <-- to implement later. this will be the phase between phases to do auxillary tasks (play animations, wait, etc)
         PLAYERTURN,
         PLAYERATTACK,
         ENEMYTURN
@@ -72,50 +76,66 @@ public class BattleManager : GameManager
                 playerCharacters.Add(CharacterGameObjects[i]);
                 CharacterGameObjects[i].characterSelectable.cyclableElements += 1;
             }
+            
             if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.ENEMY)
             {
                 enemyCharacters.Add(CharacterGameObjects[i]);
                 CharacterGameObjects[i].characterSelectable.cyclableElements += 1;
             }
         }
+
+        
+        
+        _relativeGround = FindObjectByName("RelativeGround");
+        
         currentActiveCharacter = playerCharacters[0]; // <-- testing 
+    }
+    GameObject FindObjectByName(string name)
+    {
+        for (int i = 0; i < ChildObjects.Count; i++)
+        {
+            if (ChildObjects[i].name == name)
+                return ChildObjects[i];
+        }
+        return null;
     }
     // Feed the move queue into the battle manager to start attacking.
     public void FeedPlayerMoveQueue(List<BattleMove> playerMoves, CharacterGameEntity targetEnemy)
     {
-        _playerMoveQueueBM = new List<BattleMove>(playerMoves);
-        for (int i = 0; i < _playerMoveQueueBM.Count; i++)
+        _moveQueue = new List<BattleMove>(playerMoves);
+        for (int i = 0; i < _moveQueue.Count; i++)
         {
-            if (_playerMoveQueueBM[i].mainMoveGameObject == null)
+            if (_moveQueue[i].mainMoveGameObject == null)
             {
-                Debug.Log("ERROR : " + _playerMoveQueueBM[i].moveName + " has no hitbox! Aborting.");
+                Debug.Log("ERROR : " + _moveQueue[i].moveName + " has no hitbox! Aborting.");
                 break;
             }
-            _playerMoveQueueBM[i].SetupMainMoveGameObject(targetEnemy,_playerMoveQueueBM[i],this);
-            _playerMoveQueueBM[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
+            _moveQueue[i].SetupMainMoveGameObject(targetEnemy,_moveQueue[i],this);
+            _moveQueue[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
         }
     }
     // start attacking.
     public void StartAttack()
     {
-        _playerMoveQueueBM[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
-        Instantiate(_playerMoveQueueBM[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+        _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
+        _relativeGround.transform.position = transform.position - new Vector3(0,currentActiveCharacter.GetComponent<BoxCollider2D>().size.y,0);
 
-        _playerMoveQueueBM.RemoveAt(0);
+        Instantiate(_moveQueue[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+        _moveQueue.RemoveAt(0);
     }
     public void PlayerAttackSuccess()
     {
-        if (_playerMoveQueueBM.Count == 0)
+        if (_moveQueue.Count == 0)
             Debug.Log("Success!");
         else
         {
-            _playerMoveQueueBM[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
-            Instantiate(_playerMoveQueueBM[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
-            _playerMoveQueueBM.RemoveAt(0);
+            _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
+            Instantiate(_moveQueue[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+            _moveQueue.RemoveAt(0);
         }
     }
     public void PlayerAttackFailure()
     {
-        _playerMoveQueueBM.Clear();
+        _moveQueue.Clear();
     }
 }

@@ -9,7 +9,6 @@ public class ATKScript_Beri_TossUp : ATKScript
         Beri launches her hand and drags opponents inward. Launches Upward.
     */
     [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
-    float _lerpTime;
     int subPhase = 0;
 
     ///<summary>
@@ -18,6 +17,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     public GameObject grabber;
     public BoxCollider2D safeArea;
     public BoxCollider2D grabberHitBox;
+    [Range(1.0f, 25.0f)] public float grabberSpeed = 10.0f;
     
     PrimaryControls controls;
     [SerializeField] LayerMask validLayers;
@@ -51,15 +51,10 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     void GrabberMove()
     {
-        _lerpTime += Time.deltaTime;
-        if (_lerpTime >= speedInverse)
-            _lerpTime = speedInverse;
-        
-        float percentage = _lerpTime/speedInverse;
         if (subPhase == 0)
-            grabber.transform.position = Vector3.Lerp(_initialPosition,targetEnemy.transform.position * 1.5f,percentage);
+            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,targetEnemy.transform.position, grabberSpeed * Time.deltaTime);
         else
-            grabber.transform.position = Vector3.Lerp(_enemyGrabberInitialPosition,_initialPosition * 1.5f,percentage);
+            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,_initialPosition, grabberSpeed * Time.deltaTime);
 
     }
     void FirstPhase()
@@ -77,8 +72,9 @@ public class ATKScript_Beri_TossUp : ATKScript
                 _enemyGrabberInitialPosition = grabber.transform.position;
                 _grabbedEntity.characterBattlePhysics.isGrounded = true;
                 _grabbedEntity.characterBattlePhysics.isHit = false;
-                _lerpTime = 0;
             }
+            else
+                OnFailure();
         }
         if (Vector3.Distance(_initialPosition,grabber.transform.position) > Vector3.Distance(_initialPosition,targetEnemy.transform.position * 1.45f))
             OnFailure();
@@ -107,6 +103,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         if (controls.Battle.Direction.ReadValue<Vector2>().y == 1.0f)
         {
             targetEnemy.characterBattlePhysics.SetVelocity(parentMove.launchVelocity);
+            targetEnemy.UpdateStat("Health",-parentMove.damage);
             _grabbedEntity.transform.parent = null;
             OnSuccess();
             Destroy(gameObject);
@@ -115,7 +112,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     bool EnemyInGrabberBounds()
     {
         // Is the grabber object within bounds of the enemy?
-        int hits = Physics2D.OverlapBoxNonAlloc(grabber.transform.position,grabberHitBox.size,0f,_hitBuffer,validLayers);
+        int hits = Physics2D.OverlapBoxNonAlloc(grabberHitBox.transform.position + (Vector3)grabberHitBox.offset,grabberHitBox.size,0f,_hitBuffer,validLayers);
         if (hits == 0)
             return false;
         int i;
@@ -136,7 +133,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     {
         // Is the grabber object within bounds of the safe area?
 
-        int hits = Physics2D.OverlapBoxNonAlloc(grabber.transform.position,grabberHitBox.size,0f,_hitBuffer);
+        int hits = Physics2D.OverlapBoxNonAlloc(grabberHitBox.transform.position + (Vector3) grabberHitBox.offset,grabberHitBox.size,0f,_hitBuffer);
         if (hits == 0)
             return false;
         int i;
@@ -162,15 +159,18 @@ public class ATKScript_Beri_TossUp : ATKScript
         controls.Disable();
         battleManager.PlayerAttackSuccess();
         targetEnemy.transform.parent = null;
+        base.OnSuccess();
         Destroy(gameObject);
     }
     public override void OnFailure()
     {
-        Debug.Log("uh oh");
-        targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(0,0));
+        
+        if (targetEnemy.characterBattlePhysics.isHit)
+            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(0,0));
         controls.Disable();
         battleManager.PlayerAttackFailure();
         targetEnemy.transform.parent = null;
+        base.OnFailure();
         Destroy(gameObject);
     }
 }

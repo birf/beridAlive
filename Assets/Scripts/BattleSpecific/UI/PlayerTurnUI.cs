@@ -22,8 +22,7 @@ public class PlayerTurnUI : MonoBehaviour
 
     public List<BattleMove> playerMoveQueue = new List<BattleMove>();
     
-    [SerializeField][Range(0.1f,2.0f)] float _uiElementMoveTimeLimit = 0.25f;
-    [SerializeField] float _uiElementMovementTimer = 0f;
+    [SerializeField][Range(1.0f,25.0f)] float _actionIconSpeed = 12.5f;
     [SerializeField][Range(0.1f,2.0f)] float _actionIconXScale = 1.25f;
 
     PrimaryControls controls;
@@ -54,11 +53,6 @@ public class PlayerTurnUI : MonoBehaviour
         // make absolutely sure that there exists a state manager for this object.
         if (CentralManager.GetStateManager() != null)
             battleManager = (BattleManager)CentralManager.GetStateManager();
-        
-        // start incrementing the ui movement counter.
-        _uiElementMovementTimer += Time.deltaTime;
-        if (_uiElementMovementTimer >= _uiElementMoveTimeLimit)
-            _uiElementMovementTimer = _uiElementMoveTimeLimit;
 
         // switch statement for current ui state. 
         switch (_currentState)
@@ -145,7 +139,6 @@ public class PlayerTurnUI : MonoBehaviour
         }
         
         currentActiveUIElements.Clear();
-        _uiElementMovementTimer = 0;
 
         if (playerActionIconDisplayText.IsActive())
             playerActionIconDisplayText.gameObject.SetActive(false); // stop displaying the text under the active icon
@@ -176,7 +169,6 @@ public class PlayerTurnUI : MonoBehaviour
 
         if (controls.Battle.Direction.triggered)
         {
-            _uiElementMovementTimer = 0;
             Navigate((int)-controls.Battle.Direction.ReadValue<Vector2>().x);
         }
         for (int i = 0; i < playerActionIcons.Count; i++)
@@ -217,8 +209,7 @@ public class PlayerTurnUI : MonoBehaviour
                 }
             }
         }
-    }
-    
+    } 
     // initialize action icons. 
     void SetupActionIcons() 
     {
@@ -229,11 +220,9 @@ public class PlayerTurnUI : MonoBehaviour
             playerActionIcons[i].cycle = i;
             playerActionIcons[i].cyclableElements = playerActionIcons.Count;
         }
-        _uiElementMovementTimer = 0;
         playerActionIconDisplayText.gameObject.SetActive(true);
         currentActiveUIElement = playerActionIcons[0];
     }
-
     // smoothly move the player icon at index i to appropriate position. [explicitly for actionselection menu] 
     void SmoothMoveActionIcon(int i) 
     {
@@ -244,19 +233,18 @@ public class PlayerTurnUI : MonoBehaviour
 
         Vector3 targetPosition = icon.initialPosition;
         targetPosition.x = icon.initialPosition.x + _actionIconXScale * (Mathf.Sin((THETA * icon.cycle)/icon.cyclableElements));
-        float percentage = _uiElementMovementTimer/_uiElementMoveTimeLimit;
-        icon.transform.position = Vector2.Lerp(icon.transform.position,targetPosition,percentage);
+        icon.transform.position = Vector2.Lerp(icon.transform.position,targetPosition,Time.deltaTime * _actionIconSpeed);
     }
 #endregion 
 #region AttackMenu Methods
 
     void AttackSelection()
     {
-        int curStamina = battleManager.currentActiveCharacter.characterData.curStamina;
+        int curStamina = battleManager.currentActiveCharacter.characterData.curSTAMINA;
 
         if (_currentState == _playerTurnUIStates[1])
         {
-            staminaBar.staminaCount = battleManager.currentActiveCharacter.characterData.baseStamina;
+            staminaBar.staminaCount = battleManager.currentActiveCharacter.characterData.baseSTAMINA;
             goButton.gameObject.SetActive(true);
             staminaBar.gameObject.SetActive(true);
             staminaBar.targetPosition = transform.position + new Vector3(-10,0,0);
@@ -278,7 +266,6 @@ public class PlayerTurnUI : MonoBehaviour
 
         if (controls.Battle.Direction.triggered)
         {
-            _uiElementMovementTimer = 0;
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
         switch(_currentState)
@@ -297,7 +284,13 @@ public class PlayerTurnUI : MonoBehaviour
                         _currentState = _playerTurnUIStates[5];
                         ClearCurrentSubMenu();
                         for (int i = 0; i < battleManager.enemyCharacters.Count; i++)
+                        {
+                            battleManager.enemyCharacters[i].characterSelectable.cycle = i;
+                            battleManager.enemyCharacters[i].characterSelectable.cyclableElements = battleManager.enemyCharacters.Count;
+                            battleManager.enemyCharacters[i].characterSelectable.index = i;
+                            
                             currentActiveUIElements.Add(battleManager.enemyCharacters[i].characterSelectable);
+                        }
                         currentActiveUIElement = currentActiveUIElements[0];
                     }
                 }
@@ -355,7 +348,6 @@ public class PlayerTurnUI : MonoBehaviour
     {
         if (controls.Battle.Direction.triggered)
         {
-            _uiElementMovementTimer = 0;
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
         switch(_currentState)
@@ -374,7 +366,11 @@ public class PlayerTurnUI : MonoBehaviour
                     _currentState = _playerTurnUIStates[4];
                     for (int i = 0; i < battleManager.playerCharacters.Count; i++)
                     {
-                        currentActiveUIElements.Add(battleManager.playerCharacters[i].characterSelectable);
+                            battleManager.playerCharacters[i].characterSelectable.cycle = i;
+                            battleManager.playerCharacters[i].characterSelectable.cyclableElements = battleManager.playerCharacters.Count;
+                            battleManager.playerCharacters[i].characterSelectable.index = i;
+                            
+                            currentActiveUIElements.Add(battleManager.playerCharacters[i].characterSelectable);
                     }
                     currentActiveUIElement = currentActiveUIElements[0];
                 }
