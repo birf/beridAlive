@@ -42,6 +42,24 @@ public class CharacterGameEntity : MonoBehaviour
         characterSelectable = GetComponent<UISelectable>();
         characterSelectable.isDestroyable = false;
 
+        
+
+        switch(characterData.CharType)
+        {
+            case (CharacterBase.CharacterType.PLAYER) :
+            {
+                gameObject.tag = "Player";
+                gameObject.layer = 7;
+                break;
+            }
+            case(CharacterBase.CharacterType.ENEMY) :
+            {
+                gameObject.tag = "Enemy";
+                gameObject.layer = 8;
+
+                break;
+            }
+        }
 
     }
     // Check current context of the game, and change states accordingly.

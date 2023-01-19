@@ -13,7 +13,27 @@ public class ATKScript : MonoBehaviour
     public CharacterGameEntity targetEnemy;
     public BattleManager battleManager;
 
-    public virtual void BeginMove(){} // MAKE SURE THAT THE MOVE IS PROPERLY INITIALIZED BEFORE CALLING !! May potentially lead to a null reference exception if not done so. 
+    public virtual void BeginMove()
+    {
+        bool flag = false;
+        if (battleManager == null)
+        {
+            Debug.Log("Error : battleManager never initialized! On : " + gameObject.name);
+            flag = true;
+        } 
+        if (targetEnemy == null)
+        {
+            Debug.Log("Error : targetEnemy never initialized! On : " + gameObject.name);
+            flag = true;
+        }
+        if (parentMove == null)
+        {
+            Debug.Log("Error : parentMove never initialized! On : " + gameObject.name);
+            flag = true;
+        }
+        if (flag)
+            Destroy(gameObject);
+    }  
     public virtual void OnSuccess(){}
     public virtual void OnFailure(){}
 }

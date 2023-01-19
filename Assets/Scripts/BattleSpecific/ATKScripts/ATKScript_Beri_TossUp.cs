@@ -8,7 +8,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         Attack script for the move 'Toss Up,' used by Beri.
         Beri launches her hand and drags opponents inward. Launches Upward.
     */
-    public float speed = 1.5f;
+    [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
     float _lerpTime;
     int subPhase = 0;
 
@@ -18,14 +18,14 @@ public class ATKScript_Beri_TossUp : ATKScript
     public GameObject grabber;
     public BoxCollider2D safeArea;
     public BoxCollider2D grabberHitBox;
-    public Vector3 targetEnemyPosition;
     
     PrimaryControls controls;
+    [SerializeField] LayerMask validLayers;
     Vector3 _enemyGrabberInitialPosition;
     Vector3 _initialPosition;
     Vector3 _internalVelocity;
     Collider2D[] _hitBuffer = new Collider2D[3];
-    GameObject _grabbedEntity;
+    CharacterGameEntity _grabbedEntity;
 
     void Awake()
     {
@@ -52,38 +52,42 @@ public class ATKScript_Beri_TossUp : ATKScript
     void GrabberMove()
     {
         _lerpTime += Time.deltaTime;
-        if (_lerpTime >= speed)
-            _lerpTime = speed;
+        if (_lerpTime >= speedInverse)
+            _lerpTime = speedInverse;
         
-        float percentage = _lerpTime/speed;
+        float percentage = _lerpTime/speedInverse;
         if (subPhase == 0)
             grabber.transform.position = Vector3.Lerp(_initialPosition,targetEnemy.transform.position * 1.5f,percentage);
         else
             grabber.transform.position = Vector3.Lerp(_enemyGrabberInitialPosition,_initialPosition * 1.5f,percentage);
+
     }
     void FirstPhase()
     {
         // First phase of the move. Send out the grabber and drag back as player holds enter. 
         // Failure if player hits the button and there is no target. 
-
         if (controls.Battle.Primary.triggered
-            && controls.Battle.Primary.ReadValue<float>() == 1.0f && subPhase == 0)
+            && subPhase == 0)
         {
+
             if (EnemyInGrabberBounds())
             {
                 subPhase++;
                 _grabbedEntity.transform.parent = grabber.transform;
                 _enemyGrabberInitialPosition = grabber.transform.position;
+                _grabbedEntity.characterBattlePhysics.isGrounded = true;
+                _grabbedEntity.characterBattlePhysics.isHit = false;
                 _lerpTime = 0;
             }
         }
+        if (Vector3.Distance(_initialPosition,grabber.transform.position) > Vector3.Distance(_initialPosition,targetEnemy.transform.position * 1.45f))
+            OnFailure();
     }
     void SecondPhase()
     {
         // Second phase of the move. 
         // Drag back the enemy only if the player is still holding onto enter.
-
-        if (controls.Battle.Primary.phase == InputActionPhase.Canceled)
+        if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
         {
             if (EnemyInSafeArea())
             {
@@ -102,8 +106,8 @@ public class ATKScript_Beri_TossUp : ATKScript
 
         if (controls.Battle.Direction.ReadValue<Vector2>().y == 1.0f)
         {
-            // Tester. 
-            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(0.05f,0.2f));
+            targetEnemy.characterBattlePhysics.SetVelocity(parentMove.launchVelocity);
+            _grabbedEntity.transform.parent = null;
             OnSuccess();
             Destroy(gameObject);
         }
@@ -111,7 +115,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     bool EnemyInGrabberBounds()
     {
         // Is the grabber object within bounds of the enemy?
-        int hits = Physics2D.OverlapBoxNonAlloc(grabber.transform.position,grabberHitBox.size,0f,_hitBuffer);
+        int hits = Physics2D.OverlapBoxNonAlloc(grabber.transform.position,grabberHitBox.size,0f,_hitBuffer,validLayers);
         if (hits == 0)
             return false;
         int i;
@@ -119,9 +123,9 @@ public class ATKScript_Beri_TossUp : ATKScript
         {
             if (_hitBuffer[i] != null)
             {
-                if (_hitBuffer[i].tag == "Enemy" && _hitBuffer[i].gameObject == targetEnemy.gameObject)
+                if (_hitBuffer[i].gameObject.layer == 8 && _hitBuffer[i].gameObject == targetEnemy.gameObject)
                 {
-                    _grabbedEntity = targetEnemy.gameObject;
+                    _grabbedEntity = targetEnemy;
                     return true;
                 }
             }
@@ -151,37 +155,22 @@ public class ATKScript_Beri_TossUp : ATKScript
 
     public override void BeginMove()
     {
-        bool flag = false;
-        if (battleManager == null)
-        {
-            Debug.Log("Error : battleManager never initialized! On : " + gameObject.name);
-            flag = true;
-        } 
-        if (targetEnemy == null)
-        {
-            Debug.Log("Error : targetEnemy never initialized! On : " + gameObject.name);
-            flag = true;
-        }
-        if (parentMove == null)
-        {
-            Debug.Log("Error : parentMove never initialized! On : " + gameObject.name);
-            flag = true;
-        }
-        if (flag)
-            Destroy(gameObject);
+        base.BeginMove();
     }
     public override void OnSuccess()
     {
-        // controls.Disable();
-        // battleManager.AdvanceActiveMove();
-        // targetEnemy.transform.parent = null;
-        // Destroy(gameObject);
+        controls.Disable();
+        battleManager.PlayerAttackSuccess();
+        targetEnemy.transform.parent = null;
+        Destroy(gameObject);
     }
     public override void OnFailure()
     {
-        // controls.Disable();
-        // battleManager.PlayerAttackFailure();
-        // targetEnemy.transform.parent = null;
-        // Destroy(gameObject);
+        Debug.Log("uh oh");
+        targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(0,0));
+        controls.Disable();
+        battleManager.PlayerAttackFailure();
+        targetEnemy.transform.parent = null;
+        Destroy(gameObject);
     }
 }

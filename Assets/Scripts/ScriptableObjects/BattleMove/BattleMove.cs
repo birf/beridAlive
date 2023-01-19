@@ -25,7 +25,13 @@ public class BattleMove : ScriptableObject, IDisplayable
     public int staminaCost;
     public string moveName;
     public string moveDescription;
-    
+
+    public void SetupMainMoveGameObject(CharacterGameEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
+    {
+        mainMoveGameObject.GetComponent<ATKScript>().targetEnemy = targetEnemy;
+        mainMoveGameObject.GetComponent<ATKScript>().parentMove = parentMove;
+        mainMoveGameObject.GetComponent<ATKScript>().battleManager = battleManager;
+    }    
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
         sprites = new Sprite[]{moveSpriteSmall};

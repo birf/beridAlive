@@ -26,5 +26,6 @@ MonoBehaviour:
     CharacterName: Dummy but Bad
     CharacterDescription: What a(n evil) dummy!
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}
+  battleHitBoxSize: {x: 3, y: 5}
   characterMoves: []
   characterItems: []

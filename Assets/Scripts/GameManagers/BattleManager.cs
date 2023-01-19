@@ -10,7 +10,7 @@ public class BattleManager : GameManager
     public List<CharacterGameEntity> enemyCharacters = new List<CharacterGameEntity>();
     public CharacterGameEntity currentActiveCharacter;
 
-    List<BattleMove> _playerMoveQueueBM = new List<BattleMove>();
+    [SerializeField] List<BattleMove> _playerMoveQueueBM = new List<BattleMove>();
 
     public enum BattleManagerState
     {
@@ -19,29 +19,37 @@ public class BattleManager : GameManager
         PLAYERATTACK,
         ENEMYTURN
     }
-    public BattleManagerState currentBattleManagerState;
+    public static BattleManagerState CurrentBattleManagerState;
 
-    void Awake()
+    void Start()
     {
-        currentBattleManagerState = BattleManagerState.DEFAULT;
+        CurrentBattleManagerState = BattleManagerState.DEFAULT;
         BattleManagerSetup();
+
         CentralManager.CurrentContext = CentralManager.Context.BATTLE; 
     }
     void Update() 
     {
-        switch (currentBattleManagerState)
+        switch (CurrentBattleManagerState)
         {
             case (BattleManagerState.DEFAULT) :
             {
+                Debug.Log("Default");
                 break;
             }
             case (BattleManagerState.PLAYERTURN) :
             {
+                Debug.Log("PlayerTurn");
                 break;
             }
             case (BattleManagerState.PLAYERATTACK) :
             {
-                Debug.Log("woohoo");
+                Debug.Log("PlayerAttack");
+                break;
+            }
+            case (BattleManagerState.ENEMYTURN) :
+            {
+                Debug.Log("EnemyTurn");
                 break;
             }
         }   
@@ -72,17 +80,42 @@ public class BattleManager : GameManager
         }
         currentActiveCharacter = playerCharacters[0]; // <-- testing 
     }
-
     // Feed the move queue into the battle manager to start attacking.
     public void FeedPlayerMoveQueue(List<BattleMove> playerMoves, CharacterGameEntity targetEnemy)
     {
-        _playerMoveQueueBM = playerMoves;
+        _playerMoveQueueBM = new List<BattleMove>(playerMoves);
         for (int i = 0; i < _playerMoveQueueBM.Count; i++)
         {
-            _playerMoveQueueBM[i].mainMoveGameObject.GetComponent<ATKScript>().targetEnemy = targetEnemy;
-            _playerMoveQueueBM[i].mainMoveGameObject.GetComponent<ATKScript>().parentMove = _playerMoveQueueBM[i] ;
-            _playerMoveQueueBM[i].mainMoveGameObject.GetComponent<ATKScript>().battleManager = this;
+            if (_playerMoveQueueBM[i].mainMoveGameObject == null)
+            {
+                Debug.Log("ERROR : " + _playerMoveQueueBM[i].moveName + " has no hitbox! Aborting.");
+                break;
+            }
+            _playerMoveQueueBM[i].SetupMainMoveGameObject(targetEnemy,_playerMoveQueueBM[i],this);
+            _playerMoveQueueBM[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
         }
-        Debug.Log("woohoo");
+    }
+    // start attacking.
+    public void StartAttack()
+    {
+        _playerMoveQueueBM[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
+        Instantiate(_playerMoveQueueBM[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+
+        _playerMoveQueueBM.RemoveAt(0);
+    }
+    public void PlayerAttackSuccess()
+    {
+        if (_playerMoveQueueBM.Count == 0)
+            Debug.Log("Success!");
+        else
+        {
+            _playerMoveQueueBM[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
+            Instantiate(_playerMoveQueueBM[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+            _playerMoveQueueBM.RemoveAt(0);
+        }
+    }
+    public void PlayerAttackFailure()
+    {
+        _playerMoveQueueBM.Clear();
     }
 }

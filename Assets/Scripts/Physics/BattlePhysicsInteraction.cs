@@ -13,8 +13,11 @@ public class BattlePhysicsInteraction : MonoBehaviour
 
 #region Primitives
     public bool isGrounded = true;
+    public bool isHit = false;
+    public float moveSpeed = 5.0f;
     int _groundBounces = 5;
     float _gravity = 9.81f;
+    float _lerpTime;
     const int MAXGROUNDBOUNCES = 5;
     const float MINMOVEDISTANCE = 0.01f;
 #endregion
@@ -27,7 +30,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     Collider2D[] _collisionBuffer = new Collider2D[3];
     [SerializeField] BoxCollider2D _boxCol;
     [SerializeField] LayerMask _validHits;
-    [SerializeField][Range(0f,5.0f)] float _gravityScale = 1.0f;
+    [SerializeField][Range(0f,5.0f)] float _gravityScale = 2.0f;
 
 #endregion
 
@@ -37,6 +40,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void Awake()
     {
         _boxCol = GetComponent<BoxCollider2D>();
+        _boxCol.size = GetComponent<CharacterGameEntity>().characterScriptable.battleHitBoxSize;
         isGrounded = true;
         startPosition = transform.position;
     }
@@ -48,12 +52,16 @@ public class BattlePhysicsInteraction : MonoBehaviour
         {
             UpdateVelocity();
             CheckCollisions();
+            SetState();
+
         }
         else if (isGrounded)
         {
             _internalVelocity = Vector2.zero; _groundBounces = 0; 
+            SetState();
         }
-        SetState();
+        if (isHit && isGrounded)
+            MoveToInitialPosition();        
     }
     void GetState()
     {
@@ -70,10 +78,12 @@ public class BattlePhysicsInteraction : MonoBehaviour
     }
     void CheckCollisions()
     {
-        int hits = Physics2D.BoxCastNonAlloc(transform.position,_boxCol.size * transform.localScale,0,_internalVelocity, 
+        int hits = Physics2D.BoxCastNonAlloc(transform.position,_boxCol.size,0,_internalVelocity, 
                                                 _hitBuffer, _internalVelocity.magnitude, _validHits);
+        Debug.Log("hits : " + hits);
         if (hits > 0)
         {
+            Debug.Log("Hit");
             _internalVelocity.y = -_internalVelocity.y * 0.5f;
             _internalVelocity.x *= 0.5f;
             _groundBounces++;
@@ -89,9 +99,19 @@ public class BattlePhysicsInteraction : MonoBehaviour
         _internalVelocity.x = BeriMath.Accelerate(_internalVelocity.x,0,2.0f,Time.fixedDeltaTime);
         _internalVelocity.y = BeriMath.Accelerate(_internalVelocity.y,-5.0f,_gravity*_gravityScale,Time.fixedDeltaTime);
     }
+    void MoveToInitialPosition()
+    {
+        transform.position = Vector3.Lerp(transform.position, startPosition, Time.deltaTime * moveSpeed);
+        if (Vector3.Distance(transform.position,(Vector3)startPosition) < 0.05f)
+        {
+            isHit = false;
+            BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ENEMYTURN;
+        }
+    }
     public void SetVelocity(Vector2 inputVelocity)
     {
         isGrounded = false;
-        _internalVelocity = inputVelocity; 
+        isHit = true;
+        _internalVelocity = inputVelocity/10.0f; 
     }
 }

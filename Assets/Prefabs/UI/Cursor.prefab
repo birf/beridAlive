@@ -98,4 +98,4 @@ MonoBehaviour:
   cursorSelectable: {fileID: 0}
   normalScale: {x: 0, y: 0, z: 0}
   flippedScale: {x: 0, y: 0, z: 0}
-  lerpSpeed: 0.25
+  lerpSpeed: 25

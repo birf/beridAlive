@@ -13,8 +13,7 @@ public class UIListEntry : MonoBehaviour
     public TextMeshPro displayNumber;
     public Vector3 offset = new Vector3(-3.5f,0,0);
     public Vector3 targetPosition; 
-    public float lerpSpeed = 1.0f;
-    float _currentLerpTime = 0;
+    [Range(0.1f,50.0f)]public float lerpSpeed = 1.0f;
 
     void Awake()
     {
@@ -31,11 +30,7 @@ public class UIListEntry : MonoBehaviour
         
     void Move() // move this to the correct spot dictated by the offset. 
     {
-        _currentLerpTime += Time.deltaTime;
-        if (_currentLerpTime > lerpSpeed)
-            _currentLerpTime = 0;
-        float percentage = _currentLerpTime/lerpSpeed;
-        transform.position = Vector3.Lerp(transform.position,selectable.targetPosition,percentage);
+        transform.position = Vector3.Lerp(transform.position,selectable.targetPosition, Time.deltaTime * lerpSpeed);
     }
     public void SetDisplayData(IDisplayable data) // set the correct displayable data for each item in the entry. call this first before
                                                   // instantiating the listentry object. 

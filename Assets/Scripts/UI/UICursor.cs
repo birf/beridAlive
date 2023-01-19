@@ -10,7 +10,7 @@ public class UICursor : MonoBehaviour
     public UISelectable cursorSelectable;
     public Vector3 normalScale;
     public Vector3 flippedScale;
-    [SerializeField][Range(0.1f,2.0f)] float lerpSpeed = 0.25f;
+    [SerializeField][Range(0.1f,50.0f)] float lerpSpeed = 0.25f;
     
     Vector3 _targetPositionLastFrame;
     float _currentLerpTime;
@@ -40,16 +40,9 @@ public class UICursor : MonoBehaviour
         }
     }
 
-
     void Move() // move this to the correct spot dictated by the offset. 
     {
-        if (_targetPositionLastFrame != cursorSelectable.cursorTarget)
-            _currentLerpTime = 0;
-        _currentLerpTime += Time.deltaTime;
-        if (_currentLerpTime > lerpSpeed)
-            _currentLerpTime = 0;
-        float percentage = _currentLerpTime/lerpSpeed;
-        transform.position = Vector3.Lerp(transform.position,cursorSelectable.cursorTarget,percentage);
+        transform.position = Vector3.Lerp(transform.position,cursorSelectable.cursorTarget,Time.deltaTime * lerpSpeed);
         _targetPositionLastFrame = cursorSelectable.cursorTarget;
     }
 

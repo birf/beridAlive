@@ -177,7 +177,7 @@ public class PlayerTurnUI : MonoBehaviour
         if (controls.Battle.Direction.triggered)
         {
             _uiElementMovementTimer = 0;
-            Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().x);
+            Navigate((int)-controls.Battle.Direction.ReadValue<Vector2>().x);
         }
         for (int i = 0; i < playerActionIcons.Count; i++)
             SmoothMoveActionIcon(i);
@@ -323,10 +323,14 @@ public class PlayerTurnUI : MonoBehaviour
             {
                 if (controls.Battle.Primary.triggered) // player has selected their moves and is ready to start.
                 {
-                    battleManager.FeedPlayerMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameEntity   >());
-                    battleManager.currentBattleManagerState = BattleManager.BattleManagerState.PLAYERATTACK;
+                    battleManager.FeedPlayerMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameEntity>());
+                    playerMoveQueue.Clear();
+
+                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.PLAYERATTACK;
                     ClearCurrentSubMenu();
                     _currentState = _playerTurnUIStates[6];
+                    
+                    battleManager.StartAttack();
                     gameObject.SetActive(false);
                 }
                 if (controls.Battle.Secondary.triggered) // cancel enemy selection

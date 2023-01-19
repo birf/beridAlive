@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73c63db51cda899488fb164f485464c5, type: 3}
   m_Name: UppercutTest
   m_EditorClassIdentifier: 
-  mainMoveSpawn: {fileID: 0}
-  launchVelocity: {x: 1, y: 0.75, z: 0}
+  mainMoveGameObject: {fileID: 8687983091885852476, guid: d5fcbed975423cf4ca34ed2be3e4a12c, type: 3}
+  launchVelocity: {x: 0.25, y: 3, z: 0}
   animations: {fileID: 0}
   moveSpriteSmall: {fileID: 21300000, guid: 02399c5fb34f91142af6d3a178158354, type: 3}
   damage: 1

@@ -224,7 +224,7 @@ MonoBehaviour:
   displayNumber: {fileID: 755649594956001065}
   offset: {x: -3.5, y: 0, z: 0}
   targetPosition: {x: 1.5, y: 2, z: 0}
-  lerpSpeed: 1
+  lerpSpeed: 25
 --- !u!114 &755649595494121067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,11 +241,13 @@ MonoBehaviour:
   initialPosition: {x: 0, y: 0, z: 0}
   targetPosition: {x: 0, y: 0, z: 0}
   cycle: 2
+  index: 0
   cyclableElements: 3
   isDestroyable: 1
   cursorIsHovering: 0
   canBeDisabled: 1
-  bobbable: 0
+  isSelectable: 1
+  flipCursor: 0
 --- !u!1 &755649596253684939
 GameObject:
   m_ObjectHideFlags: 0

@@ -135,7 +135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9025800730993457629}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.75, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 617106044414298795}
@@ -154,14 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29db638dec2c23a4dbedb1f438e4f9c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentMove: {fileID: 0}
+  parentMove: {fileID: 11400000, guid: dc728c79119b1f147ba3742494ef29f1, type: 2}
   targetEnemy: {fileID: 0}
   battleManager: {fileID: 0}
-  speed: 4
+  speedInverse: 1.5
   grabber: {fileID: 3707467223883067982}
   safeArea: {fileID: 7622847795286983651}
   grabberHitBox: {fileID: 4890829675711959942}
-  targetEnemyPosition: {x: 0, y: 0, z: 0}
+  validLayers:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!61 &7622847795286983651
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -186,5 +188,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.5, y: 5}
+  m_Size: {x: 4, y: 5}
   m_EdgeRadius: 0

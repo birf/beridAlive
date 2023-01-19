@@ -12,7 +12,7 @@ public class StaminaBar : MonoBehaviour
     public int staminaCount = 1;
     public float currentLerpTime = 0f;
 
-    [SerializeField][Range(0.5f,6.0f)] float lerpSpeed = 1.0f;
+    [SerializeField][Range(0.5f,50.0f)] float lerpSpeed = 1.0f;
     [SerializeField] GameObject goButtonObject;
     [SerializeField] TextMeshPro goButtonText;
     [SerializeField] SpriteRenderer goButtonBackground;
@@ -68,10 +68,6 @@ public class StaminaBar : MonoBehaviour
     }
     void Move()
     {
-        currentLerpTime += Time.deltaTime;
-        if (currentLerpTime > lerpSpeed)
-            currentLerpTime = 0;
-        float percentage = currentLerpTime/lerpSpeed;
-        transform.position = Vector3.Lerp(transform.position,targetPosition,percentage);
+        transform.position = Vector3.Lerp(transform.position,targetPosition,Time.deltaTime * lerpSpeed);
     } 
 }

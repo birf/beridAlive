@@ -14,6 +14,7 @@ public class CharacterScriptable : ScriptableObject , IDisplayable
     public Sprite[] characterSprites;
     public CharacterBase characterData;
     public RuntimeAnimatorController charAnimations;
+    public Vector2 battleHitBoxSize;
 
     public List<BattleMove> characterMoves = new List<BattleMove>();
     public List<ItemData> characterItems = new List<ItemData>();
