@@ -278,6 +278,7 @@ public class PlayerTurnUI : MonoBehaviour
                     {
                         playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
                     }
+
                     // player selected moves to perform, select target.
                     if (currentActiveUIElement.gameObject.name == "GO!" && playerMoveQueue.Count > 0) 
                     {
@@ -294,6 +295,7 @@ public class PlayerTurnUI : MonoBehaviour
                         currentActiveUIElement = currentActiveUIElements[0];
                     }
                 }
+                
                 if (controls.Battle.Secondary.triggered)
                 {
                     if (playerMoveQueue.Count > 0)

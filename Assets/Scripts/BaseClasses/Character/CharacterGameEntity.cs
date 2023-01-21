@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(UISelectable))]
+[RequireComponent(typeof(BattlePhysicsInteraction))]
 
 public class CharacterGameEntity : MonoBehaviour
 {
@@ -30,10 +31,13 @@ public class CharacterGameEntity : MonoBehaviour
     // Initialize character data from the character scriptable. 
     void CharacterSetup()
     {
-        characterData = new CharacterBase(characterScriptable);
+        if (characterScriptable != null)
+        {
+            characterData = new CharacterBase(characterScriptable);
+            characterAnimations = characterScriptable.charAnimations;
+        }
         
         characterAnimator = GetComponent<Animator>();
-        characterAnimations = characterScriptable.charAnimations;
         characterAnimator.runtimeAnimatorController = characterAnimations;
 
         // if the character is on the left side or the right, make sure the correct offset is used.

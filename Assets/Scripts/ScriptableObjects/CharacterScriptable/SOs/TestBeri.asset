@@ -32,6 +32,7 @@ MonoBehaviour:
   characterMoves:
   - {fileID: 11400000, guid: dc728c79119b1f147ba3742494ef29f1, type: 2}
   - {fileID: 11400000, guid: 2ed15a36307df374ca4a924c5da83f36, type: 2}
+  - {fileID: 11400000, guid: c9376f264bc6b0a489e66a3a8eb186c0, type: 2}
   characterItems:
   - {fileID: 11400000, guid: 3e3fbf73696bf66438a685cd8739d73d, type: 2}
   - {fileID: 11400000, guid: f1082e0289e004e4d9992423fc492c06, type: 2}

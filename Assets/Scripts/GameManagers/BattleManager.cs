@@ -12,7 +12,7 @@ public class BattleManager : GameManager
     
     public Queue<CharacterGameEntity> characterTurnQueue = new Queue<CharacterGameEntity>();
     
-    [SerializeField] GameObject _relativeGround;
+    [SerializeField] GameObject _relativeGround; // <-- The position of this will need to constantly change to wherever the "floor" is for the current target.
     [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
 
     public enum BattleManagerState

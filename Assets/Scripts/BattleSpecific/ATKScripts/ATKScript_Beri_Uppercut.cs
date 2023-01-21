@@ -58,7 +58,8 @@ public class ATKScript_Beri_Uppercut : ATKScript
         else
         {
             // check to see if enemy is in hitbox this frame.
-            int hits = Physics2D.OverlapBoxNonAlloc(puncher.transform.position + (Vector3)puncher.offset, puncher.size,0f,_hitBuffer,validLayers);
+            int hits = 0;
+            hits = Physics2D.OverlapBoxNonAlloc(puncher.transform.position + (Vector3)puncher.offset, puncher.size,0f,_hitBuffer,validLayers);
             if (hits > 0)
             {
                 for (int i = 0; i < _hitBuffer.Length; i++)

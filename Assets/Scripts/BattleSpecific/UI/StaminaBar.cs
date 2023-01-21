@@ -40,7 +40,10 @@ public class StaminaBar : MonoBehaviour
             goButtonBackground.color = new Color(0,1,0,1);
             goButtonText.color = new Color(1,1,1,1);
         }
-    
+    }
+    void UpdateStaminaBar(int input)
+    {
+        // TODO : Implement this function
     }
     void OnDisable()
     {
@@ -65,6 +68,9 @@ public class StaminaBar : MonoBehaviour
             startingPosition += new Vector3(0, 12 / (float)staminaCount, 0);
             fillBarClones.Add(rend);
         }
+
+        UpdateStaminaBar(staminaCount);
+
     }
     void Move()
     {

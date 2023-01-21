@@ -1,13 +1,11 @@
-using System.Collections.Generic;
 [System.Serializable]
 public class CharacterBase
 {
     /*
         Base class for characters, which includes player, enemies, and NPCs.
-        Only includes character stats. Flavor, such as animations, sprite data, descriptions, etc. are available in the CharacterData class.
-        These numbers are the ones that can be manipulated within the battle, and therefore must be separate from the character scriptable. 
-
-        IMPORTANT : Character game entities should get an instance of this class.
+        Only includes character stats. Flavor, such as animations, sprite data, descriptions, etc. are available in the CharacterScriptable class.
+        These stats are what can be manipulated in battle.
+        IMPORTANT : Character game entities should get an instance of this class from a character scriptable.
 
     */
     public enum CharacterType
@@ -47,6 +45,9 @@ public class CharacterBase
         this.curDEF = baseDef;
         this.curSTAMINA = baseStamina;
     }
+    ///<summary>
+    ///Create a new character class from character scriptable.
+    ///</summary>
     public CharacterBase(CharacterScriptable input)
     {
         CharacterBase inputData = input.characterData;

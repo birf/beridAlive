@@ -36,6 +36,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     void Update()
     {
+        Debug.Log(gameObject.name + " : " + controls.Battle.Primary.phase);
         if (subPhase == 0)
         {
             GrabberMove();
@@ -46,7 +47,7 @@ public class ATKScript_Beri_TossUp : ATKScript
             GrabberMove();
             SecondPhase();
         }
-        else if (subPhase == 2)
+        else if (subPhase >= 2)
             ThirdPhase();
     }
     void GrabberMove()
@@ -61,12 +62,18 @@ public class ATKScript_Beri_TossUp : ATKScript
     {
         // First phase of the move. Send out the grabber and drag back as player holds enter. 
         // Failure if player hits the button and there is no target. 
-        if (controls.Battle.Primary.triggered
-            && subPhase == 0)
-        {
 
+        if (EnemyInGrabberBounds())
+        {
+            grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
+        }
+
+        if (controls.Battle.Primary.triggered && subPhase == 0)
+        {
             if (EnemyInGrabberBounds())
             {
+                grabber.GetComponent<SpriteRenderer>().color = Color.red; // <-- tester.
+                grabber.transform.position = targetEnemy.transform.position;
                 subPhase++;
                 _grabbedEntity.transform.parent = grabber.transform;
                 _enemyGrabberInitialPosition = grabber.transform.position;
@@ -76,13 +83,17 @@ public class ATKScript_Beri_TossUp : ATKScript
             else
                 OnFailure();
         }
-        if (Vector3.Distance(_initialPosition,grabber.transform.position) > Vector3.Distance(_initialPosition,targetEnemy.transform.position * 1.45f))
+        if (Vector3.Distance(grabber.transform.position,targetEnemy.transform.position ) < 0.01f && subPhase == 0)
             OnFailure();
     }
     void SecondPhase()
     {
         // Second phase of the move. 
         // Drag back the enemy only if the player is still holding onto enter.
+        if (EnemyInSafeArea())
+        {
+            grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
+        }
         if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
         {
             if (EnemyInSafeArea())
@@ -93,8 +104,18 @@ public class ATKScript_Beri_TossUp : ATKScript
                 Destroy(grabber); 
             }
             else
+            {
+                // player let go too early or late, drop enemy
+                targetEnemy.characterBattlePhysics.isHit = true;
                 OnFailure();
-        }            
+            }
+        }
+        // player reeled in enemy too close.
+        if (Vector3.Distance(grabber.transform.position, _initialPosition) < 0.01f)
+        {
+            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(-1f,-0.5f));
+            OnFailure();
+        }       
     }
     void ThirdPhase()
     {
@@ -166,7 +187,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     {
         
         if (targetEnemy.characterBattlePhysics.isHit)
-            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(0,0));
+            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(-1f,0));
         controls.Disable();
         battleManager.PlayerAttackFailure();
         targetEnemy.transform.parent = null;

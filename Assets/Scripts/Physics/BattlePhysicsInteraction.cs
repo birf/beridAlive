@@ -4,6 +4,7 @@ using UnityEngine;
 using BeriUtils;
 
 [RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(CharacterGameEntity))]
 public class BattlePhysicsInteraction : MonoBehaviour
 {
 
@@ -18,12 +19,13 @@ public class BattlePhysicsInteraction : MonoBehaviour
     int _groundBounces = 5;
     float _gravity = 9.81f;
     float _lerpTime;
-    const int MAXGROUNDBOUNCES = 5;
+    const int MAXGROUNDBOUNCES = 3;
     const float MINMOVEDISTANCE = 0.01f;
 #endregion
 
 #region Classes and Structs
     public Vector2 startPosition = new Vector2();
+    CharacterGameEntity _characterBody;
     Vector2 _internalPosition = new Vector2();    
     Vector2 _internalVelocity = new Vector2();
     RaycastHit2D[] _hitBuffer = new RaycastHit2D[5];
@@ -40,7 +42,9 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void Awake()
     {
         _boxCol = GetComponent<BoxCollider2D>();
-        _boxCol.size = GetComponent<CharacterGameEntity>().characterScriptable.battleHitBoxSize;
+        _characterBody = GetComponent<CharacterGameEntity>();
+        if (_characterBody.characterScriptable != null)
+            _boxCol.size = _characterBody.characterScriptable.battleHitBoxSize;
         isGrounded = true;
         startPosition = transform.position;
     }
@@ -80,10 +84,8 @@ public class BattlePhysicsInteraction : MonoBehaviour
     {
         int hits = Physics2D.BoxCastNonAlloc(transform.position,_boxCol.size,0,_internalVelocity, 
                                                 _hitBuffer, _internalVelocity.magnitude, _validHits);
-        Debug.Log("hits : " + hits);
         if (hits > 0)
         {
-            Debug.Log("Hit");
             _internalVelocity.y = -_internalVelocity.y * 0.5f;
             _internalVelocity.x *= 0.5f;
             _groundBounces++;
