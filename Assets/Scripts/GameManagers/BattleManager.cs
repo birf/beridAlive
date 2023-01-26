@@ -13,13 +13,13 @@ public class BattleManager : GameManager
     public List<CharacterGameBattleEntity> playerCharacters = new List<CharacterGameBattleEntity>();
     public List<CharacterGameBattleEntity> enemyCharacters = new List<CharacterGameBattleEntity>();
     public CharacterGameBattleEntity currentActiveCharacter;
-    public CharacterGameBattleEntity currentTargetCharacter;    
+    public CharacterGameBattleEntity currentTargetCharacter;
     public static BattleManagerState CurrentBattleManagerState;
 
     Timer timer = new Timer(1); // <-- timer currently just used for testing. 
     [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
     [SerializeField] GameObject _PlayerUI;
-    
+
     public enum BattleManagerState
     {
         DEFAULT,
@@ -33,46 +33,46 @@ public class BattleManager : GameManager
     {
         CurrentBattleManagerState = BattleManagerState.DEFAULT;
         BattleManagerSetup();
-        CentralManager.CurrentContext = CentralManager.Context.BATTLE; 
+        CentralManager.CurrentContext = CentralManager.Context.BATTLE;
     }
-    void Update() 
+    void Update()
     {
         switch (CurrentBattleManagerState)
         {
-            case (BattleManagerState.DEFAULT) :
-            {
-                Debug.Log("Default");
-                break;
-            }
-            case (BattleManagerState.ANALYSIS) :
-            {
-                AnaylizeGameState();
-                Debug.Log("Analysis");
-                break;
-            }
-            case (BattleManagerState.PLAYERTURN) :
-            {
-                EnablePlayerUI();
-                Debug.Log("PlayerTurn");
-                break;
-            }
-            case (BattleManagerState.PLAYERATTACK) :
-            {
-                Debug.Log("PlayerAttack");
-                break;
-            }
-            case (BattleManagerState.ENEMYTURN) :
-            {
-                EnemyTurnState();
-                Debug.Log("EnemyTurn");
-                break;
-            }
+            case (BattleManagerState.DEFAULT):
+                {
+                    Debug.Log("Default");
+                    break;
+                }
+            case (BattleManagerState.ANALYSIS):
+                {
+                    AnaylizeGameState();
+                    Debug.Log("Analysis");
+                    break;
+                }
+            case (BattleManagerState.PLAYERTURN):
+                {
+                    EnablePlayerUI();
+                    Debug.Log("PlayerTurn");
+                    break;
+                }
+            case (BattleManagerState.PLAYERATTACK):
+                {
+                    Debug.Log("PlayerAttack");
+                    break;
+                }
+            case (BattleManagerState.ENEMYTURN):
+                {
+                    EnemyTurnState();
+                    Debug.Log("EnemyTurn");
+                    break;
+                }
         }
     }
 
     void EnablePlayerUI()
     {
-        if(_PlayerUI)
+        if (_PlayerUI)
         {
             _PlayerUI.SetActive(true);
         }
@@ -86,8 +86,8 @@ public class BattleManager : GameManager
         for (int i = 0; i < CharacterGameObjects.Count; i++)
         {
             // character is dead.
-            if (CharacterGameObjects[i].characterData.curHP <= 0 && 
-                    CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY) 
+            if (CharacterGameObjects[i].characterData.curHP <= 0 &&
+                    CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
             { flag = true; CharacterGameObjects[i].KillCharacterInBattle(); Debug.Log("I killed you, HA!"); break; }
 
             // a character has been hit and is either in hitstun or recovering from it.
@@ -101,31 +101,35 @@ public class BattleManager : GameManager
     void EnemyTurnState()
     {
         // make sure the current active character is an enemy.
+        Debug.Log(9);
         if (currentActiveCharacter != null && currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
         {
             currentActiveCharacter.GetComponent<BasicEnemyAI>().Execute();
         }
+
+
+
     }
     // initialize all entities and values in scene.
     void BattleManagerSetup()
     {
         CentralManager.SetStateManager(this);
-        CharacterGameObjects = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>()); 
-        
+        CharacterGameObjects = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
+
         for (int i = 0; i < CharacterGameObjects.Count; i++)
         {
             // if the character type is the player, setup their moves and items. 
             CharacterGameObjects[i].characterSelectable.isDestroyable = false;
             CharacterGameObjects[i].characterSelectable.canBeDisabled = false;
 
-            if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.PLAYER) 
+            if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
             {
                 playerItems = new List<ItemData>(CharacterGameObjects[i].characterScriptable.characterItems);
                 playerMoves = new List<BattleMove>(CharacterGameObjects[i].characterScriptable.characterMoves);
                 playerCharacters.Add(CharacterGameObjects[i]);
                 CharacterGameObjects[i].characterSelectable.cyclableElements += 1;
             }
-            
+
             if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.ENEMY)
             {
                 enemyCharacters.Add(CharacterGameObjects[i]);
@@ -141,24 +145,24 @@ public class BattleManager : GameManager
     }
     void DetermineStateBasedOnActiveCharacter()
     {
-        switch(currentActiveCharacter.characterData.CharType) 
+        switch (currentActiveCharacter.characterData.CharType)
         {
-            case (CharacterBase.CharacterType.ENEMY) :
-            {   CurrentBattleManagerState = BattleManagerState.ENEMYTURN; break; }
-            
-            case (CharacterBase.CharacterType.PLAYER) :
-            {   CurrentBattleManagerState = BattleManagerState.PLAYERTURN; break; }
+            case (CharacterBase.CharacterType.ENEMY):
+                { CurrentBattleManagerState = BattleManagerState.ENEMYTURN; break; }
+
+            case (CharacterBase.CharacterType.PLAYER):
+                { CurrentBattleManagerState = BattleManagerState.PLAYERTURN; break; }
         }
     }
-    GameObject FindObjectByName(string name)                                    
-    {                                                                           
-        for (int i = 0; i < ChildObjects.Count; i++)                            
-        {                                                                       
-            if (ChildObjects[i].name == name)                                   
-                return ChildObjects[i];                                         
-        }                                                                       
-        return null;                                                            
-    }               
+    GameObject FindObjectByName(string name)
+    {
+        for (int i = 0; i < ChildObjects.Count; i++)
+        {
+            if (ChildObjects[i].name == name)
+                return ChildObjects[i];
+        }
+        return null;
+    }
 
     ///<summary>
     ///Feed the battle manager the moves to perform.
@@ -173,7 +177,7 @@ public class BattleManager : GameManager
                 Debug.Log("ERROR : " + _moveQueue[i].moveName + " has no hitbox! Aborting.");
                 break;
             }
-            _moveQueue[i].SetupMainMoveGameObject(targetEnemy,_moveQueue[i],this);
+            _moveQueue[i].SetupMainMoveGameObject(targetEnemy, _moveQueue[i], this);
             _moveQueue[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
         }
     }
@@ -182,7 +186,7 @@ public class BattleManager : GameManager
     {
         _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
 
-        Instantiate(_moveQueue[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+        Instantiate(_moveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
         _moveQueue.RemoveAt(0);
     }
 
@@ -198,11 +202,11 @@ public class BattleManager : GameManager
         else
         {
             _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
-            Instantiate(_moveQueue[0].mainMoveGameObject,currentActiveCharacter.transform.position,Quaternion.identity);
+            Instantiate(_moveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
             _moveQueue.RemoveAt(0);
         }
     }
-    
+
     // when the player fails their move, this function should be called. 
     public void PlayerAttackFailure()
     {
@@ -248,7 +252,7 @@ public class BattleManager : GameManager
         else
         {
             Debug.Log("You Won!");
-            CurrentBattleManagerState = BattleManagerState.DEFAULT; 
+            CurrentBattleManagerState = BattleManagerState.DEFAULT;
         }
 
         timer.SetTimer(1); // tester

@@ -9,7 +9,7 @@ public class ATKScript_Tester_Shoot : ATKScript
     */
 
     [SerializeField] BoxCollider2D _launcherHitbox;
-    [SerializeField][Range(0.1f,20.0f)] float _launcherSpeed;
+    [SerializeField] [Range(0.1f, 20.0f)] float _launcherSpeed;
     Timer _launchTimer = new Timer(1);
     int subPhase = 0;
 
@@ -21,13 +21,13 @@ public class ATKScript_Tester_Shoot : ATKScript
     {
         _launchTimer.Tick(Time.deltaTime);
         if (subPhase == 1)
-            Move();   
+            Move();
     }
     void Move()
     {
-        _launcherHitbox.transform.position = Vector3.MoveTowards(_launcherHitbox.transform.position,targetEnemy.transform.position,
+        _launcherHitbox.transform.position = Vector3.MoveTowards(_launcherHitbox.transform.position, targetEnemy.transform.position,
                                                                         Time.deltaTime * _launcherSpeed);
-        if (Vector3.Distance(_launcherHitbox.transform.position,targetEnemy.transform.position) < 0.01f)
+        if (Vector3.Distance(_launcherHitbox.transform.position, targetEnemy.transform.position) < 0.01f)
         {
             OnSuccess();
             Destroy(gameObject);
@@ -36,9 +36,10 @@ public class ATKScript_Tester_Shoot : ATKScript
     public override void OnSuccess()
     {
         battleManager.AttackSuccess();
+        battleManager.currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
         targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
-        targetEnemy.characterData.UpdateStat("Health",-parentMove.damage);
+        targetEnemy.characterData.UpdateStat("Health", -parentMove.damage);
     }
     void Increment()
-    { subPhase ++; }
+    { subPhase++; }
 }
