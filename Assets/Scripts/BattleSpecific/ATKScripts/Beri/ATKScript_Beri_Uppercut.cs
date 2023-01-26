@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using BeriUtils.Core;
 public class ATKScript_Beri_Uppercut : ATKScript
 {
     public BoxCollider2D puncher;
@@ -12,16 +10,19 @@ public class ATKScript_Beri_Uppercut : ATKScript
     float _timer;
     
     PrimaryControls controls;
+    Timer timer = new Timer(2);
     [SerializeField] LayerMask validLayers;
     Collider2D[] _hitBuffer = new Collider2D[3];
 
     void Awake()
     {
+        timer.OnTimerEnd += OnFailure;
         controls = new PrimaryControls();
         controls.Enable();
     }
-    void Update()
+    protected override void Update()
     {
+        timer.Tick(Time.deltaTime);
         if (!_isPunching)
             FirstPhase();
         else
@@ -67,8 +68,6 @@ public class ATKScript_Beri_Uppercut : ATKScript
                     if (_hitBuffer[i] != null)
                         if( _hitBuffer[i].gameObject.layer == 8 && _hitBuffer[i].gameObject == targetEnemy.gameObject)
                         {
-                            targetEnemy.characterBattlePhysics.SetVelocity(parentMove.launchVelocity);
-                            targetEnemy.UpdateStat("Health", -parentMove.damage);
                             OnSuccess();
                             Destroy(gameObject);
                         }
@@ -90,8 +89,11 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnSuccess()
     {
+        targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
+        targetEnemy.characterData.UpdateStat("Health", -parentMove.damage);
+
         controls.Disable();
-        battleManager.PlayerAttackSuccess();
+        battleManager.AttackSuccess();
         base.OnSuccess();
         Destroy(gameObject);
     }

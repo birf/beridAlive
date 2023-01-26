@@ -6,13 +6,31 @@ public class ATKScript : MonoBehaviour
 {
     /*
         Script from which all battle moves' attack script field should be placed. These scripts are responsible for instantiating the
-        hitboxes required for the move as well as assign animations to the caster, among other features. 
+        hitboxes required for the move as well as assign animations to the caster, among other features.
+
+        
+        IMPORTANT : 
+        When making a new ATKScript, make sure that each Update method (if used) is prefaced by :
+            "protected override void"
+        This is done to inherit any base functionality from this script's update loop. For now it simply checks if at any point the 
+        player times out (i.e. : their target enemy is in recovery ) their move will fail.
+
     */
 
     public BattleMove parentMove;
-    public CharacterGameEntity targetEnemy;
+    public CharacterGameBattleEntity targetEnemy;
     public BattleManager battleManager;
 
+    protected virtual void Update()
+    {
+        StateCheck();
+    }
+    protected void StateCheck()
+    {
+        if (BattleManager.CurrentBattleManagerState != BattleManager.BattleManagerState.PLAYERATTACK &&
+            targetEnemy.characterData.CharType != CharacterBase.CharacterType.PLAYER)
+            OnFailure();
+    }
     public virtual void BeginMove()
     {
         bool flag = false;
@@ -33,10 +51,17 @@ public class ATKScript : MonoBehaviour
         }
         if (flag)
             Destroy(gameObject);
+
+        battleManager.currentTargetCharacter = targetEnemy;
+        
     }  
-    public virtual void OnSuccess(){}
+    public virtual void OnSuccess()
+    {
+        // battleManager.AttackSuccess(); <-- this is currently in a few scripts when it doesn't need to be. 
+        //                                    just call base.OnSuccess() in it's place to avoid confusion.
+    }
     public virtual void OnFailure()
     {
-        BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ENEMYTURN;
+        BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
     }
 }

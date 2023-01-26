@@ -41,9 +41,14 @@ public class StaminaBar : MonoBehaviour
             goButtonText.color = new Color(1,1,1,1);
         }
     }
-    void UpdateStaminaBar(int input)
+    public void UpdateStaminaBar(int input)
     {
-        // TODO : Implement this function
+        for (int i = 0; i < input; i++)
+            fillBarClones[i].color = Color.white;
+        
+        for (int j = input; j < fillBarClones.Count; j++)
+            fillBarClones[j].color = new Color(1,1,1,0.5f);
+
     }
     void OnDisable()
     {
@@ -65,12 +70,11 @@ public class StaminaBar : MonoBehaviour
             SpriteRenderer rend = obj.GetComponent<SpriteRenderer>();
             rend.size = new Vector2(1.333f, 12 / (float)staminaCount);
             rend.sortingOrder = 100;
+            rend.color = new Color(1,1,1,0.5f); // initiallly render each at half opacity.
             startingPosition += new Vector3(0, 12 / (float)staminaCount, 0);
             fillBarClones.Add(rend);
         }
-
         UpdateStaminaBar(staminaCount);
-
     }
     void Move()
     {

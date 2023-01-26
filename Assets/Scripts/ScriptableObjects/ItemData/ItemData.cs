@@ -11,7 +11,7 @@ public class ItemData : ScriptableObject , IDisplayable
     public string itemName;
     public string itemDesc;
     public ItemType itemType;
-    public enum ItemType
+    public enum ItemType // <-- no idea what to use this for yet lmao
     {
         HELPER
     }
@@ -21,5 +21,9 @@ public class ItemData : ScriptableObject , IDisplayable
         sprites = new Sprite[] {itemSpriteSmall};
         ints = new int[] {-1,-1,potency};
         strings = new string[] {itemName,itemDesc};
+    }
+    public void UseItem(CharacterBase character, string effect)
+    {
+        character.UpdateStat(effect, potency);
     }
 }

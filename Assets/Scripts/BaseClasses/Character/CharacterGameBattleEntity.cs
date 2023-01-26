@@ -5,8 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(UISelectable))]
 [RequireComponent(typeof(BattlePhysicsInteraction))]
-
-public class CharacterGameEntity : MonoBehaviour
+public class CharacterGameBattleEntity : MonoBehaviour
 {
     /*
         Class for holding character data read from a CharacterScriptable.
@@ -18,11 +17,11 @@ public class CharacterGameEntity : MonoBehaviour
     public CharacterScriptable characterScriptable; // <-- Whenever default or saved values from character scriptable are needed, use this.
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public UISelectable characterSelectable; // <-- The selectable for this character.
-    public GameManager currentManager;
+    public BattleManager entityBattleManager;
     void Awake()
     {
         CharacterSetup();   
-        GetCorrectContext();
+        characterAnimator.Play("battle_idle");
 
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f,1f,0) : new Vector3(-2f,1.0f,0);
         characterSelectable.cursorTarget += transform.position;
@@ -44,8 +43,6 @@ public class CharacterGameEntity : MonoBehaviour
         characterSelectable = GetComponent<UISelectable>();
         characterSelectable.isDestroyable = false;
 
-        
-
         switch(characterData.CharType)
         {
             case (CharacterBase.CharacterType.PLAYER) :
@@ -63,43 +60,21 @@ public class CharacterGameEntity : MonoBehaviour
             }
         }
 
+        characterBattlePhysics = GetComponent<BattlePhysicsInteraction>();
+
     }
     // Check current context of the game, and change states accordingly.
-    void GetCorrectContext()
-    {
-        switch (CentralManager.CurrentContext)
-        {
-            // testing purposes. just to play test animations.
-            case (CentralManager.Context.BATTLE) :
-            {
-                // testing
-                BattleManager test = (BattleManager)currentManager; // reference the current battle manager under the appropriate type.
-                characterAnimator.Play("battle_idle");
-                break;
-            }
-            // this would be where to place behaviour for other contexts / states
-        }
-    }
     void Update()
     {
         if (CentralManager.GetStateManager() != null)
-            currentManager = CentralManager.GetStateManager();
-
-        GetCorrectContext();
+            entityBattleManager = (BattleManager)CentralManager.GetStateManager();
     }
-    public void UpdateStat(string statistic, int modifier)
+
+    public void KillCharacterInBattle()
     {
-        switch(statistic) 
-        {
-            case("Health") :
-            {
-                characterData.curHP += modifier;
-                if (characterData.curHP <= 0)
-                    characterData.curHP = 0;
-                if (characterData.curHP > characterData.baseHP)
-                    characterData.curHP = characterData.baseHP;
-                break;
-            }
-        }
+        BattleManager b = (BattleManager)entityBattleManager;
+        b.enemyCharacters.Remove(this);
+        b.CharacterGameObjects.Remove(this);
+        Destroy(gameObject); // <-- for now. tester
     }
 }

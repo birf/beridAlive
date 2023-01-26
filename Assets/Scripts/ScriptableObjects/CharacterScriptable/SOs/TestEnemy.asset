@@ -21,13 +21,14 @@ MonoBehaviour:
     baseATK: 1
     curDEF: 0
     baseDEF: 0
-    curSPEED: 1
-    baseSPEED: 1
+    curSPEED: 5
+    baseSPEED: 5
     curSTAMINA: 1
     baseSTAMINA: 1
     CharacterName: Dummy but Bad
     CharacterDescription: What a(n evil) dummy!
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}
   battleHitBoxSize: {x: 3, y: 5}
-  characterMoves: []
+  characterMoves:
+  - {fileID: 11400000, guid: ae101b5bf30722743aa2407c905d881b, type: 2}
   characterItems: []

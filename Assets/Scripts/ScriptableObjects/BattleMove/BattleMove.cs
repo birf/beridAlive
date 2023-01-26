@@ -16,17 +16,16 @@ public class BattleMove : ScriptableObject, IDisplayable
     ///</summary>
     public GameObject mainMoveGameObject;
     ///<summary>
-    ///The launch velocity that this move should send the opponent. (If applicable.)
+    ///The launch velocity that this move should primarily send the opponent. (If applicable.)
     ///</summary>
-    public Vector3 launchVelocity;
-    public RuntimeAnimatorController animations; // <-- to be removed. to circumvent the issue of generality, every enemy gets a fixed, maximum amount of moves.
+    public Vector3 mainLaunchVelocity;
     public Sprite moveSpriteSmall;
     public int damage;
     public int staminaCost;
     public string moveName;
     public string moveDescription;
 
-    public void SetupMainMoveGameObject(CharacterGameEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
+    public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
     {
         mainMoveGameObject.GetComponent<ATKScript>().targetEnemy = targetEnemy;
         mainMoveGameObject.GetComponent<ATKScript>().parentMove = parentMove;

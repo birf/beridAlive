@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using BeriUtils.Core;
+
 public class ATKScript_Beri_FryerBall : ATKScript
 {
     /*
@@ -13,17 +13,17 @@ public class ATKScript_Beri_FryerBall : ATKScript
     [SerializeField] TextMeshPro chargeText;
     [SerializeField] int _charge = 0;
     [SerializeField] int _maxCharge = 110;
-    [SerializeField] float _frameTimer = 0f;
-    [SerializeField] float _secondsTimer = 0f;
-    [SerializeField] float _timeLimit = 3f;
     [Range(1.0f,100.0f)][SerializeField] float _speed = 15.0f;
 
     int subPhase = 0;
     int localDamage = 0;
     PrimaryControls controls;
+    Timer timer;
 
     void Awake()
     {
+        timer = new Timer(3.0f);
+        timer.OnTimerEnd += CheckCharge;
         controls = new PrimaryControls();
         controls.Enable();
     }
@@ -44,7 +44,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
             }
         }
     }
-    void Update()
+    protected override void Update()
     {
         if (controls.Battle.Primary.triggered)
         {
@@ -58,35 +58,30 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     void FirstPhase()
     {
-        _frameTimer += Time.fixedDeltaTime;
-        _secondsTimer += Time.fixedDeltaTime;
-        if (_frameTimer > 2 * Time.fixedDeltaTime)
-        {
-            _charge -= 1;
-            _frameTimer = 0;
-            if (_charge < 0)
-                _charge = 0;
-        }
-        if (_secondsTimer >= _timeLimit)
-        {
-            subPhase++;
-            if (_charge == 0)
-                OnFailure();
-            else if (_charge > 0 && _charge < 50)
-                localDamage = 1;
-            else if (_charge > 50 && _charge < 99)
-                localDamage = parentMove.damage;
-            else
-                localDamage = parentMove.damage + 1;
-        }
+        timer.Tick(Time.fixedDeltaTime); 
+        _charge -= 1;
+        if (_charge < 0)
+            _charge = 0;
+    }
+    void CheckCharge()
+    {
+        subPhase++;
+        if (_charge == 0)
+            OnFailure();
+        else if (_charge > 0 && _charge < 50)
+            localDamage = 1;
+        else if (_charge > 50 && _charge < 99)
+            localDamage = parentMove.damage;
+        else
+            localDamage = parentMove.damage + 1;
     }
     void SecondPhase()
     {
         _fireBall.transform.position = Vector3.MoveTowards(_fireBall.transform.position,targetEnemy.transform.position, _speed * Time.fixedDeltaTime);
         if (Vector3.Distance(_fireBall.transform.position, targetEnemy.transform.position) < 0.01f)
         {
-            targetEnemy.characterBattlePhysics.SetVelocity(parentMove.launchVelocity);
-            targetEnemy.UpdateStat("Health",-localDamage);
+            targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
+            targetEnemy.characterData.UpdateStat("Health", -localDamage);
             OnSuccess();
         }
     }
@@ -97,7 +92,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     public override void OnSuccess()
     {
         controls.Disable();
-        battleManager.PlayerAttackSuccess();
+        battleManager.AttackSuccess();
         base.OnSuccess();
         Destroy(gameObject);
     }

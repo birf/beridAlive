@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: UppercutTest
   m_EditorClassIdentifier: 
   mainMoveGameObject: {fileID: 8687983091885852476, guid: d5fcbed975423cf4ca34ed2be3e4a12c, type: 3}
-  launchVelocity: {x: 0.25, y: 3, z: 0}
-  animations: {fileID: 0}
+  mainLaunchVelocity: {x: 0.5, y: 3, z: 0}
   moveSpriteSmall: {fileID: 21300000, guid: 02399c5fb34f91142af6d3a178158354, type: 3}
   damage: 1
   staminaCost: 1

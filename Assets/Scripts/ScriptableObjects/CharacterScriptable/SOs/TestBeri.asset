@@ -21,10 +21,10 @@ MonoBehaviour:
     baseATK: 1
     curDEF: 0
     baseDEF: 0
-    curSPEED: 2
-    baseSPEED: 2
-    curSTAMINA: 3
-    baseSTAMINA: 3
+    curSPEED: 10
+    baseSPEED: 10
+    curSTAMINA: 10
+    baseSTAMINA: 10
     CharacterName: Beri
     CharacterDescription: Living legend, minus the living. (and the legend)
   charAnimations: {fileID: 9100000, guid: 8b3527a2ef70c8642b2e4cc6ac8643e5, type: 2}

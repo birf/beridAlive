@@ -67,4 +67,23 @@ public class CharacterBase
 
         CharType = inputData.CharType;
     }
+    ///<summary>
+    ///Update the input statistic for this character by the modifier.
+    ///</summary>
+    public void UpdateStat(string statistic, int modifier)
+    {
+        // right now, "Health" is the only stat you can update.
+        switch(statistic) 
+        {
+            case("Health") :
+            {
+                curHP += modifier;
+                if (curHP <= 0)
+                    curHP = 0;
+                if (curHP > baseHP)
+                    curHP = baseHP;
+                break;
+            }
+        }
+    }
 }

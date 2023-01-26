@@ -8,7 +8,7 @@ public class PlayerTurnUI : MonoBehaviour
     /*
         Class for managing the player's UI when it is currently their turn in battle.
     */
-    public Vector3[] listSpawnerOrigins = {new Vector3(1.5f,4.0f,0)}; // offsets for spawning list entries.
+    public Vector3[] listSpawnerOrigins = {new Vector3(1.5f,4.0f,0), new Vector3(2.25f,2.75f,0)}; // offsets for spawning list entries.
     public StaminaBar staminaBar;
     public UISelectable goButton;
     public List<UISelectable> playerActionIcons = new List<UISelectable>();
@@ -24,6 +24,8 @@ public class PlayerTurnUI : MonoBehaviour
     
     [SerializeField][Range(1.0f,25.0f)] float _actionIconSpeed = 12.5f;
     [SerializeField][Range(0.1f,2.0f)] float _actionIconXScale = 1.25f;
+    [SerializeField][Range(0.1f,2.0f)] float _actionIconYScale = 1.25f;
+
 
     PrimaryControls controls;
     const float THETA = 2 * Mathf.PI;
@@ -36,18 +38,22 @@ public class PlayerTurnUI : MonoBehaviour
         "Tactics",                  // 3
         "ItemUseSelection",         // 4
         "AttackTargetSelection",    // 5
-        "NOSTATE"                   // n - 1
+        "NOSTATE"                   // n - 1 : unused
     };
+    [SerializeField] GameObject _ActionIcons;
 
 #region MonoBehaviour Routines
-    void Awake() 
+    void OnEnable() 
     {
         controls = new PrimaryControls();
         controls.Enable();
         SetupActionIcons();
         _currentState = _playerTurnUIStates[0];
     }
-
+    void OnDisable()
+    {
+        DisableCursor();
+    }
     void Update()
     {
         // make absolutely sure that there exists a state manager for this object.
@@ -228,19 +234,24 @@ public class PlayerTurnUI : MonoBehaviour
     {
         UISelectable icon = playerActionIcons[i];
 
-        icon.GetComponent<SpriteRenderer>().sortingOrder = icon.cycle == 0 ? 101 : 100 - icon.cycle;
+        _ActionIcons.transform.position = battleManager.currentActiveCharacter.transform.position + listSpawnerOrigins[1];
+        icon.initialPosition = _ActionIcons.transform.position;
+        
+        icon.GetComponent<SpriteRenderer>().sortingOrder = icon.cycle == 0 ? 101 : 100 - (icon.cycle);
         icon.GetComponent<SpriteRenderer>().color = icon.cycle == 0 ? Color.white : Color.grey;
+        icon.transform.localScale = icon.cycle == 0? new Vector3(0.4f,0.4f,1) : new Vector3(0.35f,0.35f,1);
 
         Vector3 targetPosition = icon.initialPosition;
         targetPosition.x = icon.initialPosition.x + _actionIconXScale * (Mathf.Sin((THETA * icon.cycle)/icon.cyclableElements));
+        targetPosition.y = icon.initialPosition.y + _actionIconYScale * (Mathf.Sin((THETA * icon.cycle)/icon.cyclableElements));
+
         icon.transform.position = Vector2.Lerp(icon.transform.position,targetPosition,Time.deltaTime * _actionIconSpeed);
     }
 #endregion 
 #region AttackMenu Methods
-
     void AttackSelection()
     {
-        int curStamina = battleManager.currentActiveCharacter.characterData.curSTAMINA;
+        ref int curStamina = ref battleManager.currentActiveCharacter.characterData.curSTAMINA;
 
         if (_currentState == _playerTurnUIStates[1])
         {
@@ -254,10 +265,7 @@ public class PlayerTurnUI : MonoBehaviour
         {
             if (staminaBar.gameObject.activeSelf)
             {
-                for (int i = 0; i < staminaBar.fillBarClones.Count; i++) // grey out first
-                    staminaBar.fillBarClones[i].color = new Color(1,1,1,0.5f);
-                for (int j = 0; j < curStamina - playerMoveQueue.Count; j++) // fill in any bars not used yet
-                    staminaBar.fillBarClones[j].color = new Color(1,1,1,1);
+                staminaBar.UpdateStaminaBar(curStamina);
             }
         }
 
@@ -268,17 +276,22 @@ public class PlayerTurnUI : MonoBehaviour
         {
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
+
         switch(_currentState)
         {
             case ("Attack") : // player is selecting what moves they are going to attack with
             {
                 if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                 {
-                    if (currentActiveUIElement.displayable != null && playerMoveQueue.Count < curStamina)
+                    if (currentActiveUIElement.displayable != null) // if this is a valid element and the current stamina level is high enough
                     {
-                        playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
+                        BattleMove current = (BattleMove)currentActiveUIElement.displayable;
+                        if (curStamina - current.staminaCost >= 0)
+                        {
+                            playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
+                            curStamina -= current.staminaCost;
+                        }
                     }
-
                     // player selected moves to perform, select target.
                     if (currentActiveUIElement.gameObject.name == "GO!" && playerMoveQueue.Count > 0) 
                     {
@@ -300,9 +313,11 @@ public class PlayerTurnUI : MonoBehaviour
                 {
                     if (playerMoveQueue.Count > 0)
                     {
+                        curStamina += playerMoveQueue[playerMoveQueue.Count - 1].staminaCost;
                         playerMoveQueue.RemoveAt(playerMoveQueue.Count - 1);
                         if (playerMoveQueue.Count == 0)
                             goButton.isSelectable = false;
+                        
                     }
                     else if (playerMoveQueue.Count == 0)
                     {
@@ -318,7 +333,7 @@ public class PlayerTurnUI : MonoBehaviour
             {
                 if (controls.Battle.Primary.triggered) // player has selected their moves and is ready to start.
                 {
-                    battleManager.FeedPlayerMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameEntity>());
+                    battleManager.FeedMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameBattleEntity>());
                     playerMoveQueue.Clear();
 
                     BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.PLAYERATTACK;
@@ -329,15 +344,18 @@ public class PlayerTurnUI : MonoBehaviour
                     gameObject.SetActive(false);
                 }
                 if (controls.Battle.Secondary.triggered) // cancel enemy selection
-                {
+                {                    
                     _currentState = _playerTurnUIStates[1];
-                    playerMoveQueue.Clear();
+                    
                     ClearCurrentSubMenu();
+                    
                     InstantiateList(new List<IDisplayable>(battleManager.playerMoves),listSpawnerOrigins[0] + transform.position);
-
+                        
+                    for (int i = 0; i < currentActiveUIElements.Count; i++)
+                        currentActiveUIElements[i].cyclableElements += 1;
+                    
                     currentActiveUIElements.Add(goButton);
                     goButton.InitializeValues(currentActiveUIElements.Count - 1,currentActiveUIElements.Count,false,false,true);
-
                     currentActiveUIElement = currentActiveUIElements[0];
                 }
                 break;
@@ -388,6 +406,9 @@ public class PlayerTurnUI : MonoBehaviour
             {
                 if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                 {
+                    ItemData t = (ItemData)currentSelectedItem.displayable;
+                    t.UseItem(battleManager.currentActiveCharacter.characterData,"Health"); // <-- tester
+                    
                     battleManager.playerItems.RemoveAt(currentSelectedItem.index);
                     ClearCurrentSubMenu();
                     _currentState = _playerTurnUIStates[0];

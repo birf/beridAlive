@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using BeriUtils.Core;
 public class ATKScript_Beri_TossUp : ATKScript
 {
     /*
@@ -21,22 +22,21 @@ public class ATKScript_Beri_TossUp : ATKScript
     
     PrimaryControls controls;
     [SerializeField] LayerMask validLayers;
-    Vector3 _enemyGrabberInitialPosition;
     Vector3 _initialPosition;
     Vector3 _internalVelocity;
     Collider2D[] _hitBuffer = new Collider2D[3];
-    CharacterGameEntity _grabbedEntity;
+    Timer timer = new Timer(3);
 
     void Awake()
     {
         _initialPosition = transform.position;
+        timer.OnTimerEnd += OnFailure;
         controls = new PrimaryControls();
         controls.Enable();
         BeginMove();
     }
-    void Update()
+    protected override void Update()
     {
-        Debug.Log(gameObject.name + " : " + controls.Battle.Primary.phase);
         if (subPhase == 0)
         {
             GrabberMove();
@@ -53,7 +53,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     void GrabberMove()
     {
         if (subPhase == 0)
-            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,targetEnemy.transform.position, grabberSpeed * Time.deltaTime);
+            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position, targetEnemy.transform.position, grabberSpeed * Time.deltaTime);
         else
             grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,_initialPosition, grabberSpeed * Time.deltaTime);
 
@@ -75,21 +75,23 @@ public class ATKScript_Beri_TossUp : ATKScript
                 grabber.GetComponent<SpriteRenderer>().color = Color.red; // <-- tester.
                 grabber.transform.position = targetEnemy.transform.position;
                 subPhase++;
-                _grabbedEntity.transform.parent = grabber.transform;
-                _enemyGrabberInitialPosition = grabber.transform.position;
-                _grabbedEntity.characterBattlePhysics.isGrounded = true;
-                _grabbedEntity.characterBattlePhysics.isHit = false;
+                targetEnemy.transform.parent = grabber.transform;
+                targetEnemy.characterBattlePhysics.isGrounded = true;
+                targetEnemy.characterBattlePhysics.isHit = false;
             }
             else
                 OnFailure();
         }
-        if (Vector3.Distance(grabber.transform.position,targetEnemy.transform.position ) < 0.01f && subPhase == 0)
+        if (Vector3.Distance(grabber.transform.position, targetEnemy.transform.position ) < 0.01f && subPhase == 0)
             OnFailure();
     }
     void SecondPhase()
     {
         // Second phase of the move. 
         // Drag back the enemy only if the player is still holding onto enter.
+
+        targetEnemy.characterBattlePhysics.MoveGroundCoordinate(targetEnemy.transform.position.y - 0.5f);
+
         if (EnemyInSafeArea())
         {
             grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
@@ -99,8 +101,8 @@ public class ATKScript_Beri_TossUp : ATKScript
             if (EnemyInSafeArea())
             {
                 subPhase++;  
-                _grabbedEntity.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
-                _grabbedEntity.transform.parent = null;
+                targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
+                targetEnemy.transform.parent = null;
                 Destroy(grabber); 
             }
             else
@@ -110,6 +112,7 @@ public class ATKScript_Beri_TossUp : ATKScript
                 OnFailure();
             }
         }
+
         // player reeled in enemy too close.
         if (Vector3.Distance(grabber.transform.position, _initialPosition) < 0.01f)
         {
@@ -120,12 +123,9 @@ public class ATKScript_Beri_TossUp : ATKScript
     void ThirdPhase()
     {
         // Third phase. Throw up the opponent and deal damage. 
-
+        timer.Tick(Time.deltaTime);
         if (controls.Battle.Direction.ReadValue<Vector2>().y == 1.0f)
         {
-            targetEnemy.characterBattlePhysics.SetVelocity(parentMove.launchVelocity);
-            targetEnemy.UpdateStat("Health",-parentMove.damage);
-            _grabbedEntity.transform.parent = null;
             OnSuccess();
             Destroy(gameObject);
         }
@@ -142,10 +142,7 @@ public class ATKScript_Beri_TossUp : ATKScript
             if (_hitBuffer[i] != null)
             {
                 if (_hitBuffer[i].gameObject.layer == 8 && _hitBuffer[i].gameObject == targetEnemy.gameObject)
-                {
-                    _grabbedEntity = targetEnemy;
                     return true;
-                }
             }
         }
         return false;
@@ -177,8 +174,13 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     public override void OnSuccess()
     {
+        targetEnemy.transform.parent = null;
+        targetEnemy.characterData.UpdateStat("Health", -parentMove.damage);
+        targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
+        Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
-        battleManager.PlayerAttackSuccess();
+        battleManager.AttackSuccess();
+        targetEnemy.characterBattlePhysics.MoveGroundCoordinate(t.y - 0.5f);
         targetEnemy.transform.parent = null;
         base.OnSuccess();
         Destroy(gameObject);
@@ -188,6 +190,9 @@ public class ATKScript_Beri_TossUp : ATKScript
         
         if (targetEnemy.characterBattlePhysics.isHit)
             targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(-1f,0));
+        
+        else { targetEnemy.characterBattlePhysics.isHit = true; targetEnemy.characterBattlePhysics.isGrounded = true; }
+        
         controls.Disable();
         battleManager.PlayerAttackFailure();
         targetEnemy.transform.parent = null;
