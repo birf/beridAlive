@@ -80,8 +80,6 @@ public class ATKScript_Beri_FryerBall : ATKScript
         _fireBall.transform.position = Vector3.MoveTowards(_fireBall.transform.position,targetEnemy.transform.position, _speed * Time.fixedDeltaTime);
         if (Vector3.Distance(_fireBall.transform.position, targetEnemy.transform.position) < 0.01f)
         {
-            targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
-            targetEnemy.characterData.UpdateStat("Health", -localDamage);
             OnSuccess();
         }
     }
@@ -91,9 +89,9 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     public override void OnSuccess()
     {
-        controls.Disable();
-        battleManager.AttackSuccess();
         base.OnSuccess();
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, localDamage);
+        controls.Disable();
         Destroy(gameObject);
     }
     public override void OnFailure()

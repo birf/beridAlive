@@ -21,8 +21,8 @@ MonoBehaviour:
     baseATK: 1
     curDEF: 0
     baseDEF: 0
-    curSPEED: 5
-    baseSPEED: 5
+    curSPEED: 4
+    baseSPEED: 4
     curSTAMINA: 1
     baseSTAMINA: 1
     CharacterName: Dummy but Bad

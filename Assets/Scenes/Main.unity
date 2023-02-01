@@ -445,7 +445,7 @@ MonoBehaviour:
   characterScriptable: {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
   characterBattlePhysics: {fileID: 457918389}
   characterSelectable: {fileID: 0}
-  currentManager: {fileID: 0}
+  entityBattleManager: {fileID: 0}
 --- !u!95 &457918387
 Animator:
   serializedVersion: 3
@@ -513,6 +513,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _block: {fileID: 0}
 --- !u!61 &457918390
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -552,6 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyEntity: {fileID: 0}
+  canExecute: 1
 --- !u!1001 &517358760
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -713,11 +715,13 @@ GameObject:
   - component: {fileID: 578470182}
   - component: {fileID: 578470183}
   - component: {fileID: 578470185}
+  - component: {fileID: 578470188}
   - component: {fileID: 578470184}
   - component: {fileID: 578470186}
+  - component: {fileID: 578470187}
   m_Layer: 0
   m_Name: playerCharacter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -818,7 +822,7 @@ MonoBehaviour:
   characterScriptable: {fileID: 11400000, guid: d561331d58a0591458330e0be9fe7201, type: 2}
   characterBattlePhysics: {fileID: 0}
   characterSelectable: {fileID: 0}
-  currentManager: {fileID: 0}
+  entityBattleManager: {fileID: 0}
 --- !u!95 &578470183
 Animator:
   serializedVersion: 3
@@ -863,6 +867,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _block: {fileID: 0}
 --- !u!61 &578470185
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -912,6 +917,45 @@ MonoBehaviour:
   canBeDisabled: 1
   isSelectable: 1
   flipCursor: 1
+--- !u!114 &578470187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578470179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f68269c602b34fb4a6a18f745eb9ea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownDuration: 1
+  blockDuration: 0.5
+  parryOpeningTime: 0.25
+  currentBlockState: 0
+  characterBody: {fileID: 0}
+  idleColor: {r: 0, g: 1, b: 0.57254905, a: 1}
+--- !u!50 &578470188
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578470179}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &742356306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,6 +1133,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _block: {fileID: 0}
 --- !u!61 &830117884
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1169,7 +1214,7 @@ MonoBehaviour:
   characterScriptable: {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
   characterBattlePhysics: {fileID: 830117883}
   characterSelectable: {fileID: 0}
-  currentManager: {fileID: 0}
+  entityBattleManager: {fileID: 0}
 --- !u!95 &830117887
 Animator:
   serializedVersion: 3
@@ -1253,6 +1298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyEntity: {fileID: 0}
+  canExecute: 1
 --- !u!1 &1181676627
 GameObject:
   m_ObjectHideFlags: 0

@@ -116,7 +116,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         // player reeled in enemy too close.
         if (Vector3.Distance(grabber.transform.position, _initialPosition) < 0.01f)
         {
-            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(-1f,-0.5f));
+            targetEnemy.characterBattlePhysics.HitTarget(new Vector2(-1f,-0.5f), 0);
             OnFailure();
         }       
     }
@@ -175,21 +175,19 @@ public class ATKScript_Beri_TossUp : ATKScript
     public override void OnSuccess()
     {
         targetEnemy.transform.parent = null;
-        targetEnemy.characterData.UpdateStat("Health", -parentMove.damage);
-        targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
-        battleManager.AttackSuccess();
+        base.OnSuccess();
         targetEnemy.characterBattlePhysics.MoveGroundCoordinate(t.y - 0.5f);
         targetEnemy.transform.parent = null;
-        base.OnSuccess();
         Destroy(gameObject);
     }
     public override void OnFailure()
     {
         
         if (targetEnemy.characterBattlePhysics.isHit)
-            targetEnemy.characterBattlePhysics.SetVelocity(new Vector2(-1f,0));
+            targetEnemy.characterBattlePhysics.HitTarget(new Vector2(-1f,0),0);
         
         else { targetEnemy.characterBattlePhysics.isHit = true; targetEnemy.characterBattlePhysics.isGrounded = true; }
         

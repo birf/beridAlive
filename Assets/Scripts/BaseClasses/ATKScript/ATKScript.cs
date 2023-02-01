@@ -57,8 +57,7 @@ public class ATKScript : MonoBehaviour
     }  
     public virtual void OnSuccess()
     {
-        // battleManager.AttackSuccess(); <-- this is currently in a few scripts when it doesn't need to be. 
-        //                                    just call base.OnSuccess() in it's place to avoid confusion.
+        battleManager.AttackSuccess();
     }
     public virtual void OnFailure()
     {

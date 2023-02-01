@@ -22,6 +22,8 @@ public class ItemData : ScriptableObject , IDisplayable
         ints = new int[] {-1,-1,potency};
         strings = new string[] {itemName,itemDesc};
     }
+
+    // TODO : Make it so that the player can't use items if it isn't necessary to do so. 
     public void UseItem(CharacterBase character, string effect)
     {
         character.UpdateStat(effect, potency);

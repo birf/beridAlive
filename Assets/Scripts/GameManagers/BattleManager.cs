@@ -16,7 +16,6 @@ public class BattleManager : GameManager
     public CharacterGameBattleEntity currentTargetCharacter;
     public static BattleManagerState CurrentBattleManagerState;
 
-    Timer timer = new Timer(1); // <-- timer currently just used for testing. 
     [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
     [SerializeField] GameObject _PlayerUI;
 
@@ -41,19 +40,16 @@ public class BattleManager : GameManager
         {
             case (BattleManagerState.DEFAULT):
                 {
-                    Debug.Log("Default");
                     break;
                 }
             case (BattleManagerState.ANALYSIS):
                 {
                     AnaylizeGameState();
-                    Debug.Log("Analysis");
                     break;
                 }
             case (BattleManagerState.PLAYERTURN):
                 {
                     EnablePlayerUI();
-                    Debug.Log("PlayerTurn");
                     break;
                 }
             case (BattleManagerState.PLAYERATTACK):
@@ -64,7 +60,6 @@ public class BattleManager : GameManager
             case (BattleManagerState.ENEMYTURN):
                 {
                     EnemyTurnState();
-                    Debug.Log("EnemyTurn");
                     break;
                 }
         }
@@ -96,19 +91,16 @@ public class BattleManager : GameManager
             { flag = true; break; }
         }
         if (!flag)
-            GetNextTurn();
+            GetNextTurn(); 
+        
     }
     void EnemyTurnState()
     {
         // make sure the current active character is an enemy.
-        Debug.Log(9);
         if (currentActiveCharacter != null && currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
         {
             currentActiveCharacter.GetComponent<BasicEnemyAI>().Execute();
         }
-
-
-
     }
     // initialize all entities and values in scene.
     void BattleManagerSetup()
@@ -141,7 +133,7 @@ public class BattleManager : GameManager
 
         SetTurnOrder();
 
-        currentActiveCharacter = playerCharacters[0]; // <-- testing. really there should be a little bit of a wait before starting, but this works fine.
+        currentActiveCharacter = CharacterGameObjects[0]; // <-- testing. really there should be a little bit of a wait before starting, but this works fine.
     }
     void DetermineStateBasedOnActiveCharacter()
     {
@@ -199,7 +191,17 @@ public class BattleManager : GameManager
             currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
         }
-        else
+        // if the target character died from the previous move, force an attack chain to succeed, refund the player's stamina
+        else if (_moveQueue.Count > 0 && currentTargetCharacter.characterData.curHP <= 0)
+        {
+            Debug.Log("Forced Success!");
+            for (int i = 0; i < _moveQueue.Count; i++)
+                currentActiveCharacter.characterData.curSTAMINA += _moveQueue[i].staminaCost;
+            currentTargetCharacter = null;
+            CurrentBattleManagerState = BattleManagerState.ANALYSIS;
+            _moveQueue.Clear();
+        }
+        else // feed next move into the queue.
         {
             _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
             Instantiate(_moveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
@@ -213,8 +215,6 @@ public class BattleManager : GameManager
         _moveQueue.Clear();
         CurrentBattleManagerState = BattleManagerState.ANALYSIS;
     }
-
-
     // sort the current player queue and decide the turn order. (selection sort)
     public void SetTurnOrder()
     {
@@ -255,6 +255,5 @@ public class BattleManager : GameManager
             CurrentBattleManagerState = BattleManagerState.DEFAULT;
         }
 
-        timer.SetTimer(1); // tester
     }
 }

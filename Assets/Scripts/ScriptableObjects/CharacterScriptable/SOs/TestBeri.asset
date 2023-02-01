@@ -21,8 +21,8 @@ MonoBehaviour:
     baseATK: 1
     curDEF: 0
     baseDEF: 0
-    curSPEED: 10
-    baseSPEED: 10
+    curSPEED: 6
+    baseSPEED: 6
     curSTAMINA: 10
     baseSTAMINA: 10
     CharacterName: Beri

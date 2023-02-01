@@ -13,15 +13,15 @@ public class CharacterGameBattleEntity : MonoBehaviour
     */
     public Animator characterAnimator;
     public RuntimeAnimatorController characterAnimations; // <-- currently playing character animations. interacts with ^^
-    public CharacterBase characterData; //  <-- Use this when communicating with other gameObjects.
+    public CharacterBase characterData; //  <-- Base character data for this entity. Includes health, atk, etc.
     public CharacterScriptable characterScriptable; // <-- Whenever default or saved values from character scriptable are needed, use this.
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
-    public UISelectable characterSelectable; // <-- The selectable for this character.
-    public BattleManager entityBattleManager;
+    public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
+    public BattleManager entityBattleManager; // <-- reference to the battle manager. 
     void Awake()
     {
         CharacterSetup();   
-        characterAnimator.Play("battle_idle");
+        characterAnimator.Play("battle_idle"); // <-- tester
 
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f,1f,0) : new Vector3(-2f,1.0f,0);
         characterSelectable.cursorTarget += transform.position;

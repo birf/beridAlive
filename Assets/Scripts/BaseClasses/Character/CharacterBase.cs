@@ -1,3 +1,4 @@
+using System;
 [System.Serializable]
 public class CharacterBase
 {
@@ -27,6 +28,7 @@ public class CharacterBase
     public int baseSTAMINA;
     public string CharacterName;
     public string CharacterDescription;
+
 
     ///<summary>
     ///Create a new character class. (Should rarely be called.)
@@ -70,14 +72,14 @@ public class CharacterBase
     ///<summary>
     ///Update the input statistic for this character by the modifier.
     ///</summary>
-    public void UpdateStat(string statistic, int modifier)
+    public void UpdateStat(string statistic, float input)
     {
         // right now, "Health" is the only stat you can update.
         switch(statistic) 
         {
             case("Health") :
             {
-                curHP += modifier;
+                curHP += (int) Math.Floor(input);
                 if (curHP <= 0)
                     curHP = 0;
                 if (curHP > baseHP)

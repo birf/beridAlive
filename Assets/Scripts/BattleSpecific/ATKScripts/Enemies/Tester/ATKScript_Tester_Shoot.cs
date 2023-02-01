@@ -27,18 +27,33 @@ public class ATKScript_Tester_Shoot : ATKScript
     {
         _launcherHitbox.transform.position = Vector3.MoveTowards(_launcherHitbox.transform.position, targetEnemy.transform.position,
                                                                         Time.deltaTime * _launcherSpeed);
-        if (Vector3.Distance(_launcherHitbox.transform.position, targetEnemy.transform.position) < 0.01f)
+        if (CheckCollisions())
         {
+
             OnSuccess();
+            Debug.Log("in first");
             Destroy(gameObject);
         }
     }
+    bool CheckCollisions()
+    {
+        Collider2D[] buffer = new Collider2D[1];
+        int hits = Physics2D.OverlapBoxNonAlloc(_launcherHitbox.transform.position,_launcherHitbox.size,0f,buffer,0x000000e0);
+        if (hits > 0)
+        {
+            return true;
+        }
+        return false;
+    }
     public override void OnSuccess()
     {
-        battleManager.AttackSuccess();
+        base.OnSuccess();
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         battleManager.currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
-        targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
-        targetEnemy.characterData.UpdateStat("Health", -parentMove.damage);
+    }
+    public override void OnFailure()
+    {
+        base.OnFailure();
     }
     void Increment()
     { subPhase++; }

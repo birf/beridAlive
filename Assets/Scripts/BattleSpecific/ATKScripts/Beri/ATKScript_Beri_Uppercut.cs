@@ -89,12 +89,9 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnSuccess()
     {
-        targetEnemy.characterBattlePhysics.SetVelocity(parentMove.mainLaunchVelocity);
-        targetEnemy.characterData.UpdateStat("Health", -parentMove.damage);
-
-        controls.Disable();
-        battleManager.AttackSuccess();
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         base.OnSuccess();
+        controls.Disable();
         Destroy(gameObject);
     }
 }

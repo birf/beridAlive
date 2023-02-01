@@ -948,10 +948,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f68269c602b34fb4a6a18f745eb9ea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownDuration: 2
+  cooldownDuration: 0.5
   blockDuration: 1
-  parryOpeningTime: 0.25
+  parryOpeningTime: 0.5
+  currentBlockType: 0
   currentBlockState: 0
+  characterBody: {fileID: 0}
   idleColor: {r: 0, g: 1, b: 0.57254905, a: 1}
 --- !u!1 &742356306
 GameObject:

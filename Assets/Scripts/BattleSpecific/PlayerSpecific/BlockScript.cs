@@ -1,11 +1,18 @@
 using UnityEngine;
 using BeriUtils.Core;
+
 namespace RPG.Combat
 {
 
     public enum BLOCKSTATE { NO_BLOCK, BLOCK, COOLDOWN };
+    
+    [RequireComponent(typeof(CharacterGameBattleEntity))]
+    [RequireComponent(typeof(Rigidbody2D))]
     public class BlockScript : MonoBehaviour
     {
+        /*
+            Script for allowing the player to block and parry incoming attacks. 
+        */
         [SerializeField] float cooldownDuration;
         [SerializeField] float blockDuration;
 
@@ -13,11 +20,8 @@ namespace RPG.Combat
         private Timer cooldownTimer;
 
         [SerializeField] float parryOpeningTime;
-
-        enum BLOCKTYPE { NO_BLOCK, NORMAL, PARRY }
-
-        [SerializeField] BLOCKTYPE currentBlockType;
         [SerializeField] BLOCKSTATE currentBlockState;
+        [SerializeField] CharacterGameBattleEntity characterBody;
 
         SpriteRenderer spriteRenderer;
 
@@ -50,7 +54,7 @@ namespace RPG.Combat
         //    this.enabled = false;
         //}
 
-        private void Start()
+        private void Awake()
         {
             blockTimer = new Timer(blockDuration);
             cooldownTimer = new Timer(cooldownDuration);
@@ -63,25 +67,25 @@ namespace RPG.Combat
             cooldownTimer.OnTimerEnd += StopCooldown;
 
             spriteRenderer = GetComponent<SpriteRenderer>();
+            characterBody = GetComponent<CharacterGameBattleEntity>();
         }
 
-        private void Cooldown()
+        public void Cooldown()
         {
             currentBlockState = BLOCKSTATE.COOLDOWN;
             spriteRenderer.color = Color.blue;
 
         }
 
-        private void StopCooldown()
+        public void StopCooldown()
         {
             spriteRenderer.color = idleColor;
             blockTimer.SetTimer(blockDuration);
             cooldownTimer.SetTimer(cooldownDuration);
-            currentBlockType = BLOCKTYPE.NO_BLOCK;
             currentBlockState = BLOCKSTATE.NO_BLOCK;
         }
 
-        private void StopBlock(bool hasTakenDamage)
+        public void StopBlock(bool hasTakenDamage)
 
         {
             if (hasTakenDamage)
@@ -92,7 +96,6 @@ namespace RPG.Combat
             {
                 Cooldown();
             }
-
         }
 
         private void ReturnToNormalState()
@@ -100,12 +103,11 @@ namespace RPG.Combat
             spriteRenderer.color = idleColor;
             blockTimer.SetTimer(blockDuration);
             cooldownTimer.SetTimer(cooldownDuration);
-            currentBlockType = BLOCKTYPE.NO_BLOCK;
         }
 
         private void StopBlock()
         {
-            if (currentBlockType == BLOCKTYPE.PARRY || currentBlockType == BLOCKTYPE.NORMAL)
+            if (currentBlockState == BLOCKSTATE.BLOCK)
             {
                 ReturnToNormalState();
             }
@@ -114,23 +116,19 @@ namespace RPG.Combat
                 Cooldown();
                 return;
             }
-
-
         }
 
-        private void DetermineBlockType()
+        public bool DetermineBlockType()
         {
             if (blockTimer.GetRemaingingSeconds() > blockDuration - parryOpeningTime)
             {
-                currentBlockType = BLOCKTYPE.PARRY;
+                return true;
             }
 
             else
             {
-                currentBlockType = BLOCKTYPE.NORMAL;
+                return false;
             }
-
-
         }
 
         private void Update()
@@ -139,10 +137,11 @@ namespace RPG.Combat
             {
                 case BLOCKSTATE.BLOCK:
                     blockTimer.Tick(Time.deltaTime);
+                    characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.BLOCKING;
                     break;
-
                 case BLOCKSTATE.COOLDOWN:
                     cooldownTimer.Tick(Time.deltaTime);
+                    characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
                     break;
             }
 
@@ -153,37 +152,17 @@ namespace RPG.Combat
             }
         }
 
-        private void DetermineDamageOutput(BLOCKTYPE blockType)
-        {
-            switch (blockType)
-            {
-                case BLOCKTYPE.NO_BLOCK:
-                    Debug.Log("Take Full Damage");
-                    break;
-                case BLOCKTYPE.NORMAL:
-                    Debug.Log("Take Half Damage");
-                    break;
-                case BLOCKTYPE.PARRY:
-                    Debug.Log("Take no Damage");
-                    break;
-            }
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            Debug.Log("in second");
             if (collision.CompareTag("enemy_projectile"))
             {
                 if (currentBlockState == BLOCKSTATE.BLOCK)
                 {
                     DetermineBlockType();
                 }
-                DetermineDamageOutput(currentBlockType);
                 StopCooldown();
-
-
             }
         }
-
-
     }
 }
