@@ -1,0 +1,5 @@
+This folder contains the unity project that will demo the user's experience in the overworld part of the game.
+This part contains:
+- an isometric level that uses tile maps & colliders
+- an animated player sprite capable to movement and collision
+- a smooth camera that follows the player with modular limitations
