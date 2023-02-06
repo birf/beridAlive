@@ -186,6 +186,49 @@ Transform:
   m_Father: {fileID: 1945764105}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &228841960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 228841962}
+  - component: {fileID: 228841961}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &228841961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228841960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37375567701b34ad4a33ba8a3a3a7b86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &228841962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228841960}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.40253618, y: 1.4214197, z: -1.7443506}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &231830624
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,6 +556,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _block: {fileID: 0}
 --- !u!61 &457918390
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -866,6 +910,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _block: {fileID: 0}
 --- !u!61 &578470185
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -951,7 +996,6 @@ MonoBehaviour:
   cooldownDuration: 0.5
   blockDuration: 1
   parryOpeningTime: 0.5
-  currentBlockType: 0
   currentBlockState: 0
   characterBody: {fileID: 0}
   idleColor: {r: 0, g: 1, b: 0.57254905, a: 1}
@@ -1132,6 +1176,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _block: {fileID: 0}
 --- !u!61 &830117884
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -20,10 +20,10 @@ public class CharacterGameBattleEntity : MonoBehaviour
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
     void Awake()
     {
-        CharacterSetup();   
+        CharacterSetup();
         characterAnimator.Play("battle_idle"); // <-- tester
 
-        characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f,1f,0) : new Vector3(-2f,1.0f,0);
+        characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
         characterSelectable.cursorTarget += transform.position;
     }
 
@@ -35,7 +35,7 @@ public class CharacterGameBattleEntity : MonoBehaviour
             characterData = new CharacterBase(characterScriptable);
             characterAnimations = characterScriptable.charAnimations;
         }
-        
+
         characterAnimator = GetComponent<Animator>();
         characterAnimator.runtimeAnimatorController = characterAnimations;
 
@@ -43,21 +43,21 @@ public class CharacterGameBattleEntity : MonoBehaviour
         characterSelectable = GetComponent<UISelectable>();
         characterSelectable.isDestroyable = false;
 
-        switch(characterData.CharType)
+        switch (characterData.CharType)
         {
-            case (CharacterBase.CharacterType.PLAYER) :
-            {
-                gameObject.tag = "Player";
-                gameObject.layer = 7;
-                break;
-            }
-            case(CharacterBase.CharacterType.ENEMY) :
-            {
-                gameObject.tag = "Enemy";
-                gameObject.layer = 8;
+            case (CharacterBase.CharacterType.PLAYER):
+                {
+                    gameObject.tag = "Player";
+                    gameObject.layer = 7;
+                    break;
+                }
+            case (CharacterBase.CharacterType.ENEMY):
+                {
+                    gameObject.tag = "Enemy";
+                    gameObject.layer = 8;
 
-                break;
-            }
+                    break;
+                }
         }
 
         characterBattlePhysics = GetComponent<BattlePhysicsInteraction>();
@@ -72,6 +72,7 @@ public class CharacterGameBattleEntity : MonoBehaviour
 
     public void KillCharacterInBattle()
     {
+        Debug.Log("I am dead");
         BattleManager b = (BattleManager)entityBattleManager;
         b.enemyCharacters.Remove(this);
         b.CharacterGameObjects.Remove(this);

@@ -91,8 +91,8 @@ public class BattleManager : GameManager
             { flag = true; break; }
         }
         if (!flag)
-            GetNextTurn(); 
-        
+            GetNextTurn();
+
     }
     void EnemyTurnState()
     {
@@ -185,6 +185,7 @@ public class BattleManager : GameManager
     // the player has successfully performed a move/portion of their move. advance to next move (if any)
     public void AttackSuccess()
     {
+        Debug.Log(currentTargetCharacter.characterData.curHP);
         if (_moveQueue.Count == 0)
         {
             Debug.Log("Success!");

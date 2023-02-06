@@ -5,7 +5,7 @@ namespace RPG.Combat
 {
 
     public enum BLOCKSTATE { NO_BLOCK, BLOCK, COOLDOWN };
-    
+
     [RequireComponent(typeof(CharacterGameBattleEntity))]
     [RequireComponent(typeof(Rigidbody2D))]
     public class BlockScript : MonoBehaviour
@@ -133,22 +133,28 @@ namespace RPG.Combat
 
         private void Update()
         {
-            switch (currentBlockState)
-            {
-                case BLOCKSTATE.BLOCK:
-                    blockTimer.Tick(Time.deltaTime);
-                    characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.BLOCKING;
-                    break;
-                case BLOCKSTATE.COOLDOWN:
-                    cooldownTimer.Tick(Time.deltaTime);
-                    characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
-                    break;
-            }
+
 
 
             if (controls.Battle.Primary.triggered && BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN)
             {
                 Block();
+                switch (currentBlockState)
+                {
+                    case BLOCKSTATE.BLOCK:
+                        blockTimer.Tick(Time.deltaTime);
+                        characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.BLOCKING;
+                        break;
+                    case BLOCKSTATE.COOLDOWN:
+                        cooldownTimer.Tick(Time.deltaTime);
+                        characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
+                        break;
+                }
+
+            }
+            else
+            {
+                characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
             }
         }
 
