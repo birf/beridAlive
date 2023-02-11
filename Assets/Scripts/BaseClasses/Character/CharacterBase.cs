@@ -70,7 +70,7 @@ public class CharacterBase
         CharType = inputData.CharType;
     }
     ///<summary>
-    ///Update the input statistic for this character by the modifier.
+    ///Update the input statistic for this character by the input float.
     ///</summary>
     public void UpdateStat(string statistic, float input)
     {
@@ -79,7 +79,8 @@ public class CharacterBase
         {
             case("Health") :
             {
-                curHP += (int) Math.Floor(input);
+                // if the input is negative, assume that this is an attack, add it to curHP - curDEF. else, just add.
+                curHP += input < 0 ? ((int) Math.Floor(input)) + curDEF : (int)Math.Floor(input); 
                 if (curHP <= 0)
                     curHP = 0;
                 if (curHP > baseHP)

@@ -25,8 +25,11 @@ public class ATKScript : MonoBehaviour
     {
         StateCheck();
     }
+    protected virtual void LateUpdate()
+    {}
     protected void StateCheck()
     {
+        // tbh idk why this is here.
         if (BattleManager.CurrentBattleManagerState != BattleManager.BattleManagerState.PLAYERATTACK &&
             targetEnemy.characterData.CharType != CharacterBase.CharacterType.PLAYER)
             OnFailure();

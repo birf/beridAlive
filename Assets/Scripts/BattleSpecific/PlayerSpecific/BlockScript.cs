@@ -1,174 +1,135 @@
 using UnityEngine;
 using BeriUtils.Core;
 
-namespace RPG.Combat
+
+[RequireComponent(typeof(CharacterGameBattleEntity))]
+public class BlockScript : MonoBehaviour
 {
 
-    public enum BLOCKSTATE { NO_BLOCK, BLOCK, COOLDOWN };
+    [SerializeField] CharacterGameBattleEntity _characterBody;
+    PrimaryControls controls;
+    Timer _blockTimer;
+    Timer _parryTimer;
+    Timer _cooldownTimer;
 
-    [RequireComponent(typeof(CharacterGameBattleEntity))]
-    [RequireComponent(typeof(Rigidbody2D))]
-    public class BlockScript : MonoBehaviour
+    [SerializeField] float _blockDuration; // how long the block state lasts
+    [SerializeField] float _parryDuration; // how long the parry duration lasts.
+    [SerializeField] float _cooldownDuration; // how long the cooldown lasts.
+    [SerializeField] LayerMask _validLayers;
+
+    enum BlockPhase 
     {
-        /*
-            Script for allowing the player to block and parry incoming attacks. 
-        */
-        [SerializeField] float cooldownDuration;
-        [SerializeField] float blockDuration;
+        NONE,
+        PARRY,
+        BLOCK,
+        COOLDOWN
+    }
+    [SerializeField] BlockPhase _currentBlockPhase;
+    SpriteRenderer _test;
+    void OnEnable()
+    {
+        controls = new PrimaryControls();
+        controls.Enable();
+        _characterBody = GetComponent<CharacterGameBattleEntity>();
 
-        private Timer blockTimer;
-        private Timer cooldownTimer;
+        _blockTimer = new Timer(_blockDuration);
+        _parryTimer = new Timer(_parryDuration);
+        _cooldownTimer = new Timer(_cooldownDuration);
 
-        [SerializeField] float parryOpeningTime;
-        [SerializeField] BLOCKSTATE currentBlockState;
-        [SerializeField] CharacterGameBattleEntity characterBody;
+        _blockTimer.OnTimerEnd += ChangeState;
+        _parryTimer.OnTimerEnd += ChangeState;
+        _cooldownTimer.OnTimerEnd += ChangeState;
 
-        SpriteRenderer spriteRenderer;
+        _test = GetComponent<SpriteRenderer>();
+    }
 
-        [SerializeField] Color idleColor;
-
-        PrimaryControls controls;
-
-
-
-        void OnEnable()
+    void Update()
+    {
+        // only ever have this script function if the current state is "ENEMYTURN".
+        if (BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN)
         {
-            controls = new PrimaryControls();
-            controls.Enable();
-        }
-        //void OnDisable()
-        //{
-        //    DisableCursor();
-        //}
 
-
-        public void Block()
-        {
-            spriteRenderer.color = Color.yellow;
-            currentBlockState = BLOCKSTATE.BLOCK;
-            //GetComponent<ActionScheduler>().StartAction(this);
-        }
-
-        //public void Cancel()
-        //{
-        //    this.enabled = false;
-        //}
-
-        private void Awake()
-        {
-            blockTimer = new Timer(blockDuration);
-            cooldownTimer = new Timer(cooldownDuration);
-
-
-            blockTimer.OnTimerStart += Block;
-            blockTimer.OnTimerEnd += StopBlock;
-
-            cooldownTimer.OnTimerStart += Cooldown;
-            cooldownTimer.OnTimerEnd += StopCooldown;
-
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            characterBody = GetComponent<CharacterGameBattleEntity>();
-        }
-
-        public void Cooldown()
-        {
-            currentBlockState = BLOCKSTATE.COOLDOWN;
-            spriteRenderer.color = Color.blue;
-
-        }
-
-        public void StopCooldown()
-        {
-            spriteRenderer.color = idleColor;
-            blockTimer.SetTimer(blockDuration);
-            cooldownTimer.SetTimer(cooldownDuration);
-            currentBlockState = BLOCKSTATE.NO_BLOCK;
-        }
-
-        public void StopBlock(bool hasTakenDamage)
-
-        {
-            if (hasTakenDamage)
+            if (CheckCollisions())
             {
-                ReturnToNormalState();
-            }
-            else
-            {
-                Cooldown();
-            }
-        }
-
-        private void ReturnToNormalState()
-        {
-            spriteRenderer.color = idleColor;
-            blockTimer.SetTimer(blockDuration);
-            cooldownTimer.SetTimer(cooldownDuration);
-        }
-
-        private void StopBlock()
-        {
-            if (currentBlockState == BLOCKSTATE.BLOCK)
-            {
-                ReturnToNormalState();
-            }
-            else
-            {
-                Cooldown();
-                return;
-            }
-        }
-
-        public bool DetermineBlockType()
-        {
-            if (blockTimer.GetRemaingingSeconds() > blockDuration - parryOpeningTime)
-            {
-                return true;
+                CompleteReset();
             }
 
-            else
+            if (controls.Battle.Primary.triggered && _currentBlockPhase == BlockPhase.NONE)
+                _currentBlockPhase = BlockPhase.PARRY;
+            switch (_currentBlockPhase)
             {
-                return false;
-            }
-        }
-
-        private void Update()
-        {
-
-
-
-            if (controls.Battle.Primary.triggered && BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN)
-            {
-                Block();
-                switch (currentBlockState)
+                case (BlockPhase.PARRY) :
                 {
-                    case BLOCKSTATE.BLOCK:
-                        blockTimer.Tick(Time.deltaTime);
-                        characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.BLOCKING;
-                        break;
-                    case BLOCKSTATE.COOLDOWN:
-                        cooldownTimer.Tick(Time.deltaTime);
-                        characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
-                        break;
+                    ParryingPhase();
+                    break;
                 }
-
-            }
-            else
-            {
-                characterBody.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
-            }
-        }
-
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            Debug.Log("in second");
-            if (collision.CompareTag("enemy_projectile"))
-            {
-                if (currentBlockState == BLOCKSTATE.BLOCK)
+                case (BlockPhase.BLOCK) :
                 {
-                    DetermineBlockType();
+                    BlockingPhase();
+                    break;
                 }
-                StopCooldown();
+                case(BlockPhase.COOLDOWN) :
+                {
+                    CooldownPhase();
+                    break;
+                }
+                default :
+                    _test.color = new Color(0,1,0.57f,1);
+                    break;
             }
         }
+        else
+            ResetTimers();
+    }
+    
+    void ParryingPhase()
+    {
+        _characterBody.characterData.curDEF = 99;
+        _parryTimer.Tick(Time.deltaTime);
+
+        _test.color = Color.yellow; 
+       
+    }
+    void BlockingPhase()
+    {
+        _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF + 1;
+        _blockTimer.Tick(Time.deltaTime);
+        _test.color = Color.white;
+    }
+    void CooldownPhase()
+    {
+        _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF;
+        _cooldownTimer.Tick(Time.deltaTime);
+        _test.color = Color.blue;
+    }
+    void ChangeState()
+    {
+        _currentBlockPhase += 1;
+        if ((int)_currentBlockPhase > 3)
+            _currentBlockPhase = 0;
+        
+        ResetTimers();
+    }
+    void ResetTimers()
+    {
+        _blockTimer.SetTimer(_blockDuration);
+        _parryTimer.SetTimer(_parryDuration);
+        _cooldownTimer.SetTimer(_cooldownDuration);
+
+        _test.color = new Color(0,1,0.57f,1);
+    }
+    void CompleteReset()
+    {
+        ResetTimers();
+        _currentBlockPhase = BlockPhase.NONE;
+    }
+
+    public bool CheckCollisions()
+    {
+        Collider2D[] buffer = new Collider2D[1];
+        int hits = Physics2D.OverlapBoxNonAlloc(transform.position,_characterBody.characterScriptable.battleHitBoxSize,0f,buffer,_validLayers);
+        if (hits > 0)
+            return true;
+        return false;
     }
 }

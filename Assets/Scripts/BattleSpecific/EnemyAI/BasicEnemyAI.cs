@@ -14,7 +14,6 @@ public class BasicEnemyAI : MonoBehaviour
 
     public void Execute()
     {
-        Debug.Log("in execute function for " + gameObject.name);
         if (canExecute)
             DecideNextMove();
     }

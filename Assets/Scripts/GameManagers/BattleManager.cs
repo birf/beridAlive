@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using BeriUtils.Core;
 
 public class BattleManager : GameManager
 {
-    /*
-        TODO : Make sure that AttackSuccess() is unbiased.
-    */
     public List<ItemData> playerItems = new List<ItemData>();
     public List<BattleMove> playerMoves = new List<BattleMove>();
     public List<CharacterGameBattleEntity> playerCharacters = new List<CharacterGameBattleEntity>();
@@ -18,6 +16,8 @@ public class BattleManager : GameManager
 
     [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
     [SerializeField] GameObject _PlayerUI;
+    Timer startupTimer = new Timer(1);
+    Timer endTimer = new Timer(1);
 
     public enum BattleManagerState
     {
@@ -25,17 +25,28 @@ public class BattleManager : GameManager
         ANALYSIS, // <-- this state is only in effect in between turns and is what ultimately decides the next turn.
         PLAYERTURN,
         PLAYERATTACK,
-        ENEMYTURN
+        ENEMYTURN,
+        WIN,
+        LOSE
     }
 
     void Awake()
     {
         CurrentBattleManagerState = BattleManagerState.DEFAULT;
-        BattleManagerSetup();
         CentralManager.CurrentContext = CentralManager.Context.BATTLE;
+        startupTimer.OnTimerEnd += BattleManagerSetup;
+        endTimer.OnTimerEnd += RestartGame;
+    }
+    void RestartGame()
+    {
+        SceneManager.LoadScene(0);
     }
     void Update()
     {
+        // done to make sure that all characters on field are initialized with correct values
+        if (startupTimer.GetRemaingingSeconds() > 0)
+            startupTimer.Tick(Time.deltaTime);
+            
         switch (CurrentBattleManagerState)
         {
             case (BattleManagerState.DEFAULT):
@@ -54,7 +65,6 @@ public class BattleManager : GameManager
                 }
             case (BattleManagerState.PLAYERATTACK):
                 {
-                    Debug.Log("PlayerAttack");
                     break;
                 }
             case (BattleManagerState.ENEMYTURN):
@@ -62,6 +72,13 @@ public class BattleManager : GameManager
                     EnemyTurnState();
                     break;
                 }
+            case BattleManagerState.LOSE :
+            case BattleManagerState.WIN :
+            {
+                endTimer.Tick(Time.deltaTime);
+                break;
+            }
+            
         }
     }
 
@@ -83,12 +100,19 @@ public class BattleManager : GameManager
             // character is dead.
             if (CharacterGameObjects[i].characterData.curHP <= 0 &&
                     CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
-            { flag = true; CharacterGameObjects[i].KillCharacterInBattle(); Debug.Log("I killed you, HA!"); break; }
+            { flag = true; CharacterGameObjects[i].KillCharacterInBattle(); break; }
 
             // a character has been hit and is either in hitstun or recovering from it.
             if (CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.HITSTUN ||
                     CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
             { flag = true; break; }
+
+            if (playerCharacters.Count == 0)
+            { flag = true; CurrentBattleManagerState = BattleManagerState.LOSE; Debug.Log("You lose!"); break;} 
+
+            if (enemyCharacters.Count == 0)
+            { flag = true; CurrentBattleManagerState = BattleManagerState.WIN; Debug.Log("You Win!"); break;}
+            
         }
         if (!flag)
             GetNextTurn();
@@ -103,9 +127,14 @@ public class BattleManager : GameManager
         }
     }
     // initialize all entities and values in scene.
+    /*
+        Note that this entire function will need to be rewritten when actually starting a battle. 
+        This function relies on all objects already being present and active.
+    */
     void BattleManagerSetup()
     {
         CentralManager.SetStateManager(this);
+        
         CharacterGameObjects = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
 
         for (int i = 0; i < CharacterGameObjects.Count; i++)
@@ -137,6 +166,8 @@ public class BattleManager : GameManager
     }
     void DetermineStateBasedOnActiveCharacter()
     {
+        Debug.Log("determining active character");
+        Debug.Log(currentActiveCharacter.characterData.CharType);
         switch (currentActiveCharacter.characterData.CharType)
         {
             case (CharacterBase.CharacterType.ENEMY):
@@ -182,20 +213,17 @@ public class BattleManager : GameManager
         _moveQueue.RemoveAt(0);
     }
 
-    // the player has successfully performed a move/portion of their move. advance to next move (if any)
+    // the player or enemy has successfully performed a move/portion of their move. advance to next move (if any)
     public void AttackSuccess()
     {
-        Debug.Log(currentTargetCharacter.characterData.curHP);
         if (_moveQueue.Count == 0)
         {
-            Debug.Log("Success!");
             currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
         }
         // if the target character died from the previous move, force an attack chain to succeed, refund the player's stamina
         else if (_moveQueue.Count > 0 && currentTargetCharacter.characterData.curHP <= 0)
         {
-            Debug.Log("Forced Success!");
             for (int i = 0; i < _moveQueue.Count; i++)
                 currentActiveCharacter.characterData.curSTAMINA += _moveQueue[i].staminaCost;
             currentTargetCharacter = null;
@@ -241,20 +269,13 @@ public class BattleManager : GameManager
     // fetch the next active character from the turn queue. 
     public void GetNextTurn()
     {
-        if (CharacterGameObjects.Count > 1 && enemyCharacters.Count > 0)
-        {
-            currentActiveCharacter = CharacterGameObjects[1];
-            List<CharacterGameBattleEntity> t = new List<CharacterGameBattleEntity>(CharacterGameObjects);
-            t.RemoveAt(0);
-            t.Add(CharacterGameObjects[0]);
-            CharacterGameObjects = t;
-            DetermineStateBasedOnActiveCharacter();
-        }
-        else
-        {
-            Debug.Log("You Won!");
-            CurrentBattleManagerState = BattleManagerState.DEFAULT;
-        }
-
+        if (CharacterGameObjects.Count == 0)
+            return;
+        currentActiveCharacter = CharacterGameObjects[1];
+        List<CharacterGameBattleEntity> t = new List<CharacterGameBattleEntity>(CharacterGameObjects);
+        t.RemoveAt(0);
+        t.Add(CharacterGameObjects[0]);
+        CharacterGameObjects = t;
+        DetermineStateBasedOnActiveCharacter();
     }
 }

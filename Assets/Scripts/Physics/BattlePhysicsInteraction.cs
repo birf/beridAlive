@@ -1,10 +1,8 @@
 using UnityEngine;
 using BeriUtils.Core;
-using RPG.Combat;
 
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(CharacterGameBattleEntity))]
-
 public class BattlePhysicsInteraction : MonoBehaviour
 {
 
@@ -13,13 +11,10 @@ public class BattlePhysicsInteraction : MonoBehaviour
 
         TODO : Migrate the blocking/parrying code into this script.
     */
-
     public enum CharacterPhysicsState
     {
         DEFAULT,
         HITSTUN,
-        BLOCKING,
-        PARRYING,
         RECOVERY
     }
     
@@ -48,7 +43,6 @@ public class BattlePhysicsInteraction : MonoBehaviour
     [SerializeField] BoxCollider2D _boxCol;
     [SerializeField] LayerMask _validHits;
     [SerializeField][Range(0f,5.0f)] float _gravityScale = 2.0f;
-    [SerializeField] BlockScript _block;
 
 
 #endregion
@@ -63,9 +57,6 @@ public class BattlePhysicsInteraction : MonoBehaviour
         localGroundYCoordinate = transform.position.y - 0.5f;
 
         characterPhysicsState = CharacterPhysicsState.DEFAULT;
-        
-        if (TryGetComponent<BlockScript>(out BlockScript component))
-            _block = component;
 
     }
 
@@ -74,10 +65,10 @@ public class BattlePhysicsInteraction : MonoBehaviour
         GetState();
 
         // while the character isn't currently moving from hitstun.
-        if (characterPhysicsState != CharacterPhysicsState.RECOVERY && characterPhysicsState != CharacterPhysicsState.BLOCKING) 
+        if (characterPhysicsState != CharacterPhysicsState.RECOVERY) 
         {
             // character is not currently grounded, and they are not in any blocking state.
-            if (!isGrounded ) 
+            if (!isGrounded) 
             {
                 UpdateVelocity();
                 CheckCollisions();
@@ -103,8 +94,8 @@ public class BattlePhysicsInteraction : MonoBehaviour
     {
         _internalPosition = transform.position;
 
-        if (_internalVelocity == Vector2.zero)
-            transform.position = startPosition;
+        // if (_internalVelocity == Vector2.zero)
+        //     transform.position = startPosition;
     }
     void SetState()
     {
@@ -130,49 +121,30 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void RecoverToInitialPosition()
     {
         transform.position = Vector3.MoveTowards(transform.position, startPosition, Time.deltaTime * moveSpeed);
+        // when character reaches the initial position, update their state.
         if (Vector3.Distance(transform.position,(Vector3)startPosition) < MINMOVEDISTANCE)
         {
             isHit = false;
             isGrounded = true;
             characterPhysicsState = CharacterPhysicsState.DEFAULT;
-            localGroundYCoordinate = transform.position.y - 0.01f;
+            localGroundYCoordinate = transform.position.y - 0.5f;
         }
     }
+
     public void HitTarget(Vector2 inputVelocity, int damage)
     {
         // called when we hit the target. check if we are blocking and set the appropriate damage.
-
-        // if the character isn't blocking, deal full damage. 
-        switch(characterPhysicsState) 
-        {
-            case (CharacterPhysicsState.DEFAULT) :
-            case (CharacterPhysicsState.HITSTUN) :
-            case (CharacterPhysicsState.RECOVERY) :
-            {
-                isGrounded = false;
-                isHit = true;
-                characterPhysicsState = CharacterPhysicsState.HITSTUN;
-                _internalVelocity = inputVelocity/10.0f;
-                _characterBody.characterData.UpdateStat("Health", -damage);
-                Debug.Log("in bad block");
-                break;
-            }
-            case (CharacterPhysicsState.BLOCKING) :
-            {
-                _characterBody.characterData.UpdateStat("Health", -damage * 0.5f);
-                Debug.Log("in good block");
-                break;
-            }
-            case (CharacterPhysicsState.PARRYING) :
-            {
-                Debug.Log("perfect block");
-                break;
-            }
-        }
+        if (10 + _characterBody.characterData.curDEF > 99)
+            return;
+        _internalVelocity = inputVelocity/(10.0f + _characterBody.characterData.curDEF);
+        characterPhysicsState = CharacterPhysicsState.HITSTUN;
+        isGrounded = false;
+        isHit = true;
+        
+        _characterBody.characterData.UpdateStat("Health", -damage);
     }
     public void MoveGroundCoordinate(float position)
     {
         localGroundYCoordinate = position;
     }
-    
 }

@@ -8,8 +8,8 @@ using UnityEngine;
 public class CharacterGameBattleEntity : MonoBehaviour
 {
     /*
-        Class for holding character data read from a CharacterScriptable.
-        Use this to read character data and manipulate it on screen regardless of context.
+        Class for holding character data read from a CharacterScriptable during battle.
+        Use this to read character data and manipulate it on screen.
     */
     public Animator characterAnimator;
     public RuntimeAnimatorController characterAnimations; // <-- currently playing character animations. interacts with ^^
@@ -18,6 +18,7 @@ public class CharacterGameBattleEntity : MonoBehaviour
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
+    
     void Awake()
     {
         CharacterSetup();
@@ -68,13 +69,21 @@ public class CharacterGameBattleEntity : MonoBehaviour
     {
         if (CentralManager.GetStateManager() != null)
             entityBattleManager = (BattleManager)CentralManager.GetStateManager();
+        characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
+        characterSelectable.cursorTarget += transform.position;
+        
     }
 
     public void KillCharacterInBattle()
     {
-        Debug.Log("I am dead");
         BattleManager b = (BattleManager)entityBattleManager;
-        b.enemyCharacters.Remove(this);
+        BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
+        
+        if (characterData.CharType == CharacterBase.CharacterType.ENEMY)
+            b.enemyCharacters.Remove(this);
+        else if (characterData.CharType == CharacterBase.CharacterType.PLAYER)
+            b.playerCharacters.Remove(this);
+        
         b.CharacterGameObjects.Remove(this);
         Destroy(gameObject); // <-- for now. tester
     }
