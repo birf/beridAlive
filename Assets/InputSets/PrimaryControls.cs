@@ -177,6 +177,132 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Overworld"",
+            ""id"": ""f2f92ec8-d6d6-482f-af09-99cc5bc124ca"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""f25c2c76-ed73-4fff-83fa-6b7329cb81df"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""KeyboardOne"",
+                    ""id"": ""6afb1144-fc1c-4bf1-8e45-fe311c02a915"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""2200d42c-dd1b-4b42-b5ee-00de9c18bcd1"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""d893560c-3aee-41b4-9e13-600153ef188d"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ff06ba07-4ae7-4123-b0b0-fb8230466dd9"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""b8ab9123-7e77-4c3f-9723-4c831c6c4052"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""KeyboardTwo"",
+                    ""id"": ""7ad4ae71-b719-424a-9601-512fcbd9cf2d"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""9e38e552-fc3d-4d48-bae5-b058a7149d5e"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""97988e6d-90cd-410f-baac-9df973f63eae"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""b1502466-90f3-4f57-82b1-c8dd733ad579"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""72c4d1fd-6e70-4bfe-9fc0-8f374dabcb07"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -247,6 +373,9 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         m_Battle_Direction = m_Battle.FindAction("Direction", throwIfNotFound: true);
         m_Battle_Primary = m_Battle.FindAction("Primary", throwIfNotFound: true);
         m_Battle_Secondary = m_Battle.FindAction("Secondary", throwIfNotFound: true);
+        // Overworld
+        m_Overworld = asset.FindActionMap("Overworld", throwIfNotFound: true);
+        m_Overworld_Move = m_Overworld.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -341,6 +470,39 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         }
     }
     public BattleActions @Battle => new BattleActions(this);
+
+    // Overworld
+    private readonly InputActionMap m_Overworld;
+    private IOverworldActions m_OverworldActionsCallbackInterface;
+    private readonly InputAction m_Overworld_Move;
+    public struct OverworldActions
+    {
+        private @PrimaryControls m_Wrapper;
+        public OverworldActions(@PrimaryControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Overworld_Move;
+        public InputActionMap Get() { return m_Wrapper.m_Overworld; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(OverworldActions set) { return set.Get(); }
+        public void SetCallbacks(IOverworldActions instance)
+        {
+            if (m_Wrapper.m_OverworldActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_OverworldActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_OverworldActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_OverworldActionsCallbackInterface.OnMove;
+            }
+            m_Wrapper.m_OverworldActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+            }
+        }
+    }
+    public OverworldActions @Overworld => new OverworldActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -391,5 +553,9 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         void OnDirection(InputAction.CallbackContext context);
         void OnPrimary(InputAction.CallbackContext context);
         void OnSecondary(InputAction.CallbackContext context);
+    }
+    public interface IOverworldActions
+    {
+        void OnMove(InputAction.CallbackContext context);
     }
 }

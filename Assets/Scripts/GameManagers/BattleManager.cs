@@ -12,12 +12,24 @@ public class BattleManager : GameManager
     public List<CharacterGameBattleEntity> enemyCharacters = new List<CharacterGameBattleEntity>();
     public CharacterGameBattleEntity currentActiveCharacter;
     public CharacterGameBattleEntity currentTargetCharacter;
+    public List<CharacterGameBattleEntity> CharacterGameBattleEntities = new List<CharacterGameBattleEntity>();  
+
     public static BattleManagerState CurrentBattleManagerState;
 
     [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
     [SerializeField] GameObject _PlayerUI;
     Timer startupTimer = new Timer(1);
     Timer endTimer = new Timer(1);
+
+    #region Spawn Positions
+    
+    Vector2[][] spawnPositions = {
+        new Vector2[] {new Vector2(4.5f,0.75f)},
+        new Vector2[] {new Vector2(6.25f,3f), new Vector2(5f,-2f)},
+        new Vector2[] {new Vector2(6.25f,3f), new Vector2(5f,-2f)  , new Vector2(8.5f,0.75f)},
+        new Vector2[] {new Vector2(4.75f,3f), new Vector2(8.75f,3f), new Vector2(3.25f,-2f), new Vector2(8f,-2f)}
+    };
+    #endregion
 
     public enum BattleManagerState
     {
@@ -34,12 +46,25 @@ public class BattleManager : GameManager
     {
         CurrentBattleManagerState = BattleManagerState.DEFAULT;
         CentralManager.CurrentContext = CentralManager.Context.BATTLE;
+        CentralManager.SetStateManager(this);
         startupTimer.OnTimerEnd += BattleManagerSetup;
-        endTimer.OnTimerEnd += RestartGame;
+        endTimer.OnTimerEnd += ReturnToOverworld;
     }
     void RestartGame()
     {
         SceneManager.LoadScene(0);
+    }
+    void ReturnToOverworld()
+    {
+        OverworldManager om = ChildObjects[0].GetComponent<OverworldManager>();
+        if (CurrentBattleManagerState == BattleManagerState.WIN)
+        {
+            Destroy(om.currentEnemyEncounter.gameObject);
+            om.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+        else
+            RestartGame();
     }
     void Update()
     {
@@ -95,16 +120,16 @@ public class BattleManager : GameManager
         bool flag = false;
 
         // wait for every character to reach their start position.
-        for (int i = 0; i < CharacterGameObjects.Count; i++)
+        for (int i = 0; i < CharacterGameBattleEntities.Count; i++)
         {
             // character is dead.
-            if (CharacterGameObjects[i].characterData.curHP <= 0 &&
-                    CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
-            { flag = true; CharacterGameObjects[i].KillCharacterInBattle(); break; }
+            if (CharacterGameBattleEntities[i].characterData.curHP <= 0 &&
+                    CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
+            { flag = true; CharacterGameBattleEntities[i].KillCharacterInBattle(); break; }
 
             // a character has been hit and is either in hitstun or recovering from it.
-            if (CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.HITSTUN ||
-                    CharacterGameObjects[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
+            if (CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.HITSTUN ||
+                    CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
             { flag = true; break; }
 
             if (playerCharacters.Count == 0)
@@ -126,35 +151,36 @@ public class BattleManager : GameManager
             currentActiveCharacter.GetComponent<BasicEnemyAI>().Execute();
         }
     }
+    
     // initialize all entities and values in scene.
     /*
         Note that this entire function will need to be rewritten when actually starting a battle. 
-        This function relies on all objects already being present and active.
+        This function relies on all objects already being present.
     */
     void BattleManagerSetup()
     {
         CentralManager.SetStateManager(this);
         
-        CharacterGameObjects = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
+        CharacterGameBattleEntities = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
 
-        for (int i = 0; i < CharacterGameObjects.Count; i++)
+        for (int i = 0; i < CharacterGameBattleEntities.Count; i++)
         {
             // if the character type is the player, setup their moves and items. 
-            CharacterGameObjects[i].characterSelectable.isDestroyable = false;
-            CharacterGameObjects[i].characterSelectable.canBeDisabled = false;
+            CharacterGameBattleEntities[i].characterSelectable.isDestroyable = false;
+            CharacterGameBattleEntities[i].characterSelectable.canBeDisabled = false;
 
-            if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
+            if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
             {
-                playerItems = new List<ItemData>(CharacterGameObjects[i].characterScriptable.characterItems);
-                playerMoves = new List<BattleMove>(CharacterGameObjects[i].characterScriptable.characterMoves);
-                playerCharacters.Add(CharacterGameObjects[i]);
-                CharacterGameObjects[i].characterSelectable.cyclableElements += 1;
+                playerItems = new List<ItemData>(CharacterGameBattleEntities[i].characterScriptable.characterItems);
+                playerMoves = new List<BattleMove>(CharacterGameBattleEntities[i].characterScriptable.characterMoves);
+                playerCharacters.Add(CharacterGameBattleEntities[i]);
+                CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
             }
 
-            if (CharacterGameObjects[i].characterData.CharType == CharacterBase.CharacterType.ENEMY)
+            if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.ENEMY)
             {
-                enemyCharacters.Add(CharacterGameObjects[i]);
-                CharacterGameObjects[i].characterSelectable.cyclableElements += 1;
+                enemyCharacters.Add(CharacterGameBattleEntities[i]);
+                CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
             }
         }
 
@@ -162,7 +188,7 @@ public class BattleManager : GameManager
 
         SetTurnOrder();
 
-        currentActiveCharacter = CharacterGameObjects[0]; // <-- testing. really there should be a little bit of a wait before starting, but this works fine.
+        currentActiveCharacter = CharacterGameBattleEntities[0];
     }
     void DetermineStateBasedOnActiveCharacter()
     {
@@ -248,34 +274,35 @@ public class BattleManager : GameManager
     public void SetTurnOrder()
     {
         int minIdx;
-        for (int i = 0; i < CharacterGameObjects.Count; i++)
+        for (int i = 0; i < CharacterGameBattleEntities.Count; i++)
         {
             minIdx = i;
-            for (int j = 0; j < CharacterGameObjects.Count; j++)
+            for (int j = 0; j < CharacterGameBattleEntities.Count; j++)
             {
-                if (CharacterGameObjects[j].characterData.curSPEED < CharacterGameObjects[minIdx].characterData.curSPEED)
+                if (CharacterGameBattleEntities[j].characterData.curSPEED < CharacterGameBattleEntities[minIdx].characterData.curSPEED)
                     minIdx = j;
                 if (minIdx != i)
                 {
-                    CharacterGameBattleEntity t = CharacterGameObjects[minIdx];
-                    CharacterGameObjects[minIdx] = CharacterGameObjects[i];
-                    CharacterGameObjects[i] = t;
+                    CharacterGameBattleEntity t = CharacterGameBattleEntities[minIdx];
+                    CharacterGameBattleEntities[minIdx] = CharacterGameBattleEntities[i];
+                    CharacterGameBattleEntities[i] = t;
                 }
             }
         }
-        currentActiveCharacter = CharacterGameObjects[0];
+        currentActiveCharacter = CharacterGameBattleEntities[0];
         DetermineStateBasedOnActiveCharacter();
     }
     // fetch the next active character from the turn queue. 
     public void GetNextTurn()
     {
-        if (CharacterGameObjects.Count == 0)
+        if (CharacterGameBattleEntities.Count == 0)
             return;
-        currentActiveCharacter = CharacterGameObjects[1];
-        List<CharacterGameBattleEntity> t = new List<CharacterGameBattleEntity>(CharacterGameObjects);
+        currentActiveCharacter = CharacterGameBattleEntities[1];
+        List<CharacterGameBattleEntity> t = new List<CharacterGameBattleEntity>(CharacterGameBattleEntities);
         t.RemoveAt(0);
-        t.Add(CharacterGameObjects[0]);
-        CharacterGameObjects = t;
+        t.Add(CharacterGameBattleEntities[0]);
+        CharacterGameBattleEntities = t;
         DetermineStateBasedOnActiveCharacter();
     }
 }
+

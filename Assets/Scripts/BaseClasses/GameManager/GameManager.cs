@@ -23,10 +23,5 @@ public class GameManager : MonoBehaviour
     ///<summary>
     /// Publicly accessible list of character objects associated with this state manager.
     ///</summary>
-    public List<CharacterBase> Characters = new List<CharacterBase>();
-    
-    ///<summary>
-    ///Character Game Entities associated with this state manager.
-    ///</summary>
-    public List<CharacterGameBattleEntity> CharacterGameObjects = new List<CharacterGameBattleEntity>();  
+    public List<CharacterBase> Characters = new List<CharacterBase>();    
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(UISelectable))]
 [RequireComponent(typeof(BattlePhysicsInteraction))]
-public class CharacterGameBattleEntity : MonoBehaviour
+public class CharacterGameBattleEntity : CharacterGameEntity
 {
     /*
         Class for holding character data read from a CharacterScriptable during battle.
@@ -13,8 +13,6 @@ public class CharacterGameBattleEntity : MonoBehaviour
     */
     public Animator characterAnimator;
     public RuntimeAnimatorController characterAnimations; // <-- currently playing character animations. interacts with ^^
-    public CharacterBase characterData; //  <-- Base character data for this entity. Includes health, atk, etc.
-    public CharacterScriptable characterScriptable; // <-- Whenever default or saved values from character scriptable are needed, use this.
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
@@ -84,7 +82,7 @@ public class CharacterGameBattleEntity : MonoBehaviour
         else if (characterData.CharType == CharacterBase.CharacterType.PLAYER)
             b.playerCharacters.Remove(this);
         
-        b.CharacterGameObjects.Remove(this);
+        b.CharacterGameBattleEntities.Remove(this);
         Destroy(gameObject); // <-- for now. tester
     }
 }
