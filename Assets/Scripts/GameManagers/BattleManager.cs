@@ -12,7 +12,7 @@ public class BattleManager : GameManager
     public List<CharacterGameBattleEntity> enemyCharacters = new List<CharacterGameBattleEntity>();
     public CharacterGameBattleEntity currentActiveCharacter;
     public CharacterGameBattleEntity currentTargetCharacter;
-    public List<CharacterGameBattleEntity> CharacterGameBattleEntities = new List<CharacterGameBattleEntity>();  
+    public List<CharacterGameBattleEntity> CharacterGameBattleEntities = new List<CharacterGameBattleEntity>();
 
     public static BattleManagerState CurrentBattleManagerState;
 
@@ -22,7 +22,7 @@ public class BattleManager : GameManager
     Timer endTimer = new Timer(1);
 
     #region Spawn Positions
-    
+
     Vector2[][] spawnPositions = {
         new Vector2[] {new Vector2(4.5f,0.75f)},
         new Vector2[] {new Vector2(6.25f,3f), new Vector2(5f,-2f)},
@@ -71,7 +71,7 @@ public class BattleManager : GameManager
         // done to make sure that all characters on field are initialized with correct values
         if (startupTimer.GetRemaingingSeconds() > 0)
             startupTimer.Tick(Time.deltaTime);
-            
+
         switch (CurrentBattleManagerState)
         {
             case (BattleManagerState.DEFAULT):
@@ -97,13 +97,13 @@ public class BattleManager : GameManager
                     EnemyTurnState();
                     break;
                 }
-            case BattleManagerState.LOSE :
-            case BattleManagerState.WIN :
-            {
-                endTimer.Tick(Time.deltaTime);
-                break;
-            }
-            
+            case BattleManagerState.LOSE:
+            case BattleManagerState.WIN:
+                {
+                    endTimer.Tick(Time.deltaTime);
+                    break;
+                }
+
         }
     }
 
@@ -133,11 +133,11 @@ public class BattleManager : GameManager
             { flag = true; break; }
 
             if (playerCharacters.Count == 0)
-            { flag = true; CurrentBattleManagerState = BattleManagerState.LOSE; Debug.Log("You lose!"); break;} 
+            { flag = true; CurrentBattleManagerState = BattleManagerState.LOSE; Debug.Log("You lose!"); break; }
 
             if (enemyCharacters.Count == 0)
-            { flag = true; CurrentBattleManagerState = BattleManagerState.WIN; Debug.Log("You Win!"); break;}
-            
+            { flag = true; CurrentBattleManagerState = BattleManagerState.WIN; Debug.Log("You Win!"); break; }
+
         }
         if (!flag)
             GetNextTurn();
@@ -151,7 +151,7 @@ public class BattleManager : GameManager
             currentActiveCharacter.GetComponent<BasicEnemyAI>().Execute();
         }
     }
-    
+
     // initialize all entities and values in scene.
     /*
         Note that this entire function will need to be rewritten when actually starting a battle. 
@@ -160,8 +160,16 @@ public class BattleManager : GameManager
     void BattleManagerSetup()
     {
         CentralManager.SetStateManager(this);
-        
+
         CharacterGameBattleEntities = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
+
+
+
+
+
+
+
+
 
         for (int i = 0; i < CharacterGameBattleEntities.Count; i++)
         {
