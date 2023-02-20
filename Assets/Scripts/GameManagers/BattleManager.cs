@@ -18,8 +18,8 @@ public class BattleManager : GameManager
 
     [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
     [SerializeField] GameObject _PlayerUI;
-    Timer startupTimer = new Timer(1);
-    Timer endTimer = new Timer(1);
+    Timer startupTimer;
+    Timer endTimer;
 
     #region Spawn Positions
 
@@ -42,8 +42,10 @@ public class BattleManager : GameManager
         LOSE
     }
 
-    void Awake()
+    void OnEnable()
     {
+        startupTimer = new Timer(1);
+        endTimer = new Timer(1);
         CurrentBattleManagerState = BattleManagerState.DEFAULT;
         CentralManager.CurrentContext = CentralManager.Context.BATTLE;
         CentralManager.SetStateManager(this);
