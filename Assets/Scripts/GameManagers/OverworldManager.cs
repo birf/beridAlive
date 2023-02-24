@@ -12,6 +12,11 @@ public class OverworldManager : GameManager
     [SerializeField] GameObject entities;
 
     [SerializeField] List<Vector2> battlePositions;
+
+    //current level
+    private int levelNumber; 
+    public GameObject activeLevel;
+
     void Start()
     {
         CentralManager.SetStateManager(this);
@@ -66,6 +71,32 @@ public class OverworldManager : GameManager
         {
             Characters.Add(characterEntities[i].characterData);
         }
+
+        //enable the first level
+        levelNumber = 0;
+        nextLevel();
+    }
+
+
+    //load the next level
+    public void nextLevel(){
+        string[] levelNames = new string[]{"test_level_1", "test_level_2"}; 
+        GameObject levels = GameObject.Find("Levels");
+        if(activeLevel != null) activeLevel.SetActive(false); //deactivate current level
+        //find and enable level
+        Debug.Log(levelNames[levelNumber]);
+        activeLevel = levels.transform.Find(levelNames[levelNumber]).gameObject;
+        activeLevel.SetActive(true);
+        activeLevel.GetComponent<OverworldLevel>().initializeLevel();
+
+        //add each enemy to Characters and change their parent to entities
+        foreach (GameObject enemy in activeLevel.GetComponent<OverworldLevel>().getEnemies()){
+            Characters.Add(enemy.GetComponent<CharacterGameOverworldEntity>().characterData);
+            enemy.transform.parent = GameObject.Find("entities").transform;      
+        }
+        levelNumber++;
+        
+
     }
 
 }
