@@ -15,7 +15,7 @@ MonoBehaviour:
   mainMoveGameObject: {fileID: 1081917864187986720, guid: f2bd94359ad313d418e4f6e6946c3c0d, type: 3}
   mainLaunchVelocity: {x: -0.25, y: 1, z: 0}
   moveSpriteSmall: {fileID: 0}
-  damage: 5
+  damage: 2
   staminaCost: 0
   moveName: Test Launcher
   moveDescription: It's stupid! It's bad! It was programmed by me!

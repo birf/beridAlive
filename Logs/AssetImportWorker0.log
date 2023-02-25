@@ -15,11 +15,11 @@ D:/UnityProjects/beridAlive
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-53785
+54816
 Successfully changed project path to: D:/UnityProjects/beridAlive
 D:/UnityProjects/beridAlive
 Using Asset Import Pipeline V2.
-Refreshing native plugins compatible for Editor in 192.61 ms, found 1 plugins.
+Refreshing native plugins compatible for Editor in 112.51 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.2.1f1 (270dd8c3da1c)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/Resources/UnitySubsystems
@@ -35,71 +35,63 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56080
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56240
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.005420 seconds.
+Registered in 0.005503 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for OSXStandalone target not found
 Native extension for WebGL target not found
-Refreshing native plugins compatible for Editor in 122.79 ms, found 1 plugins.
+Refreshing native plugins compatible for Editor in 167.28 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  2.183 seconds
+- Completed reload, in  2.521 seconds
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
-Registered in 0.001851 seconds.
+Registered in 0.001926 seconds.
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
 Native extension for OSXStandalone target not found
 Native extension for WebGL target not found
-Refreshing native plugins compatible for Editor in 115.61 ms, found 1 plugins.
+Refreshing native plugins compatible for Editor in 125.24 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Invoked RoslynAnalysisRunner static constructor.
 RoslynAnalysisRunner will not be running.
 RoslynAnalysisRunner has terminated.
 Mono: successfully reloaded assembly
-- Completed reload, in  2.050 seconds
+- Completed reload, in  2.174 seconds
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
-Refreshing native plugins compatible for Editor in 2.19 ms, found 1 plugins.
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.14 seconds
+Refreshing native plugins compatible for Editor in 0.73 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 2261 Unused Serialized files (Serialized files now loaded: 0)
-System memory in use before: 101.2 MB.
-System memory in use after: 65.9 MB.
+System memory in use before: 101.3 MB.
+System memory in use after: 66.0 MB.
 
-Unloading 21 unused Assets to reduce memory usage. Loaded Objects now: 2706.
-Total: 7.199000 ms (FindLiveObjects: 0.499100 ms CreateObjectMapping: 0.195100 ms MarkObjects: 6.411000 ms  DeleteObjects: 0.091400 ms)
-
-========================================================================
-Received Import Request.
-  path: Assets/OverworldAssets/NewShaderVariants.shadervariants
-  artifactKey: Guid(f4ec844ea42ad1a439f8105c4649044a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/OverworldAssets/NewShaderVariants.shadervariants using Guid(f4ec844ea42ad1a439f8105c4649044a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c1c99e1b2ebae99ce52081821ff3c029') in 0.108612 seconds
-  Import took 0.115899 seconds .
+Unloading 21 unused Assets to reduce memory usage. Loaded Objects now: 2707.
+Total: 9.146500 ms (FindLiveObjects: 0.469600 ms CreateObjectMapping: 0.113200 ms MarkObjects: 8.419200 ms  DeleteObjects: 0.139900 ms)
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000374 seconds.
-  path: Assets/OverworldAssets
-  artifactKey: Guid(68480e5c4ea9f6b458e48a838a551ea6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/OverworldAssets using Guid(68480e5c4ea9f6b458e48a838a551ea6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5e1fe74131baa4a0381cedd7f75c1002') in 0.018319 seconds
-  Import took 0.025493 seconds .
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000536 seconds.
   path: Assets/Assets.index
   artifactKey: Guid(fdc639d2342f7554ea5bf80635f28a65) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Assets.index using Guid(fdc639d2342f7554ea5bf80635f28a65) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ee85382bdeae3f9692ff4635c0408f2e') in 0.074251 seconds
-  Import took 0.083318 seconds .
+Start importing Assets/Assets.index using Guid(fdc639d2342f7554ea5bf80635f28a65) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e1c0b2b384b3e401de301d29ace92eae') in 0.501469 seconds
+  Import took 0.516272 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000412 seconds.
+  path: Assets/Scripts/BattleSpecific/PlayerSpecific/BlockScript.cs
+  artifactKey: Guid(2f68269c602b34fb4a6a18f745eb9ea8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/BattleSpecific/PlayerSpecific/BlockScript.cs using Guid(2f68269c602b34fb4a6a18f745eb9ea8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5aaf0fb57e8ff0421e9681382dbd40a3') in 0.024652 seconds
+  Import took 0.032353 seconds .
 
 AssetImportWorkerClient::OnTransportError - code=2 error=End of file

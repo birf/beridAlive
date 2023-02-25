@@ -59,6 +59,13 @@ public class PlayerTurnUI : MonoBehaviour
         // make absolutely sure that there exists a state manager for this object.
         if (CentralManager.GetStateManager() != null)
             battleManager = (BattleManager)CentralManager.GetStateManager();
+        
+        if (_currentState == "ActionSelect")
+            battleManager.currentActiveCharacter.characterAnimator.Play("battle_select");
+        else
+            battleManager.currentActiveCharacter.characterAnimator.Play("battle_idle");
+
+
 
         // switch statement for current ui state. 
         switch (_currentState)
@@ -271,6 +278,8 @@ public class PlayerTurnUI : MonoBehaviour
 
         if(playerMoveQueue.Count > 0)
             goButton.isSelectable = true;
+        else
+            goButton.isSelectable = false;
 
         if (controls.Battle.Direction.triggered)
         {

@@ -16,18 +16,17 @@ public class CharacterGameBattleEntity : CharacterGameEntity
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
+    public BoxCollider2D boxCol;
     
     void Awake()
     {
-        CharacterSetup();
-        characterAnimator.Play("battle_idle"); // <-- tester
-
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
         characterSelectable.cursorTarget += transform.position;
+        CharacterSetup();
     }
 
     // Initialize character data from the character scriptable. 
-    void CharacterSetup()
+    public void CharacterSetup()
     {
         if (characterScriptable != null)
         {
@@ -54,13 +53,12 @@ public class CharacterGameBattleEntity : CharacterGameEntity
                 {
                     gameObject.tag = "Enemy";
                     gameObject.layer = 8;
-
                     break;
                 }
         }
-
+        
         characterBattlePhysics = GetComponent<BattlePhysicsInteraction>();
-
+        characterBattlePhysics.localGroundYCoordinate = transform.position.y;
     }
     // Check current context of the game, and change states accordingly.
     void Update()
@@ -69,6 +67,11 @@ public class CharacterGameBattleEntity : CharacterGameEntity
             entityBattleManager = (BattleManager)CentralManager.GetStateManager();
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
         characterSelectable.cursorTarget += transform.position;
+
+        // i fucking hate unity lmao. for some reason, even though the collider object exists upon instantiation, setting this up in 
+        // character setup is a null reference. if someone smarter than me can fix this that'd be swell. 
+        if (GetComponent<BoxCollider2D>().size != characterScriptable.battleHitBoxSize)
+            GetComponent<BoxCollider2D>().size = characterScriptable.battleHitBoxSize;
         
     }
 

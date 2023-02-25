@@ -74,7 +74,7 @@ public class BlockScript : MonoBehaviour
                     break;
                 }
                 default :
-                    _test.color = new Color(0,1,0.57f,1);
+                    _test.color = Color.white;
                     break;
             }
         }
@@ -116,7 +116,7 @@ public class BlockScript : MonoBehaviour
         _parryTimer.SetTimer(_parryDuration);
         _cooldownTimer.SetTimer(_cooldownDuration);
 
-        _test.color = new Color(0,1,0.57f,1);
+        _test.color = Color.white;
     }
     void CompleteReset()
     {

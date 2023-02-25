@@ -39,6 +39,7 @@ public class OverworldManager : GameManager
         enemy.transform.parent = entities.transform;
 
 
+        entity.CharacterSetup();
         return enemy;
 
     }

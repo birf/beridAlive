@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterGameOverworldEntity : MonoBehaviour
+public class CharacterGameOverworldEntity : CharacterGameEntity
 {
-    public CharacterBase characterData;
-    public CharacterScriptable characterScriptable;
     public OverworldManager overworldManager;
     public List<CharacterScriptable> partnerCharacters = new List<CharacterScriptable>();
 

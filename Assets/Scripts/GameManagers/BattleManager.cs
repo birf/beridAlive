@@ -181,7 +181,8 @@ public class BattleManager : GameManager
 
             if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
             {
-                playerItems = new List<ItemData>(CharacterGameBattleEntities[i].characterScriptable.characterItems);
+                // playerItems = new List<ItemData>(CharacterGameBattleEntities[i].characterScriptable.characterItems);
+                playerItems = CharacterGameBattleEntities[i].characterScriptable.characterItems;
                 playerMoves = new List<BattleMove>(CharacterGameBattleEntities[i].characterScriptable.characterMoves);
                 playerCharacters.Add(CharacterGameBattleEntities[i]);
                 CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
