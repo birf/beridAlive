@@ -8740,6 +8740,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 887403173}
   - {fileID: 1884335999}
   m_Father: {fileID: 1945764105}
   m_RootOrder: 0
@@ -39889,10 +39890,10 @@ MonoBehaviour:
     baseSTAMINA: 0
     CharacterName: 
     CharacterDescription: 
-  characterScriptable: {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
+  characterScriptable: {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
   overworldManager: {fileID: 0}
   partnerCharacters:
-  - {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
+  - {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
 --- !u!61 &533804527
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -40084,12 +40085,13 @@ MonoBehaviour:
     baseSTAMINA: 0
     CharacterName: 
     CharacterDescription: 
-  characterScriptable: {fileID: 11400000, guid: d561331d58a0591458330e0be9fe7201, type: 2}
+  characterScriptable: {fileID: 11400000, guid: c306d68809b6c8b4abb23077b31b09cb, type: 2}
   characterAnimator: {fileID: 0}
   characterAnimations: {fileID: 0}
   characterBattlePhysics: {fileID: 0}
   characterSelectable: {fileID: 578470186}
   entityBattleManager: {fileID: 0}
+  boxCol: {fileID: 0}
 --- !u!95 &578470183
 Animator:
   serializedVersion: 3
@@ -40371,10 +40373,10 @@ MonoBehaviour:
     baseSTAMINA: 0
     CharacterName: 
     CharacterDescription: 
-  characterScriptable: {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
+  characterScriptable: {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
   overworldManager: {fileID: 0}
   partnerCharacters:
-  - {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
+  - {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
 --- !u!1 &671207501
 GameObject:
   m_ObjectHideFlags: 0
@@ -40434,12 +40436,12 @@ MonoBehaviour:
     baseSTAMINA: 0
     CharacterName: 
     CharacterDescription: 
-  characterScriptable: {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
+  characterScriptable: {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
   overworldManager: {fileID: 0}
   partnerCharacters:
-  - {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
-  - {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
-  - {fileID: 11400000, guid: 40cec232e73f96540aee550b0d5fd680, type: 2}
+  - {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
+  - {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
+  - {fileID: 11400000, guid: a8b3f6670ae52d64e9bbd7c541dfb18e, type: 2}
 --- !u!61 &671207504
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -40735,6 +40737,88 @@ MonoBehaviour:
   - {x: 8.09, y: 0.75}
   - {x: 7.82, y: -1.99}
   activeLevel: {fileID: 0}
+--- !u!1 &887403172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 887403173}
+  - component: {fileID: 887403174}
+  m_Layer: 0
+  m_Name: bg_purgatory_icicles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &887403173
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887403172}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
+  m_Children: []
+  m_Father: {fileID: 188560425}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &887403174
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887403172}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 100
+  m_Sprite: {fileID: 21300000, guid: 25816cbe9eb9e4147b83fdfb135760e2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 19.2, y: 10.8}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &907820948
 GameObject:
   m_ObjectHideFlags: 0
@@ -107022,7 +107106,7 @@ MonoBehaviour:
     baseSTAMINA: 0
     CharacterName: 
     CharacterDescription: 
-  characterScriptable: {fileID: 11400000, guid: d561331d58a0591458330e0be9fe7201, type: 2}
+  characterScriptable: {fileID: 11400000, guid: c306d68809b6c8b4abb23077b31b09cb, type: 2}
   overworldManager: {fileID: 0}
   partnerCharacters: []
 --- !u!212 &1646506912
@@ -107114,7 +107198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1aee14c342e71548b227d6433bfc91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 2.5
+  _movementSpeed: 5
   _validLayers:
     serializedVersion: 2
     m_Bits: 256
@@ -107315,10 +107399,10 @@ Transform:
   m_GameObject: {fileID: 1884335998}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 0.61, y: 0.61, z: 1}
   m_Children: []
   m_Father: {fileID: 188560425}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1884336000
 SpriteRenderer:
@@ -107360,7 +107444,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -100
-  m_Sprite: {fileID: 21300000, guid: d9c07fb064603704b817f37158493178, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 64b9e643f64584843965bec68dfa545c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

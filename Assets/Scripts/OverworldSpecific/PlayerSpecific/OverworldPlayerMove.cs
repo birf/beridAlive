@@ -47,6 +47,7 @@ public class OverworldPlayerMove : MonoBehaviour
     {
         _internalPosition = transform.position;
         _internalVelocity = controls.Overworld.Move.ReadValue<Vector2>() * _movementSpeed * Time.deltaTime;
+        _internalVelocity.y *= 0.5f;
 
     }
     void CheckCollisions()

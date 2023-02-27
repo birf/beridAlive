@@ -60,6 +60,7 @@ public class OverworldManager : GameManager
             GameObject enemy = CreateEnemy(currentEnemyEncounter.partnerCharacters[i]);
             enemy.transform.localPosition = battlePositions[i];
             enemy.GetComponent<BattlePhysicsInteraction>().startPosition = battlePositions[i];
+            enemy.GetComponent<BattlePhysicsInteraction>().localGroundYCoordinate = battlePositions[i].y;
         }
 
         gameObject.SetActive(false);

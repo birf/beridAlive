@@ -117,6 +117,8 @@ public class BlockScript : MonoBehaviour
         _cooldownTimer.SetTimer(_cooldownDuration);
 
         _test.color = Color.white;
+        _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF;
+
     }
     void CompleteReset()
     {
