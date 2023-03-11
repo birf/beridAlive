@@ -23,7 +23,7 @@ public class ATKScript : MonoBehaviour
 
     protected virtual void Update()
     {
-        StateCheck();
+        // StateCheck();
     }
     protected virtual void LateUpdate()
     {}
@@ -58,9 +58,19 @@ public class ATKScript : MonoBehaviour
         battleManager.currentTargetCharacter = targetEnemy;
         
     }  
+    
+    ///<summary>
+    /// When an attack is successful, the attack script will alert the current battle manager and 
+    /// deal the appropriate damage and knockback to the entity. When creating a battle script, always have 
+    /// this called somewhere within it. Be careful not to reuse functions within!
+    ///</summary>
+
     public virtual void OnSuccess()
     {
         battleManager.AttackSuccess();
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
+        targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
+
     }
     public virtual void OnFailure()
     {

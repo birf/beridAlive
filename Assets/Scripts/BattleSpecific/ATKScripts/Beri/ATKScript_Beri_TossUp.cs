@@ -175,7 +175,6 @@ public class ATKScript_Beri_TossUp : ATKScript
     public override void OnSuccess()
     {
         targetEnemy.transform.parent = null;
-        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
         base.OnSuccess();

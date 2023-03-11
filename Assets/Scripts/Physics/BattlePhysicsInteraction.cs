@@ -36,8 +36,8 @@ public class BattlePhysicsInteraction : MonoBehaviour
 #region Classes and Structs
     public Vector3 startPosition = new Vector3();
     CharacterGameBattleEntity _characterBody;
-    Vector2 _internalPosition = new Vector2();    
-    Vector2 _internalVelocity = new Vector2();
+    Vector3 _internalPosition = new Vector3();    
+    Vector3 _internalVelocity = new Vector3();
     RaycastHit2D[] _hitBuffer = new RaycastHit2D[5];
     Collider2D[] _collisionBuffer = new Collider2D[3];
     [SerializeField] BoxCollider2D _boxCol;
@@ -85,6 +85,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
                 characterPhysicsState = CharacterPhysicsState.RECOVERY;
             }
         }
+
         else
         {
             RecoverToInitialPosition(); // character is grounded and was just hit by something.                 
@@ -93,6 +94,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void GetState()
     {
         _internalPosition = transform.position;
+        _internalPosition.z = transform.position.y;
 
         // if (_internalVelocity == Vector2.zero)
         //     transform.position = startPosition;
@@ -120,14 +122,19 @@ public class BattlePhysicsInteraction : MonoBehaviour
     }
     void RecoverToInitialPosition()
     {
-        transform.position = Vector3.MoveTowards(transform.position, startPosition, Time.deltaTime * moveSpeed);
+        MoveToPosition((Vector3)startPosition);
+    }
+    void MoveToPosition(Vector3 destination)
+    {
+        transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * moveSpeed);
+        MoveGroundCoordinate(transform.position.y);
         // when character reaches the initial position, update their state.
-        if (Vector3.Distance(transform.position,(Vector3)startPosition) < MINMOVEDISTANCE)
+        if (Vector3.Distance(transform.position,destination) < MINMOVEDISTANCE)
         {
             isHit = false;
             isGrounded = true;
             characterPhysicsState = CharacterPhysicsState.DEFAULT;
-            localGroundYCoordinate = transform.position.y - 0.5f;
+            localGroundYCoordinate = startPosition.y;
         }
     }
 

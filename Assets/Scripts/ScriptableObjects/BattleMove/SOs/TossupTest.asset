@@ -20,3 +20,4 @@ MonoBehaviour:
   moveName: Tossup
   moveDescription: 'Grab an opponent and launch them upwards with the strength of
     10 zombies. '
+  canBeFirst: 1

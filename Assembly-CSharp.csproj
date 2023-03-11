@@ -38,6 +38,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\UI\UISelectable.cs" />
      <Compile Include="Assets\OverworldAssets\_External\2d-techdemos\GridInformation\Scripts\GridInformation.cs" />
+     <Compile Include="Assets\Scripts\UI\UIMainMenu.cs" />
      <Compile Include="Assets\Scripts\UI\UICursor.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\ATKScripts\Beri\ATKScript_Beri_Uppercut.cs" />
      <Compile Include="Assets\OverworldAssets\Scripts\BasicCameraFollow.cs" />
@@ -81,7 +82,7 @@
      <Compile Include="Assets\Scripts\UI\UIListEntry.cs" />
      <Compile Include="Assets\Utils\BeriUtils.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\UI\StaminaBar.cs" />
-     <Compile Include="Assets\Scripts\UI\UIMainMenu.cs" />
+     <Compile Include="Assets\Scripts\Other\Aesthetic\BattleDropShadow.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

@@ -48,12 +48,10 @@ public class BlockScript : MonoBehaviour
         // only ever have this script function if the current state is "ENEMYTURN".
         if (BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN)
         {
-
             if (CheckCollisions())
             {
                 CompleteReset();
             }
-
             if (controls.Battle.Primary.triggered && _currentBlockPhase == BlockPhase.NONE)
                 _currentBlockPhase = BlockPhase.PARRY;
             switch (_currentBlockPhase)
@@ -86,15 +84,13 @@ public class BlockScript : MonoBehaviour
     {
         _characterBody.characterData.curDEF = 99;
         _parryTimer.Tick(Time.deltaTime);
-
         _test.color = Color.yellow; 
-       
     }
     void BlockingPhase()
     {
         _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF + 1;
         _blockTimer.Tick(Time.deltaTime);
-        _test.color = Color.white;
+        _test.color = Color.green;
     }
     void CooldownPhase()
     {
@@ -117,7 +113,6 @@ public class BlockScript : MonoBehaviour
         _cooldownTimer.SetTimer(_cooldownDuration);
 
         _test.color = Color.white;
-        _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF;
 
     }
     void CompleteReset()

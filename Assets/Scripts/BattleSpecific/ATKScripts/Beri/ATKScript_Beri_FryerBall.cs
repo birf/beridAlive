@@ -89,7 +89,6 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     public override void OnSuccess()
     {
-        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, localDamage);
         controls.Disable();
         base.OnSuccess();
         Destroy(gameObject);

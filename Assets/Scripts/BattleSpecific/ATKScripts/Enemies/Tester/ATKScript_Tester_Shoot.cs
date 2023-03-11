@@ -38,7 +38,6 @@ public class ATKScript_Tester_Shoot : ATKScript
     public override void OnSuccess()
     {
         base.OnSuccess();
-        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         battleManager.currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
     }
     public override void OnFailure()

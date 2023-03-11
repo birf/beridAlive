@@ -54,7 +54,7 @@ public class BattleManager : GameManager
     }
     void RestartGame()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     void ReturnToOverworld()
     {
@@ -166,14 +166,6 @@ public class BattleManager : GameManager
 
         CharacterGameBattleEntities = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
 
-
-
-
-
-
-
-
-
         for (int i = 0; i < CharacterGameBattleEntities.Count; i++)
         {
             // if the character type is the player, setup their moves and items. 
@@ -182,8 +174,7 @@ public class BattleManager : GameManager
 
             if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
             {
-                // playerItems = new List<ItemData>(CharacterGameBattleEntities[i].characterScriptable.characterItems);
-                playerItems = CharacterGameBattleEntities[i].characterScriptable.characterItems;
+                playerItems = new List<ItemData>(CharacterGameBattleEntities[i].characterScriptable.characterItems);
                 playerMoves = new List<BattleMove>(CharacterGameBattleEntities[i].characterScriptable.characterMoves);
                 playerCharacters.Add(CharacterGameBattleEntities[i]);
                 CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
@@ -204,8 +195,6 @@ public class BattleManager : GameManager
     }
     void DetermineStateBasedOnActiveCharacter()
     {
-        Debug.Log("determining active character");
-        Debug.Log(currentActiveCharacter.characterData.CharType);
         switch (currentActiveCharacter.characterData.CharType)
         {
             case (CharacterBase.CharacterType.ENEMY):
@@ -304,6 +293,7 @@ public class BattleManager : GameManager
         currentActiveCharacter = CharacterGameBattleEntities[0];
         DetermineStateBasedOnActiveCharacter();
     }
+    
     // fetch the next active character from the turn queue. 
     public void GetNextTurn()
     {
@@ -315,6 +305,9 @@ public class BattleManager : GameManager
         t.Add(CharacterGameBattleEntities[0]);
         CharacterGameBattleEntities = t;
         DetermineStateBasedOnActiveCharacter();
+        // if the next turn is the player's turn, add 1 back to their stamina
+        if (CurrentBattleManagerState == BattleManagerState.PLAYERTURN)
+            currentActiveCharacter.characterData.UpdateStat("Stamina", 1);
     }
 }
 

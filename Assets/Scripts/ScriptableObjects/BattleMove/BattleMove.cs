@@ -19,11 +19,17 @@ public class BattleMove : ScriptableObject, IDisplayable
     ///The launch velocity that this move should primarily send the opponent. (If applicable.)
     ///</summary>
     public Vector3 mainLaunchVelocity;
+    ///<summary>
+    /// Animations specific to this move. While not needed in every move, it may be more convenient to interface with this set
+    /// of animations instead of a large web of unrelated animations in Beri's main animation controller, for example. 
+    ///</summary>
+    public RuntimeAnimatorController moveSpecificAnimations;
     public Sprite moveSpriteSmall;
     public int damage;
     public int staminaCost;
     public string moveName;
     public string moveDescription;
+    public bool mustBeNearEnemy;
 
     public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
     {

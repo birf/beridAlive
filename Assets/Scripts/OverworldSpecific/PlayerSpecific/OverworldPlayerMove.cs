@@ -3,40 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using BeriUtils.Core;
 
-[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(CircleCollider2D))]
 public class OverworldPlayerMove : MonoBehaviour
 {
     [SerializeField] [Range(0.1f, 25.0f)] float _movementSpeed = 5.0f;
     [SerializeField] LayerMask _validLayers;
-    [SerializeField] Camera _playerCamera;
-    BoxCollider2D _boxCol;
+    [SerializeField] CircleCollider2D _cirCol;
     PrimaryControls controls;
     Vector2 _internalPosition;
     Vector2 _internalVelocity;
     Collider2D[] _colliderBuffer = new Collider2D[3];
+    Animator _animator;
 
 
     // Start is called before the first frame update
-    void Awake()
+    void OnEnable()
     {
         controls = new PrimaryControls();
         controls.Enable();
-        _boxCol = GetComponent<BoxCollider2D>();
+        _cirCol = GetComponent<CircleCollider2D>();
+        _animator = GetComponent<Animator>();
+        _animator.Play("standSW");
     }
 
     void OnDisable()
     {
         controls.Disable();
     }
-    void OnEnable()
-    {
-        controls.Enable();
-    }
 
     // Update is called once per frame
     void Update()
     {
         GetState();
+
         //
         _internalPosition += _internalVelocity;
         //
@@ -48,12 +48,12 @@ public class OverworldPlayerMove : MonoBehaviour
         _internalPosition = transform.position;
         _internalVelocity = controls.Overworld.Move.ReadValue<Vector2>() * _movementSpeed * Time.deltaTime;
         _internalVelocity.y *= 0.5f;
-
+        AnimationUpdate();
     }
     void CheckCollisions()
     {
 
-        if (Physics2D.OverlapBoxNonAlloc(transform.position, _boxCol.size, 0f, _colliderBuffer, _validLayers) > 0)
+        if (Physics2D.OverlapCircleNonAlloc(transform.position, _cirCol.radius, _colliderBuffer, _validLayers) > 0)
         {
             OverworldManager om = (OverworldManager)CentralManager.GetStateManager();
             for (int i = 0; i < _colliderBuffer.Length; i++)
@@ -71,5 +71,32 @@ public class OverworldPlayerMove : MonoBehaviour
     void SetState()
     {
         transform.position = _internalPosition;
+    }
+
+    void AnimationUpdate()
+    {
+        float sin = Mathf.Sin((Vector2.SignedAngle(Vector2.right,controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
+        float cos = Mathf.Cos((Vector2.SignedAngle(Vector2.right,controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
+        Debug.Log(sin);
+
+        if (sin > -0.5f && sin <= 0.5f && cos >= 0 && _internalVelocity.magnitude != 0f)
+        { _animator.Play("standE");}
+        else if (sin > 0.5f && sin <= 0.86f && cos >= 0)
+        { _animator.Play("standNE");}
+        else if (sin > 0.86f && sin <= 1)
+        { _animator.Play("standN"); }
+        else if (sin > 0.5f && sin <= 0.86f && cos <= 0)
+        { _animator.Play("standNW");}
+        if (sin > -0.5f && sin <= 0.5f && cos <= 0)
+        { _animator.Play("standW");}
+        else if (sin <= -0.5f && sin > -0.86f && cos <= 0)
+        { _animator.Play("standSW");}
+        else if (sin <= -0.86f && sin <= -1f)
+        { _animator.Play("standS"); }
+        else if (sin <= -0.5f && sin > -0.86f && cos >= 0)
+        { _animator.Play("standSE"); }
+
+
+
     }
 }

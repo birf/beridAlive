@@ -19,3 +19,4 @@ MonoBehaviour:
   staminaCost: 1
   moveName: Uppercut
   moveDescription: Punch a demon, square in the jaw.
+  mustBeNearEnemy: 1

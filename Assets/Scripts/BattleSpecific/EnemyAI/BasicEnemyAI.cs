@@ -25,6 +25,7 @@ public class BasicEnemyAI : MonoBehaviour
         l.Add(enemyEntity.characterScriptable.characterMoves[0]);
         enemyEntity.entityBattleManager.FeedMoveQueue(l, enemyEntity.entityBattleManager.playerCharacters[0]);
         enemyEntity.entityBattleManager.StartAttack();
+        enemyEntity.characterAnimator.Play("attack01");
         canExecute = false;
     }
 

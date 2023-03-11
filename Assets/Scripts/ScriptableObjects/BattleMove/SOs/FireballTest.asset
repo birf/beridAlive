@@ -19,3 +19,4 @@ MonoBehaviour:
   staminaCost: 2
   moveName: Fryerball
   moveDescription: Bless her heart, but she can't cook at all.
+  canBeFirst: 1

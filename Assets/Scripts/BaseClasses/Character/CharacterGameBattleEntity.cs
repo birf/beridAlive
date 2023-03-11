@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(UISelectable))]
 [RequireComponent(typeof(BattlePhysicsInteraction))]
+
+
 public class CharacterGameBattleEntity : CharacterGameEntity
 {
     /*
@@ -63,6 +65,7 @@ public class CharacterGameBattleEntity : CharacterGameEntity
     // Check current context of the game, and change states accordingly.
     void Update()
     {
+
         if (CentralManager.GetStateManager() != null)
             entityBattleManager = (BattleManager)CentralManager.GetStateManager();
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
@@ -70,8 +73,10 @@ public class CharacterGameBattleEntity : CharacterGameEntity
 
         // i fucking hate unity lmao. for some reason, even though the collider object exists upon instantiation, setting this up in 
         // character setup is a null reference. if someone smarter than me can fix this that'd be swell. 
+        
         if (GetComponent<BoxCollider2D>().size != characterScriptable.battleHitBoxSize)
             GetComponent<BoxCollider2D>().size = characterScriptable.battleHitBoxSize;
+        
         
     }
 
@@ -88,4 +93,11 @@ public class CharacterGameBattleEntity : CharacterGameEntity
         b.CharacterGameBattleEntities.Remove(this);
         Destroy(gameObject); // <-- for now. tester
     }
+}
+public enum BattleEntityState
+{
+    NORMAL,
+    MOVING,
+    DAMAGED,
+    ATTACKING
 }

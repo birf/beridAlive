@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 [System.Serializable]
 public class CharacterBase
 {
@@ -85,6 +86,13 @@ public class CharacterBase
                     curHP = 0;
                 if (curHP > baseHP)
                     curHP = baseHP;
+                break;
+            }
+            case("Stamina") :
+            {
+                curSTAMINA += (int)input; 
+                if (curSTAMINA >= baseSTAMINA)
+                    curSTAMINA = baseSTAMINA;
                 break;
             }
         }
