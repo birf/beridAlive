@@ -73,6 +73,7 @@
      <Compile Include="Assets\Scripts\OverworldSpecific\PlayerSpecific\OverworldPlayerMove.cs" />
      <Compile Include="Assets\Scripts\BaseClasses\Character\CharacterGameBattleEntity.cs" />
      <Compile Include="Assets\Scripts\BaseClasses\Character\CharacterGameOverworldEntity.cs" />
+     <Compile Include="Assets\Scripts\Other\Aesthetic\BattleDropShadow.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\EnemyAI\BasicEnemyAI.cs" />
      <Compile Include="Assets\Scripts\UI\UIResults.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\PlayerSpecific\BlockScript.cs" />
@@ -82,7 +83,7 @@
      <Compile Include="Assets\Scripts\UI\UIListEntry.cs" />
      <Compile Include="Assets\Utils\BeriUtils.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\UI\StaminaBar.cs" />
-     <Compile Include="Assets\Scripts\Other\Aesthetic\BattleDropShadow.cs" />
+     <Compile Include="Assets\Scripts\ScriptableObjects\Tactics\Tactics.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

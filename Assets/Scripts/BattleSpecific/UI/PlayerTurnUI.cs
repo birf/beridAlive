@@ -18,9 +18,11 @@ public class PlayerTurnUI : MonoBehaviour
     public UIListEntry listEntryPrefab;
     public UICursor cursor;
     public TextMeshPro playerActionIconDisplayText;
+    public TextMeshPro descriptionDisplay;
     public BattleManager battleManager;
 
     public List<BattleMove> playerMoveQueue = new List<BattleMove>();
+    public List<Tactics> playerTactics = new List<Tactics>();
     
     [SerializeField][Range(1.0f,25.0f)] float _actionIconSpeed = 12.5f;
     [SerializeField][Range(0.1f,2.0f)] float _actionIconXScale = 1.25f;
@@ -64,8 +66,6 @@ public class PlayerTurnUI : MonoBehaviour
             battleManager.currentActiveCharacter.characterAnimator.Play("battle_select");
         else
             battleManager.currentActiveCharacter.characterAnimator.Play("battle_idle");
-
-
 
         // switch statement for current ui state. 
         switch (_currentState)
@@ -175,6 +175,8 @@ public class PlayerTurnUI : MonoBehaviour
 #region ActionSelect Methods
     void ActionSelect() // Method for moving the actionIcons.
     {
+        SetDescriptorActive(false);
+
         playerActionIconDisplayText.text = currentActiveUIElement.gameObject.name;
         currentActiveUIElements = new List<UISelectable>(playerActionIcons);
         if (cursor.gameObject.activeSelf)
@@ -290,6 +292,16 @@ public class PlayerTurnUI : MonoBehaviour
         {
             case ("Attack") : // player is selecting what moves they are going to attack with
             {
+                // display description text.
+                if (currentActiveUIElement.displayable != null)
+                {
+                    currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
+                    SetDescriptionText(strings[1]);
+                    SetDescriptorActive(true);
+                }
+                else
+                    SetDescriptorActive(false);
+
                 if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                 {
                     if (currentActiveUIElement.displayable != null) // if this is a valid element and the current stamina level is high enough
@@ -340,6 +352,9 @@ public class PlayerTurnUI : MonoBehaviour
             }
             case("AttackTargetSelection") :
             {
+
+                SetDescriptorActive(false);
+
                 if (controls.Battle.Primary.triggered) // player has selected their moves and is ready to start.
                 {
                     battleManager.FeedMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameBattleEntity>());
@@ -375,6 +390,13 @@ public class PlayerTurnUI : MonoBehaviour
 #region ItemSelection methods
     void ItemSelection()
     {
+        if (currentActiveUIElement.displayable != null)
+        {
+                currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
+                SetDescriptionText(strings[1]);
+                SetDescriptorActive(true);
+        }
+
         if (controls.Battle.Direction.triggered)
         {
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
@@ -402,6 +424,7 @@ public class PlayerTurnUI : MonoBehaviour
                             currentActiveUIElements.Add(battleManager.playerCharacters[i].characterSelectable);
                     }
                     currentActiveUIElement = currentActiveUIElements[0];
+                    SetDescriptorActive(false);
                 }
                 if (controls.Battle.Secondary.triggered)
                 {
@@ -409,10 +432,15 @@ public class PlayerTurnUI : MonoBehaviour
                     ClearCurrentSubMenu();
                     SetupActionIcons();
                 }
+
+                SetDescriptorActive(true);
+
                 break;
             }
             case ("ItemUseSelection") : // player selected an item to use.
             {
+                SetDescriptorActive(false);
+
                 if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                 {
                     ItemData t = (ItemData)currentSelectedItem.displayable;
@@ -449,5 +477,17 @@ public class PlayerTurnUI : MonoBehaviour
         }
     }
 #endregion
+#region Description Methods
+#endregion
+    void SetDescriptorActive(bool active)
+    {
+        descriptionDisplay.transform.parent.gameObject.SetActive(active);
+    }
+    void SetDescriptionText(string text)
+    {
+        descriptionDisplay.text = text;
+    }
 }
+
+
 
