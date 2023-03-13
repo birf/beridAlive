@@ -15,5 +15,5 @@ MonoBehaviour:
   tacticName: Charge
   tacticDescription: Use your current turn to deal +1 extra damage next turn on each
     attack.
-  mainSprite: {fileID: 21300000, guid: 007c9c7165949c242aab245bd70f088a, type: 3}
+  mainSprite: {fileID: 21300000, guid: b784670ac45a84f429368dc0ab65a8e6, type: 3}
   potency: 1

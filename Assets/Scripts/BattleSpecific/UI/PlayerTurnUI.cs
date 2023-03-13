@@ -223,6 +223,7 @@ public class PlayerTurnUI : MonoBehaviour
                     {
                         ClearCurrentSubMenu();
                         _currentState = _playerTurnUIStates[3];
+                        InstantiateList(new List<IDisplayable>(playerTactics),listSpawnerOrigins[0] + transform.position);
                         break;
                     }
             }
@@ -479,17 +480,27 @@ public class PlayerTurnUI : MonoBehaviour
     #endregion
     #region TacticsMenu Methods
 
-    // Nothing yet.
 
     void TacticsSelection()
     {
+        SetDescriptorActive(true);
+        if (currentActiveUIElement.displayable != null)
+        {
+            currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
+            SetDescriptionText(strings[1]);
+            SetDescriptorActive(true);
+        }
         if (controls.Battle.Secondary.triggered)
         {
             _currentState = _playerTurnUIStates[0];
             ClearCurrentSubMenu();
             SetupActionIcons();
-
+            SetDescriptorActive(false);
             GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);
+        }
+        if (controls.Battle.Direction.triggered)
+        {
+            Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
     }
     #endregion
