@@ -13,9 +13,14 @@ public class OverworldManager : GameManager
 
     [SerializeField] List<Vector2> battlePositions;
 
+    //[SerializeField] AudioManager audioManager;
+
     //current level
-    private int levelNumber; 
+    private int levelNumber;
     public GameObject activeLevel;
+
+
+
 
     void Start()
     {
@@ -52,6 +57,9 @@ public class OverworldManager : GameManager
     public void BattleStart()
     {
         BattleManager bm = ChildObjects[0].GetComponent<BattleManager>();
+        FindObjectOfType<AudioManager>().PlayTrack(AUDIOCLIPS.BATTLE_THEME);
+
+
         bm.gameObject.SetActive(true);
 
 
@@ -80,10 +88,11 @@ public class OverworldManager : GameManager
 
 
     //load the next level
-    public void nextLevel(){
-        string[] levelNames = new string[]{"test_level_1", "test_level_2"}; 
+    public void nextLevel()
+    {
+        string[] levelNames = new string[] { "test_level_1", "test_level_2" };
         GameObject levels = GameObject.Find("Levels");
-        if(activeLevel != null) activeLevel.SetActive(false); //deactivate current level
+        if (activeLevel != null) activeLevel.SetActive(false); //deactivate current level
         //find and enable level
         Debug.Log(levelNames[levelNumber]);
         activeLevel = levels.transform.Find(levelNames[levelNumber]).gameObject;
@@ -91,12 +100,13 @@ public class OverworldManager : GameManager
         activeLevel.GetComponent<OverworldLevel>().initializeLevel();
 
         //add each enemy to Characters and change their parent to entities
-        foreach (GameObject enemy in activeLevel.GetComponent<OverworldLevel>().getEnemies()){
+        foreach (GameObject enemy in activeLevel.GetComponent<OverworldLevel>().getEnemies())
+        {
             Characters.Add(enemy.GetComponent<CharacterGameOverworldEntity>().characterData);
-            enemy.transform.parent = GameObject.Find("entities").transform;      
+            enemy.transform.parent = GameObject.Find("entities").transform;
         }
         levelNumber++;
-        
+
 
     }
 

@@ -8,7 +8,7 @@ public class PlayerTurnUI : MonoBehaviour
     /*
         Class for managing the player's UI when it is currently their turn in battle.
     */
-    public Vector3[] listSpawnerOrigins = {new Vector3(1.5f,4.0f,0), new Vector3(2.25f,2.75f,0)}; // offsets for spawning list entries.
+    public Vector3[] listSpawnerOrigins = { new Vector3(1.5f, 4.0f, 0), new Vector3(2.25f, 2.75f, 0) }; // offsets for spawning list entries.
     public StaminaBar staminaBar;
     public UISelectable goButton;
     public List<UISelectable> playerActionIcons = new List<UISelectable>();
@@ -23,16 +23,17 @@ public class PlayerTurnUI : MonoBehaviour
 
     public List<BattleMove> playerMoveQueue = new List<BattleMove>();
     public List<Tactics> playerTactics = new List<Tactics>();
-    
-    [SerializeField][Range(1.0f,25.0f)] float _actionIconSpeed = 12.5f;
-    [SerializeField][Range(0.1f,2.0f)] float _actionIconXScale = 1.25f;
-    [SerializeField][Range(0.1f,2.0f)] float _actionIconYScale = 1.25f;
+
+    [SerializeField] [Range(1.0f, 25.0f)] float _actionIconSpeed = 12.5f;
+    [SerializeField] [Range(0.1f, 2.0f)] float _actionIconXScale = 1.25f;
+    [SerializeField] [Range(0.1f, 2.0f)] float _actionIconYScale = 1.25f;
 
 
     PrimaryControls controls;
     const float THETA = 2 * Mathf.PI;
-    [SerializeField]string _currentState;
-    [SerializeField]string[] _playerTurnUIStates = 
+    [SerializeField] string _currentState;
+    [SerializeField]
+    string[] _playerTurnUIStates =
     {
         "ActionSelect",             // 0
         "Attack",                   // 1
@@ -44,8 +45,8 @@ public class PlayerTurnUI : MonoBehaviour
     };
     [SerializeField] GameObject _ActionIcons;
 
-#region MonoBehaviour Routines
-    void OnEnable() 
+    #region MonoBehaviour Routines
+    void OnEnable()
     {
         controls = new PrimaryControls();
         controls.Enable();
@@ -61,7 +62,7 @@ public class PlayerTurnUI : MonoBehaviour
         // make absolutely sure that there exists a state manager for this object.
         if (CentralManager.GetStateManager() != null)
             battleManager = (BattleManager)CentralManager.GetStateManager();
-        
+
         if (_currentState == "ActionSelect")
             battleManager.currentActiveCharacter.characterAnimator.Play("battle_select");
         else
@@ -70,41 +71,41 @@ public class PlayerTurnUI : MonoBehaviour
         // switch statement for current ui state. 
         switch (_currentState)
         {
-            case ("ActionSelect") :
-            {
-                ActionSelect();
-                break;
-            }
-            case ("Attack") :
-            case ("AttackTargetSelection") :
-            {
-                AttackSelection();
-                break;
-            }
-            case ("Items") :
-            case ("ItemUseSelection") :
-            {
-                ItemSelection();
-                break;
-            }
-            case ("Tactics") :
-            {
-                TacticsSelection();
-                break;
-            }
-            default :
-            {
-                ClearCurrentSubMenu();
-                SetupActionIcons();
-                break;
-            }
+            case ("ActionSelect"):
+                {
+                    ActionSelect();
+                    break;
+                }
+            case ("Attack"):
+            case ("AttackTargetSelection"):
+                {
+                    AttackSelection();
+                    break;
+                }
+            case ("Items"):
+            case ("ItemUseSelection"):
+                {
+                    ItemSelection();
+                    break;
+                }
+            case ("Tactics"):
+                {
+                    TacticsSelection();
+                    break;
+                }
+            default:
+                {
+                    ClearCurrentSubMenu();
+                    SetupActionIcons();
+                    break;
+                }
         }
         // safeguard. probably should remove.
         if (cursor.enabled)
             cursor.cursorSelectable = currentActiveUIElement;
     }
-#endregion
-#region General Functions
+    #endregion
+    #region General Functions
     void EnableCursor(Vector3 startPosition)
     {
         cursor.cursorSelectable = currentActiveUIElement;
@@ -128,15 +129,15 @@ public class PlayerTurnUI : MonoBehaviour
                 Vector3 target = spawnerOrigin;
                 target.y -= (i * yOffset);
                 UIListEntry objEntry = Instantiate(listEntryPrefab);
-                objEntry.selectable.InitializeValues(i,ListEntries.Count,true,false,true);
-                objEntry.selectable.InitializePositions(spawnerOrigin,target);
+                objEntry.selectable.InitializeValues(i, ListEntries.Count, true, false, true);
+                objEntry.selectable.InitializePositions(spawnerOrigin, target);
                 objEntry.selectable.displayable = ListEntries[i];
                 objEntry.SetDisplayData(ListEntries[i]);
                 currentActiveUIElements.Add(objEntry.selectable);
             }
             currentActiveUIElement = currentActiveUIElements[0];
             EnableCursor(currentActiveUIElements[0].cursorTarget + spawnerOrigin);
-        }   
+        }
     }
     void ClearCurrentSubMenu()
     {
@@ -150,16 +151,17 @@ public class PlayerTurnUI : MonoBehaviour
                     currentActiveUIElements[i].gameObject.SetActive(false);
             }
         }
-        
+
         currentActiveUIElements.Clear();
+
 
         if (playerActionIconDisplayText.IsActive())
             playerActionIconDisplayText.gameObject.SetActive(false); // stop displaying the text under the active icon
         if (staminaBar.gameObject.activeSelf)
-            { staminaBar.gameObject.SetActive(false);  staminaBar.currentLerpTime = 0;}
-        
+        { staminaBar.gameObject.SetActive(false); staminaBar.currentLerpTime = 0; }
+
         if (_currentState == _playerTurnUIStates[0])
-            foreach(UISelectable icon in playerActionIcons)
+            foreach (UISelectable icon in playerActionIcons)
                 icon.transform.position = icon.initialPosition;
     }
     void Navigate(int shift) // Navigate through the current list of active UI elements. 
@@ -170,9 +172,10 @@ public class PlayerTurnUI : MonoBehaviour
             currentActiveUIElements[i].ShiftCycle(shift);
             if (currentActiveUIElements[i].cycle == 0) { currentActiveUIElement = currentActiveUIElements[i]; }
         }
+        GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.NAVIGATE);
     }
-#endregion
-#region ActionSelect Methods
+    #endregion
+    #region ActionSelect Methods
     void ActionSelect() // Method for moving the actionIcons.
     {
         SetDescriptorActive(false);
@@ -188,45 +191,47 @@ public class PlayerTurnUI : MonoBehaviour
         }
         for (int i = 0; i < playerActionIcons.Count; i++)
             SmoothMoveActionIcon(i);
-        
+
         if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
         {
             switch (currentActiveUIElement.name)
             {
-                case "Attack" :
-                {
-                    ClearCurrentSubMenu();
-                    _currentState = _playerTurnUIStates[1];
-                    InstantiateList(new List<IDisplayable>(battleManager.playerMoves),listSpawnerOrigins[0] + transform.position);
-                    for (int i = 0; i < currentActiveUIElements.Count; i++)
+                case "Attack":
                     {
-                        currentActiveUIElements[i].cyclableElements += 1;
-                    }
-                    currentActiveUIElements.Add(goButton);
-                    goButton.InitializeValues(currentActiveUIElements.Count - 1,currentActiveUIElements.Count,false,false,true);
-                    
-                    break;
-                }
-                case "Items" :
-                {
-                    if (battleManager.playerItems.Count == 0)
+                        ClearCurrentSubMenu();
+                        _currentState = _playerTurnUIStates[1];
+                        InstantiateList(new List<IDisplayable>(battleManager.playerMoves), listSpawnerOrigins[0] + transform.position);
+                        for (int i = 0; i < currentActiveUIElements.Count; i++)
+                        {
+                            currentActiveUIElements[i].cyclableElements += 1;
+                        }
+                        currentActiveUIElements.Add(goButton);
+                        goButton.InitializeValues(currentActiveUIElements.Count - 1, currentActiveUIElements.Count, false, false, true);
+
                         break;
-                    ClearCurrentSubMenu();
-                    _currentState = _playerTurnUIStates[2];
-                    InstantiateList(new List<IDisplayable>(battleManager.playerItems),listSpawnerOrigins[0] + transform.position);
-                    break;
-                }
-                case "Tactics" :
-                {
-                    ClearCurrentSubMenu();
-                    _currentState = _playerTurnUIStates[3];
-                    break;
-                }
+                    }
+                case "Items":
+                    {
+                        if (battleManager.playerItems.Count == 0)
+                            break;
+                        ClearCurrentSubMenu();
+                        _currentState = _playerTurnUIStates[2];
+                        InstantiateList(new List<IDisplayable>(battleManager.playerItems), listSpawnerOrigins[0] + transform.position);
+                        break;
+                    }
+                case "Tactics":
+                    {
+                        ClearCurrentSubMenu();
+                        _currentState = _playerTurnUIStates[3];
+                        break;
+                    }
             }
+
+            GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.SELECT);
         }
-    } 
+    }
     // initialize action icons. 
-    void SetupActionIcons() 
+    void SetupActionIcons()
     {
         int i;
         for (i = 0; i < playerActionIcons.Count; i++)
@@ -239,25 +244,25 @@ public class PlayerTurnUI : MonoBehaviour
         currentActiveUIElement = playerActionIcons[0];
     }
     // smoothly move the player icon at index i to appropriate position. [explicitly for actionselection menu] 
-    void SmoothMoveActionIcon(int i) 
+    void SmoothMoveActionIcon(int i)
     {
         UISelectable icon = playerActionIcons[i];
 
         _ActionIcons.transform.position = battleManager.currentActiveCharacter.transform.position + listSpawnerOrigins[1];
         icon.initialPosition = _ActionIcons.transform.position;
-        
+
         icon.GetComponent<SpriteRenderer>().sortingOrder = icon.cycle == 0 ? 101 : 100 - (icon.cycle);
         icon.GetComponent<SpriteRenderer>().color = icon.cycle == 0 ? Color.white : Color.grey;
-        icon.transform.localScale = icon.cycle == 0? new Vector3(0.4f,0.4f,1) : new Vector3(0.35f,0.35f,1);
+        icon.transform.localScale = icon.cycle == 0 ? new Vector3(0.4f, 0.4f, 1) : new Vector3(0.35f, 0.35f, 1);
 
         Vector3 targetPosition = icon.initialPosition;
-        targetPosition.x = icon.initialPosition.x + _actionIconXScale * (Mathf.Sin((THETA * icon.cycle)/icon.cyclableElements));
-        targetPosition.y = icon.initialPosition.y + _actionIconYScale * (Mathf.Sin((THETA * icon.cycle)/icon.cyclableElements));
+        targetPosition.x = icon.initialPosition.x + _actionIconXScale * (Mathf.Sin((THETA * icon.cycle) / icon.cyclableElements));
+        targetPosition.y = icon.initialPosition.y + _actionIconYScale * (Mathf.Sin((THETA * icon.cycle) / icon.cyclableElements));
 
-        icon.transform.position = Vector2.Lerp(icon.transform.position,targetPosition,Time.deltaTime * _actionIconSpeed);
+        icon.transform.position = Vector2.Lerp(icon.transform.position, targetPosition, Time.deltaTime * _actionIconSpeed);
     }
-#endregion 
-#region AttackMenu Methods
+    #endregion
+    #region AttackMenu Methods
     void AttackSelection()
     {
         ref int curStamina = ref battleManager.currentActiveCharacter.characterData.curSTAMINA;
@@ -267,7 +272,7 @@ public class PlayerTurnUI : MonoBehaviour
             staminaBar.staminaCount = battleManager.currentActiveCharacter.characterData.baseSTAMINA;
             goButton.gameObject.SetActive(true);
             staminaBar.gameObject.SetActive(true);
-            staminaBar.targetPosition = transform.position + new Vector3(-10,0,0);
+            staminaBar.targetPosition = transform.position + new Vector3(-10, 0, 0);
         }
 
         // draw the stamina bar
@@ -278,7 +283,7 @@ public class PlayerTurnUI : MonoBehaviour
             }
         }
 
-        if(playerMoveQueue.Count > 0)
+        if (playerMoveQueue.Count > 0)
             goButton.isSelectable = true;
         else
             goButton.isSelectable = false;
@@ -288,185 +293,194 @@ public class PlayerTurnUI : MonoBehaviour
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
 
-        switch(_currentState)
+        switch (_currentState)
         {
-            case ("Attack") : // player is selecting what moves they are going to attack with
-            {
-                // display description text.
-                if (currentActiveUIElement.displayable != null)
+            case ("Attack"): // player is selecting what moves they are going to attack with
                 {
-                    currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
-                    SetDescriptionText(strings[1]);
-                    SetDescriptorActive(true);
+                    // display description text.
+                    if (currentActiveUIElement.displayable != null)
+                    {
+                        currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
+                        SetDescriptionText(strings[1]);
+                        SetDescriptorActive(true);
+                    }
+                    else
+                        SetDescriptorActive(false);
+
+                    if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
+                    {
+                        if (currentActiveUIElement.displayable != null) // if this is a valid element and the current stamina level is high enough
+                        {
+                            BattleMove current = (BattleMove)currentActiveUIElement.displayable;
+                            if (curStamina - current.staminaCost >= 0)
+                            {
+                                playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
+                                curStamina -= current.staminaCost;
+                            }
+                        }
+                        // player selected moves to perform, select target.
+                        if (currentActiveUIElement.gameObject.name == "GO!" && playerMoveQueue.Count > 0)
+                        {
+                            _currentState = _playerTurnUIStates[5];
+                            ClearCurrentSubMenu();
+                            for (int i = 0; i < battleManager.enemyCharacters.Count; i++)
+                            {
+                                battleManager.enemyCharacters[i].characterSelectable.cycle = i;
+                                battleManager.enemyCharacters[i].characterSelectable.cyclableElements = battleManager.enemyCharacters.Count;
+                                battleManager.enemyCharacters[i].characterSelectable.index = i;
+
+                                currentActiveUIElements.Add(battleManager.enemyCharacters[i].characterSelectable);
+                            }
+                            currentActiveUIElement = currentActiveUIElements[0];
+                            GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.SELECT);
+                        }
+                    }
+
+                    if (controls.Battle.Secondary.triggered)
+                    {
+                        if (playerMoveQueue.Count > 0)
+                        {
+                            curStamina += playerMoveQueue[playerMoveQueue.Count - 1].staminaCost;
+                            playerMoveQueue.RemoveAt(playerMoveQueue.Count - 1);
+                            if (playerMoveQueue.Count == 0)
+                                goButton.isSelectable = false;
+
+                        }
+                        else if (playerMoveQueue.Count == 0)
+                        {
+                            _currentState = _playerTurnUIStates[0];
+
+                            ClearCurrentSubMenu();
+                            SetupActionIcons();
+                        }
+                        GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);
+                    }
+                    break;
                 }
-                else
+            case ("AttackTargetSelection"):
+                {
+
                     SetDescriptorActive(false);
 
-                if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
-                {
-                    if (currentActiveUIElement.displayable != null) // if this is a valid element and the current stamina level is high enough
+                    if (controls.Battle.Primary.triggered) // player has selected their moves and is ready to start.
                     {
-                        BattleMove current = (BattleMove)currentActiveUIElement.displayable;
-                        if (curStamina - current.staminaCost >= 0)
-                        {
-                            playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
-                            curStamina -= current.staminaCost;
-                        }
-                    }
-                    // player selected moves to perform, select target.
-                    if (currentActiveUIElement.gameObject.name == "GO!" && playerMoveQueue.Count > 0) 
-                    {
-                        _currentState = _playerTurnUIStates[5];
+
+                        battleManager.FeedMoveQueue(playerMoveQueue, currentActiveUIElement.GetComponent<CharacterGameBattleEntity>());
+                        playerMoveQueue.Clear();
+
+                        BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.PLAYERATTACK;
                         ClearCurrentSubMenu();
-                        for (int i = 0; i < battleManager.enemyCharacters.Count; i++)
-                        {
-                            battleManager.enemyCharacters[i].characterSelectable.cycle = i;
-                            battleManager.enemyCharacters[i].characterSelectable.cyclableElements = battleManager.enemyCharacters.Count;
-                            battleManager.enemyCharacters[i].characterSelectable.index = i;
-                            
-                            currentActiveUIElements.Add(battleManager.enemyCharacters[i].characterSelectable);
-                        }
+                        _currentState = _playerTurnUIStates[6];
+
+
+                        battleManager.StartAttack();
+
+                        gameObject.SetActive(false);
+                    }
+                    if (controls.Battle.Secondary.triggered) // cancel enemy selection
+                    {
+                        _currentState = _playerTurnUIStates[1];
+
+                        ClearCurrentSubMenu();
+
+                        InstantiateList(new List<IDisplayable>(battleManager.playerMoves), listSpawnerOrigins[0] + transform.position);
+
+                        for (int i = 0; i < currentActiveUIElements.Count; i++)
+                            currentActiveUIElements[i].cyclableElements += 1;
+
+                        currentActiveUIElements.Add(goButton);
+                        goButton.InitializeValues(currentActiveUIElements.Count - 1, currentActiveUIElements.Count, false, false, true);
                         currentActiveUIElement = currentActiveUIElements[0];
+                        GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);
                     }
+                    break;
                 }
-                
-                if (controls.Battle.Secondary.triggered)
-                {
-                    if (playerMoveQueue.Count > 0)
-                    {
-                        curStamina += playerMoveQueue[playerMoveQueue.Count - 1].staminaCost;
-                        playerMoveQueue.RemoveAt(playerMoveQueue.Count - 1);
-                        if (playerMoveQueue.Count == 0)
-                            goButton.isSelectable = false;
-                        
-                    }
-                    else if (playerMoveQueue.Count == 0)
-                    {
-                        _currentState = _playerTurnUIStates[0];
-                        
-                        ClearCurrentSubMenu();
-                        SetupActionIcons();
-                    }
-                }
-                break;
-            }
-            case("AttackTargetSelection") :
-            {
-
-                SetDescriptorActive(false);
-
-                if (controls.Battle.Primary.triggered) // player has selected their moves and is ready to start.
-                {
-                    battleManager.FeedMoveQueue(playerMoveQueue,currentActiveUIElement.GetComponent<CharacterGameBattleEntity>());
-                    playerMoveQueue.Clear();
-
-                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.PLAYERATTACK;
-                    ClearCurrentSubMenu();
-                    _currentState = _playerTurnUIStates[6];
-                    
-                    battleManager.StartAttack();
-                    gameObject.SetActive(false);
-                }
-                if (controls.Battle.Secondary.triggered) // cancel enemy selection
-                {                    
-                    _currentState = _playerTurnUIStates[1];
-                    
-                    ClearCurrentSubMenu();
-                    
-                    InstantiateList(new List<IDisplayable>(battleManager.playerMoves),listSpawnerOrigins[0] + transform.position);
-                        
-                    for (int i = 0; i < currentActiveUIElements.Count; i++)
-                        currentActiveUIElements[i].cyclableElements += 1;
-                    
-                    currentActiveUIElements.Add(goButton);
-                    goButton.InitializeValues(currentActiveUIElements.Count - 1,currentActiveUIElements.Count,false,false,true);
-                    currentActiveUIElement = currentActiveUIElements[0];
-                }
-                break;
-            }
         }
     }
-#endregion
-#region ItemSelection methods
+    #endregion
+    #region ItemSelection methods
     void ItemSelection()
     {
         if (currentActiveUIElement.displayable != null)
         {
-                currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
-                SetDescriptionText(strings[1]);
-                SetDescriptorActive(true);
+            currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
+            SetDescriptionText(strings[1]);
+            SetDescriptorActive(true);
         }
 
         if (controls.Battle.Direction.triggered)
         {
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
-        switch(_currentState)
+        switch (_currentState)
         {
-            case ("Items") : // Menu selections for selecting an item. 
-            {
-                if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable) // if the player selected an item, setup the next menu.
+            case ("Items"): // Menu selections for selecting an item. 
                 {
-                    // -----------------------------------------------------------------------------------------------------------------------------
-                    // | there's probably a better way to do this. since the active ui element would need to serve two purposes, we can't remove   |
-                    // V the item after using it by getting the index of the currently active selectable. thus, the selected item must be stored.  V
-                    // -----------------------------------------------------------------------------------------------------------------------------
-                    currentSelectedItem = currentActiveUIElement; 
-                    // -----------------------------------------------------------------------------------------------------------------------------
-                    ClearCurrentSubMenu();
-                    _currentState = _playerTurnUIStates[4];
-                    for (int i = 0; i < battleManager.playerCharacters.Count; i++)
+                    if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable) // if the player selected an item, setup the next menu.
                     {
+                        // -----------------------------------------------------------------------------------------------------------------------------
+                        // | there's probably a better way to do this. since the active ui element would need to serve two purposes, we can't remove   |
+                        // V the item after using it by getting the index of the currently active selectable. thus, the selected item must be stored.  V
+                        // -----------------------------------------------------------------------------------------------------------------------------
+                        currentSelectedItem = currentActiveUIElement;
+                        // -----------------------------------------------------------------------------------------------------------------------------
+                        ClearCurrentSubMenu();
+                        _currentState = _playerTurnUIStates[4];
+                        for (int i = 0; i < battleManager.playerCharacters.Count; i++)
+                        {
                             battleManager.playerCharacters[i].characterSelectable.cycle = i;
                             battleManager.playerCharacters[i].characterSelectable.cyclableElements = battleManager.playerCharacters.Count;
                             battleManager.playerCharacters[i].characterSelectable.index = i;
-                            
+
                             currentActiveUIElements.Add(battleManager.playerCharacters[i].characterSelectable);
+                        }
+                        currentActiveUIElement = currentActiveUIElements[0];
+                        GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.SELECT);
+                        SetDescriptorActive(false);
                     }
-                    currentActiveUIElement = currentActiveUIElements[0];
+                    if (controls.Battle.Secondary.triggered)
+                    {
+                        _currentState = _playerTurnUIStates[0];
+                        ClearCurrentSubMenu();
+                        SetupActionIcons();
+                        GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);
+                    }
+
+                    SetDescriptorActive(true);
+
+                    break;
+                }
+            case ("ItemUseSelection"): // player selected an item to use.
+                {
                     SetDescriptorActive(false);
-                }
-                if (controls.Battle.Secondary.triggered)
-                {
-                    _currentState = _playerTurnUIStates[0];
-                    ClearCurrentSubMenu();
-                    SetupActionIcons();
-                }
 
-                SetDescriptorActive(true);
+                    if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
+                    {
+                        ItemData t = (ItemData)currentSelectedItem.displayable;
+                        t.UseItem(battleManager.currentActiveCharacter.characterData, "Health"); // <-- tester
 
-                break;
-            }
-            case ("ItemUseSelection") : // player selected an item to use.
-            {
-                SetDescriptorActive(false);
-
-                if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
-                {
-                    ItemData t = (ItemData)currentSelectedItem.displayable;
-                    t.UseItem(battleManager.currentActiveCharacter.characterData,"Health"); // <-- tester
-                    
-                    battleManager.playerItems.RemoveAt(currentSelectedItem.index);
-                    ClearCurrentSubMenu();
-                    _currentState = _playerTurnUIStates[0];
-                    SetupActionIcons();
-                    currentSelectedItem = null;
+                        battleManager.playerItems.RemoveAt(currentSelectedItem.index);
+                        ClearCurrentSubMenu();
+                        _currentState = _playerTurnUIStates[0];
+                        SetupActionIcons();
+                        currentSelectedItem = null;
+                    }
+                    if (controls.Battle.Secondary.triggered)
+                    {
+                        _currentState = _playerTurnUIStates[2];
+                        ClearCurrentSubMenu();
+                        InstantiateList(new List<IDisplayable>(battleManager.playerItems), listSpawnerOrigins[0] + transform.position);
+                        GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);
+                    }
+                    break;
                 }
-                if (controls.Battle.Secondary.triggered)
-                {
-                    _currentState = _playerTurnUIStates[2];
-                    ClearCurrentSubMenu();
-                    InstantiateList(new List<IDisplayable>(battleManager.playerItems),listSpawnerOrigins[0] + transform.position);
-                }
-                break;
-            }
         }
     }
-#endregion
-#region TacticsMenu Methods
-    
+    #endregion
+    #region TacticsMenu Methods
+
     // Nothing yet.
-    
+
     void TacticsSelection()
     {
         if (controls.Battle.Secondary.triggered)
@@ -474,11 +488,13 @@ public class PlayerTurnUI : MonoBehaviour
             _currentState = _playerTurnUIStates[0];
             ClearCurrentSubMenu();
             SetupActionIcons();
+
+            GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);
         }
     }
-#endregion
-#region Description Methods
-#endregion
+    #endregion
+    #region Description Methods
+    #endregion
     void SetDescriptorActive(bool active)
     {
         descriptionDisplay.transform.parent.gameObject.SetActive(active);

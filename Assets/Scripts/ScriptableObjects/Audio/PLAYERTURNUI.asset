@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b8f76eb9dac94ebd9d0b44f4d694ed5, type: 3}
+  m_Name: PLAYERTURNUI
+  m_EditorClassIdentifier: 
+  audioTracks:
+  - audioClipName: 2
+    audioClip: {fileID: 8300000, guid: 8be2c673754c140a5b435037b0f02471, type: 3}
+  - audioClipName: 3
+    audioClip: {fileID: 8300000, guid: e2ec23f5755d44e44b5b98fe2442820e, type: 3}
+  - audioClipName: 4
+    audioClip: {fileID: 8300000, guid: 1305c66a482d248cfa093ab09027bdeb, type: 3}
+  - audioClipName: 5
+    audioClip: {fileID: 8300000, guid: 06b741136653e424fbb70c77d562ca7d, type: 3}

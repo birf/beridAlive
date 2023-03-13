@@ -61,7 +61,7 @@ public class BattleManager : GameManager
         OverworldManager om = ChildObjects[0].GetComponent<OverworldManager>();
         if (CurrentBattleManagerState == BattleManagerState.WIN)
         {
-            currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA; 
+            currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
             Destroy(om.currentEnemyEncounter.gameObject);
             om.gameObject.SetActive(true);
             gameObject.SetActive(false);
@@ -293,7 +293,7 @@ public class BattleManager : GameManager
         currentActiveCharacter = CharacterGameBattleEntities[0];
         DetermineStateBasedOnActiveCharacter();
     }
-    
+
     // fetch the next active character from the turn queue. 
     public void GetNextTurn()
     {
