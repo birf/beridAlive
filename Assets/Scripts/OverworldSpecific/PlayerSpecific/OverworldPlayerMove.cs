@@ -63,9 +63,7 @@ public class OverworldPlayerMove : MonoBehaviour
                     om.currentEnemyEncounter = _colliderBuffer[i].GetComponent<CharacterGameOverworldEntity>();
                 }
             }
-
             om.BattleStart();
-
         }
     }
     void SetState()
@@ -77,7 +75,6 @@ public class OverworldPlayerMove : MonoBehaviour
     {
         float sin = Mathf.Sin((Vector2.SignedAngle(Vector2.right,controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
         float cos = Mathf.Cos((Vector2.SignedAngle(Vector2.right,controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
-        Debug.Log(sin);
 
         if (sin > -0.5f && sin <= 0.5f && cos >= 0 && _internalVelocity.magnitude != 0f)
         { _animator.Play("standE");}
@@ -95,8 +92,6 @@ public class OverworldPlayerMove : MonoBehaviour
         { _animator.Play("standS"); }
         else if (sin <= -0.5f && sin > -0.86f && cos >= 0)
         { _animator.Play("standSE"); }
-
-
 
     }
 }

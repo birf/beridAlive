@@ -6,6 +6,12 @@ using BeriUtils.Core;
 
 public class BattleManager : GameManager
 {
+
+    /*
+        TODO : Implement a way to have the battle manager know which move was performed previously.
+            NOTE : Simply setting a "previousMoveType" from when we feed the moves into the queue WILL NOT WORK. 
+    */
+
     public List<ItemData> playerItems = new List<ItemData>();
     public List<BattleMove> playerMoves = new List<BattleMove>();
     public List<CharacterGameBattleEntity> playerCharacters = new List<CharacterGameBattleEntity>();
@@ -185,6 +191,7 @@ public class BattleManager : GameManager
                 enemyCharacters.Add(CharacterGameBattleEntities[i]);
                 CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
             }
+            Characters.Add(CharacterGameBattleEntities[i].characterData);
         }
 
         _PlayerUI = FindObjectByName("PlayerTurnUI");
@@ -227,7 +234,17 @@ public class BattleManager : GameManager
                 Debug.Log("ERROR : " + _moveQueue[i].moveName + " has no hitbox! Aborting.");
                 break;
             }
-            _moveQueue[i].SetupMainMoveGameObject(targetEnemy, _moveQueue[i], this);
+            if (i == 0)
+                _moveQueue[i].SetupMainMoveGameObject(targetEnemy, _moveQueue[i], this, MoveType.NONE);
+            else
+                _moveQueue[i].SetupMainMoveGameObject(targetEnemy, _moveQueue[i], this, _moveQueue[i-1].moveType);
+            // ^ ----------------------------------------------------------------------------------------------- ^
+            // | THIS DOES NOT WORK CORRECTLY. Setting this is directly modifying the scriptable object. Data    |
+            // | contamination is inevitable. We would like to have this functionality within the final game as  |
+            // | it can allow individual moves that require the enemy to be close to have them be close without  |
+            // | using a move that brings them closer beforehand. (i.e., uppercut without grab).                 |
+            // | _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
+            
             _moveQueue[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
         }
     }
@@ -305,9 +322,27 @@ public class BattleManager : GameManager
         t.Add(CharacterGameBattleEntities[0]);
         CharacterGameBattleEntities = t;
         DetermineStateBasedOnActiveCharacter();
+
         // if the next turn is the player's turn, add 1 back to their stamina
         if (CurrentBattleManagerState == BattleManagerState.PLAYERTURN)
-            currentActiveCharacter.characterData.UpdateStat("Stamina", 1);
+            currentActiveCharacter.characterData.AddToStat(CharacterStats.STAMINA, 1, false);
+
+        CheckStatusEffects(currentActiveCharacter.characterData);
+    }
+    public void CheckStatusEffects(CharacterBase activeChar)
+    {
+        List<CharacterStatusEffect> curList = new List<CharacterStatusEffect>(activeChar.statusEffects);
+        foreach(CharacterStatusEffect statusEffect in curList)
+        {
+            statusEffect.duration -= 1;
+            if (statusEffect.duration == 0)
+            {
+                Debug.Log("in here");
+                statusEffect.ChangeStat(false);
+                activeChar.statusEffects.Remove(statusEffect);
+            }
+        }
     }
 }
+
 

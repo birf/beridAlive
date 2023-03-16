@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMoveGameObject: {fileID: 5185726160269979199, guid: d0863652af3e69741aa5b54592461332, type: 3}
   mainLaunchVelocity: {x: 0.5, y: 4, z: 0}
+  moveSpecificAnimations: {fileID: 0}
   moveSpriteSmall: {fileID: 21300000, guid: 479ee7be6af958e4c808ac9423f20f2b, type: 3}
-  damage: 2
+  moveType: 3
+  damage: 1
   staminaCost: 2
   moveName: Fryerball
   moveDescription: Bless her heart, but she can't cook at all.
-  canBeFirst: 1

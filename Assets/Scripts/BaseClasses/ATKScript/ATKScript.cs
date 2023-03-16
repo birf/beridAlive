@@ -17,9 +17,15 @@ public class ATKScript : MonoBehaviour
 
     */
 
+    /*
+        TODO : Find a way to have previousMoveType attached to the game object when it spawns, not when fed. 
+    */
+
     public BattleMove parentMove;
     public CharacterGameBattleEntity targetEnemy;
     public BattleManager battleManager;
+    public MoveType previousMoveType;
+
 
     protected virtual void Update()
     {
@@ -56,7 +62,6 @@ public class ATKScript : MonoBehaviour
             Destroy(gameObject);
 
         battleManager.currentTargetCharacter = targetEnemy;
-        
     }  
     
     ///<summary>
@@ -67,13 +72,22 @@ public class ATKScript : MonoBehaviour
 
     public virtual void OnSuccess()
     {
+        targetEnemy.characterBattlePhysics.HitTarget(
+            parentMove.mainLaunchVelocity, battleManager.currentActiveCharacter.characterData.curATK + parentMove.bonusDamage);
         battleManager.AttackSuccess();
-        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
-
+        previousMoveType = MoveType.NONE;
+    }
+    public virtual void OnSuccess(int damageOverride)
+    {
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity,damageOverride);
+        battleManager.AttackSuccess();
+        targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
+        previousMoveType = MoveType.NONE;
     }
     public virtual void OnFailure()
     {
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
+        previousMoveType = MoveType.NONE;
     }
 }

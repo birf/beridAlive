@@ -54,7 +54,6 @@
      <Compile Include="Assets\Scripts\BattleSpecific\ATKScripts\Beri\ATKScript_Beri_TossUp.cs" />
      <Compile Include="Assets\Scripts\OverworldSpecific\Levels\LevelExit.cs" />
      <Compile Include="Assets\Scripts\BaseClasses\ATKScript\ATKScript.cs" />
-     <Compile Include="Assets\Scripts\OverworldSpecific\PlayerSpecific\OverworldCameraFollow.cs" />
      <Compile Include="Assets\OverworldAssets\_External\2d-techdemos\Rule Tiles\Scripts\RuleOverrideTile.cs" />
      <Compile Include="Assets\OverworldAssets\Scripts\IsometricCharacterRenderer.cs" />
      <Compile Include="Assets\Scripts\Physics\BattlePhysicsInteraction.cs" />
@@ -87,6 +86,7 @@
      <Compile Include="Assets\Utils\BeriUtils.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\UI\StaminaBar.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\Tactics\Tactics.cs" />
+     <Compile Include="Assets\Scripts\BaseClasses\Character\CharacterStatusEffect.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

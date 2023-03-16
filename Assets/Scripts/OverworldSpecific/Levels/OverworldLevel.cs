@@ -7,19 +7,19 @@ public class OverworldLevel : MonoBehaviour
     [SerializeField] Vector3 playerOrigin;
 
     public OverworldManager overworldManager;
-    private List<GameObject> enemies;
+    [SerializeField] List<GameObject> enemies;
 
     public List<GameObject> getEnemies(){ return enemies;}
     private bool levelInitialized = false;
 
     //initialize the list of enemies
-    private void initializeEnemies(){
+    private void initializeEnemies()
+    {
         if(enemies == null) enemies = new List<GameObject>();
         Transform enemiesTransform = transform.Find("enemies");
         foreach(Transform child in enemiesTransform){           
             enemies.Add(child.gameObject);
         }
-
     }
 
     public void initializeLevel(){
@@ -36,21 +36,5 @@ public class OverworldLevel : MonoBehaviour
             if(enemy != null) return false;
         }
         return true;        
-    }
-
-
-    void Start()
-    {
-
-    }
-
-    void OnEnable(){
-
-    }
-
-    void Update()
-    {
-
-        
     }
 }

@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+public enum MoveType
+{
+    NONE,
+    GRAB,
+    PUNCH,
+    PROJECTILE
+}
+
 [CreateAssetMenu(fileName = "BattleMove", menuName = "Scriptable/Battle Move")]
 public class BattleMove : ScriptableObject, IDisplayable
 {
@@ -25,22 +33,23 @@ public class BattleMove : ScriptableObject, IDisplayable
     ///</summary>
     public RuntimeAnimatorController moveSpecificAnimations;
     public Sprite moveSpriteSmall;
-    public int damage;
+    public MoveType moveType;
+    public int bonusDamage;
     public int staminaCost;
     public string moveName;
     public string moveDescription;
-    public bool mustBeNearEnemy;
 
-    public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
+    public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager, MoveType prev)
     {
         mainMoveGameObject.GetComponent<ATKScript>().targetEnemy = targetEnemy;
         mainMoveGameObject.GetComponent<ATKScript>().parentMove = parentMove;
         mainMoveGameObject.GetComponent<ATKScript>().battleManager = battleManager;
+        mainMoveGameObject.GetComponent<ATKScript>().previousMoveType = prev;
     }    
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
         sprites = new Sprite[]{moveSpriteSmall};
-        ints = new int[]{staminaCost,damage,-1};
+        ints = new int[]{staminaCost,bonusDamage,-1};
         strings = new string[]{moveName,moveDescription};
     }
 }

@@ -54,10 +54,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
             _boxCol.size = _characterBody.characterScriptable.battleHitBoxSize;
         isGrounded = true;
         startPosition = transform.position;
-        localGroundYCoordinate = transform.position.y - 0.5f;
-
         characterPhysicsState = CharacterPhysicsState.DEFAULT;
-
     }
 
     void FixedUpdate()
@@ -94,7 +91,6 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void GetState()
     {
         _internalPosition = transform.position;
-        _internalPosition.z = transform.position.y;
 
         // if (_internalVelocity == Vector2.zero)
         //     transform.position = startPosition;
@@ -124,7 +120,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     {
         MoveToPosition((Vector3)startPosition);
     }
-    void MoveToPosition(Vector3 destination)
+    public void MoveToPosition(Vector3 destination)
     {
         transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * moveSpeed);
         MoveGroundCoordinate(transform.position.y);
@@ -134,7 +130,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
             isHit = false;
             isGrounded = true;
             characterPhysicsState = CharacterPhysicsState.DEFAULT;
-            localGroundYCoordinate = startPosition.y;
+            transform.position = destination;
         }
     }
 
@@ -148,7 +144,12 @@ public class BattlePhysicsInteraction : MonoBehaviour
         isGrounded = false;
         isHit = true;
         
-        _characterBody.characterData.UpdateStat("Health", -damage);
+        _characterBody.characterData.AddToStat(CharacterStats.HP, -damage, false);
+    }
+    public void Jump()
+    {
+        HitTarget(new Vector2(0f,2.5f), 0);
+        jumping = true;
     }
     public void MoveGroundCoordinate(float position)
     {

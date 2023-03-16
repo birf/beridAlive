@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 [System.Serializable]
 public class CharacterBase
 {
@@ -16,6 +16,7 @@ public class CharacterBase
         PLAYER,
         ENEMY
     }
+    public List<CharacterStatusEffect> statusEffects = new List<CharacterStatusEffect>();
     public CharacterType CharType;
     public int curHP;
     public int baseHP;
@@ -73,28 +74,60 @@ public class CharacterBase
     ///<summary>
     ///Update the input statistic for this character by the input float.
     ///</summary>
-    public void UpdateStat(string statistic, float input)
+    public void AddToStat(CharacterStats statistic, float input, bool ignoreBaseStat)
     {
-        // right now, "Health" is the only stat you can update.
         switch(statistic) 
         {
-            case("Health") :
+            case(CharacterStats.HP) :
             {
                 // if the input is negative, assume that this is an attack, add it to curHP - curDEF. else, just add.
                 curHP += input < 0 ? ((int) Math.Floor(input)) + curDEF : (int)Math.Floor(input); 
-                if (curHP <= 0)
-                    curHP = 0;
-                if (curHP > baseHP)
-                    curHP = baseHP;
+                
+                if (!ignoreBaseStat)
+                {   
+                    if (curHP <= 0)
+                        curHP = 0;
+                    if (curHP > baseHP)
+                        curHP = baseHP;
+                }
+                
                 break;
             }
-            case("Stamina") :
+            case(CharacterStats.STAMINA) :
             {
                 curSTAMINA += (int)input; 
-                if (curSTAMINA >= baseSTAMINA)
+                if (curSTAMINA >= baseSTAMINA && !ignoreBaseStat)
                     curSTAMINA = baseSTAMINA;
                 break;
             }
+            case(CharacterStats.ATK) :
+            {
+                curATK += (int) input;
+                if (curATK >= baseATK && !ignoreBaseStat)
+                    curATK = baseATK;
+                break;
+            }
+        }
+    }
+    public void SetCurrentStat(CharacterStats stat, float input)
+    {
+        switch(stat) 
+        {
+            case(CharacterStats.ATK) :
+                curATK = (int) input;  
+                break; 
+            case(CharacterStats.DEF) :
+                curDEF = (int) input;  
+                break;            
+            case(CharacterStats.HP) :
+                curHP = (int) input;  
+                break;
+            case(CharacterStats.SPEED) :
+                curSPEED = (int) input;  
+                break;
+            case(CharacterStats.STAMINA) :
+                curSTAMINA = (int) input;  
+                break;
         }
     }
 }

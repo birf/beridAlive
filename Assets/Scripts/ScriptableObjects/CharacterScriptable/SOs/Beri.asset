@@ -28,7 +28,7 @@ MonoBehaviour:
     CharacterName: Beri
     CharacterDescription: The living legend herself. (Minus the living (and the legend.).)
   charAnimations: {fileID: 9100000, guid: 4e15e88423d6a9741b0dc29a05bda2c5, type: 2}
-  battleHitBoxSize: {x: 0, y: 0}
+  battleHitBoxSize: {x: 3, y: 2}
   characterMoves:
   - {fileID: 11400000, guid: dc728c79119b1f147ba3742494ef29f1, type: 2}
   - {fileID: 11400000, guid: 2ed15a36307df374ca4a924c5da83f36, type: 2}

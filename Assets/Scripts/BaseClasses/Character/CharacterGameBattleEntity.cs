@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(UISelectable))]
 [RequireComponent(typeof(BattlePhysicsInteraction))]
-
-
 public class CharacterGameBattleEntity : CharacterGameEntity
 {
     /*

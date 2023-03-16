@@ -48,7 +48,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     {
         if (controls.Battle.Primary.triggered)
         {
-            _charge += 10;
+            _charge += 15;
         }
         chargeText.text = "" + _charge;
         if (_charge >= 100)
@@ -71,9 +71,9 @@ public class ATKScript_Beri_FryerBall : ATKScript
         else if (_charge > 0 && _charge < 50)
             localDamage = 1;
         else if (_charge > 50 && _charge < 99)
-            localDamage = parentMove.damage;
+            localDamage = parentMove.bonusDamage;
         else
-            localDamage = parentMove.damage + 1;
+            localDamage = parentMove.bonusDamage + 1;
     }
     void SecondPhase()
     {
@@ -89,8 +89,8 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     public override void OnSuccess()
     {
+        base.OnSuccess(localDamage);
         controls.Disable();
-        base.OnSuccess();
         Destroy(gameObject);
     }
     public override void OnFailure()

@@ -56,6 +56,7 @@ public class PlayerTurnUI : MonoBehaviour
     void OnDisable()
     {
         DisableCursor();
+        SetDescriptorActive(false);
     }
     void Update()
     {
@@ -458,7 +459,7 @@ public class PlayerTurnUI : MonoBehaviour
                     if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                     {
                         ItemData t = (ItemData)currentSelectedItem.displayable;
-                        t.UseItem(battleManager.currentActiveCharacter.characterData, "Health"); // <-- tester
+                        t.UseItem(battleManager.currentActiveCharacter.characterData, CharacterStats.HP); // <-- tester
 
                         battleManager.playerItems.RemoveAt(currentSelectedItem.index);
                         ClearCurrentSubMenu();
@@ -501,6 +502,43 @@ public class PlayerTurnUI : MonoBehaviour
         if (controls.Battle.Direction.triggered)
         {
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
+        }
+        if (controls.Battle.Primary.triggered)
+        {
+            currentActiveUIElement.displayable.GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings);
+            string name = strings[0];
+
+            switch(name)
+            {
+                case "Charge" :
+                    Debug.Log("charge!");
+                    
+                    battleManager.currentActiveCharacter.characterBattlePhysics.Jump();
+                    battleManager.currentActiveCharacter.characterData.statusEffects.Add(new CharacterStatusEffect(
+                        2,1,battleManager.currentActiveCharacter.characterData.baseATK,CharacterStats.ATK,battleManager.currentActiveCharacter.characterData
+                    ));
+                    
+                    
+                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
+                    
+                    ClearCurrentSubMenu();
+                    _currentState = _playerTurnUIStates[6];
+                    gameObject.SetActive(false);
+
+                    break;
+                case "Run Away" : 
+                    Debug.Log("run away!");
+                    break;
+                case "Do Nothing" :
+                    Debug.Log("do nothing!");
+
+                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;                    
+                    ClearCurrentSubMenu();
+                    _currentState = _playerTurnUIStates[6];
+                    gameObject.SetActive(false);
+
+                    break;
+            }
         }
     }
     #endregion

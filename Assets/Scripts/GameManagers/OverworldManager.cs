@@ -6,7 +6,7 @@ public class OverworldManager : GameManager
 {
     public CharacterGameOverworldEntity currentEnemyEncounter;
 
-    [SerializeField] GameObject @object;
+    [SerializeField] GameObject enemyPrefab;
 
 
     [SerializeField] GameObject entities;
@@ -17,7 +17,8 @@ public class OverworldManager : GameManager
 
     //current level
     private int levelNumber;
-    public GameObject activeLevel;
+    public OverworldLevel activeLevel;
+    public List<OverworldLevel> overworldLevels = new List<OverworldLevel>();
 
 
 
@@ -41,13 +42,10 @@ public class OverworldManager : GameManager
 
     GameObject CreateEnemy(CharacterScriptable characterScriptable)
     {
-        GameObject enemy = Instantiate(@object);
+        GameObject enemy = Instantiate(enemyPrefab);
         CharacterGameBattleEntity entity = enemy.GetComponent<CharacterGameBattleEntity>();
         entity.characterScriptable = characterScriptable;
         entity.characterAnimations = characterScriptable.charAnimations;
-
-        enemy.transform.parent = entities.transform;
-
 
         entity.CharacterSetup();
         return enemy;
@@ -80,7 +78,7 @@ public class OverworldManager : GameManager
         {
             Characters.Add(characterEntities[i].characterData);
         }
-
+        overworldLevels = new List<OverworldLevel>(FindObjectsOfType<OverworldLevel>(true));
         //enable the first level
         levelNumber = 0;
         nextLevel();
@@ -88,26 +86,41 @@ public class OverworldManager : GameManager
 
 
     //load the next level
+    // public void nextLevel()
+    // {
+    //     string[] levelNames = new string[] { "test_level_1", "test_level_2" };
+    //     GameObject levels = GameObject.Find("Levels");
+    //     if (activeLevel != null) activeLevel.SetActive(false); //deactivate current level
+    //     //find and enable level
+    //     Debug.Log(levelNames[levelNumber]);
+    //     activeLevel = levels.transform.Find(levelNames[levelNumber]).gameObject;
+    //     activeLevel.SetActive(true);
+    //     activeLevel.GetComponent<OverworldLevel>().initializeLevel();
+
+    //     //add each enemy to Characters and change their parent to entities
+    //     foreach (GameObject enemy in activeLevel.GetComponent<OverworldLevel>().getEnemies())
+    //     {
+    //         Characters.Add(enemy.GetComponent<CharacterGameOverworldEntity>().characterData);
+    //         enemy.transform.parent = GameObject.Find("entities").transform;
+    //     }
+    //     levelNumber++;
+
+    // }
+
     public void nextLevel()
     {
-        string[] levelNames = new string[] { "test_level_1", "test_level_2" };
-        GameObject levels = GameObject.Find("Levels");
-        if (activeLevel != null) activeLevel.SetActive(false); //deactivate current level
-        //find and enable level
-        Debug.Log(levelNames[levelNumber]);
-        activeLevel = levels.transform.Find(levelNames[levelNumber]).gameObject;
-        activeLevel.SetActive(true);
-        activeLevel.GetComponent<OverworldLevel>().initializeLevel();
+        if (activeLevel)
+            activeLevel.gameObject.SetActive(false);
+        
+        activeLevel = overworldLevels[levelNumber];
+        activeLevel.gameObject.SetActive(true);
+        activeLevel.initializeLevel();
 
-        //add each enemy to Characters and change their parent to entities
-        foreach (GameObject enemy in activeLevel.GetComponent<OverworldLevel>().getEnemies())
+        foreach(GameObject enemy in activeLevel.getEnemies())
         {
             Characters.Add(enemy.GetComponent<CharacterGameOverworldEntity>().characterData);
-            enemy.transform.parent = GameObject.Find("entities").transform;
         }
         levelNumber++;
-
-
     }
 
 }

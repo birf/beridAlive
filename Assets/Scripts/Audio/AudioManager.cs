@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+[RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour
 {
 
@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -24,6 +24,5 @@ public class AudioManager : MonoBehaviour
         audioSource.clip = audioSO.GetAudioClip(clipName);
         audioSource.Play();
     }
-
 
 }

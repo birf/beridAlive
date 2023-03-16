@@ -14,13 +14,11 @@ public class UIMainMenu : MonoBehaviour
             if (c.name == "fadeout")
                 clip = c;
         }
-        evt.functionName = "ChangeScene";
-        evt.time = 1.5f;
-        clip.AddEvent(evt);
+
     }
     public void Play()
     {
-        SceneManager.LoadScene("prototype 2");
+        SceneManager.LoadScene("prototype 3");
         // blackScreenFadeout.Play("fadeout");
         // gameObject.SetActive(false);
     }

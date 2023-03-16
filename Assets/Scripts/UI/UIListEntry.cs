@@ -40,7 +40,7 @@ public class UIListEntry : MonoBehaviour
             displaySprite.sprite = sprites[0];
         if (strings.Length != 0)
             displayText.text = strings[0];
-        if (ints.Length == 0 || ints[0] == -1)
+        if (ints.Length == 0 || ints[0] == 0 || ints[0] == -1)
             displayNumber.text = "";
         else
             displayNumber.text = "" + ints[0];

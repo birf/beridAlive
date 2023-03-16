@@ -24,8 +24,8 @@ public class ItemData : ScriptableObject , IDisplayable
     }
 
     // TODO : Make it so that the player can't use items if it isn't necessary to do so. 
-    public void UseItem(CharacterBase character, string effect)
+    public void UseItem(CharacterBase character, CharacterStats effect)
     {
-        character.UpdateStat(effect, potency);
+        character.AddToStat(effect, potency, false);
     }
 }

@@ -3,6 +3,15 @@ using UnityEngine;
 // using System.Collections;
 // using System.Collections.Generic;
 
+public enum CharacterStats
+{
+    ATK,
+    DEF,
+    HP,
+    SPEED,
+    STAMINA
+}
+
 namespace BeriUtils
 {
     namespace Core
@@ -59,5 +68,6 @@ namespace BeriUtils
                 return RemaingSeconds;
             }
         }
+
     }
 }
