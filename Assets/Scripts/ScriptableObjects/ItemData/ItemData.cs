@@ -10,11 +10,7 @@ public class ItemData : ScriptableObject , IDisplayable
     public int potency;
     public string itemName;
     public string itemDesc;
-    public ItemType itemType;
-    public enum ItemType // <-- no idea what to use this for yet lmao
-    {
-        HELPER
-    }
+    public CharacterStat statAffected;
 
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
@@ -24,7 +20,7 @@ public class ItemData : ScriptableObject , IDisplayable
     }
 
     // TODO : Make it so that the player can't use items if it isn't necessary to do so. 
-    public void UseItem(CharacterBase character, CharacterStats effect)
+    public void UseItem(CharacterBase character, CharacterStat effect)
     {
         character.AddToStat(effect, potency, false);
     }

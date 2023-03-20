@@ -74,11 +74,11 @@ public class CharacterBase
     ///<summary>
     ///Update the input statistic for this character by the input float.
     ///</summary>
-    public void AddToStat(CharacterStats statistic, float input, bool ignoreBaseStat)
+    public void AddToStat(CharacterStat statistic, float input, bool ignoreBaseStat)
     {
         switch(statistic) 
         {
-            case(CharacterStats.HP) :
+            case(CharacterStat.HP) :
             {
                 // if the input is negative, assume that this is an attack, add it to curHP - curDEF. else, just add.
                 curHP += input < 0 ? ((int) Math.Floor(input)) + curDEF : (int)Math.Floor(input); 
@@ -93,14 +93,14 @@ public class CharacterBase
                 
                 break;
             }
-            case(CharacterStats.STAMINA) :
+            case(CharacterStat.STAMINA) :
             {
                 curSTAMINA += (int)input; 
                 if (curSTAMINA >= baseSTAMINA && !ignoreBaseStat)
                     curSTAMINA = baseSTAMINA;
                 break;
             }
-            case(CharacterStats.ATK) :
+            case(CharacterStat.ATK) :
             {
                 curATK += (int) input;
                 if (curATK >= baseATK && !ignoreBaseStat)
@@ -109,25 +109,46 @@ public class CharacterBase
             }
         }
     }
-    public void SetCurrentStat(CharacterStats stat, float input)
+    public void SetCurrentStat(CharacterStat stat, float input)
     {
         switch(stat) 
         {
-            case(CharacterStats.ATK) :
+            case(CharacterStat.ATK) :
                 curATK = (int) input;  
                 break; 
-            case(CharacterStats.DEF) :
+            case(CharacterStat.DEF) :
                 curDEF = (int) input;  
                 break;            
-            case(CharacterStats.HP) :
+            case(CharacterStat.HP) :
                 curHP = (int) input;  
                 break;
-            case(CharacterStats.SPEED) :
+            case(CharacterStat.SPEED) :
                 curSPEED = (int) input;  
                 break;
-            case(CharacterStats.STAMINA) :
+            case(CharacterStat.STAMINA) :
                 curSTAMINA = (int) input;  
                 break;
         }
+    }
+
+    ///<summary>
+    ///Return the stat value by the given type, either by it's current value or it's base value.
+    ///<\summary>
+    public int GetStateByStatType(CharacterStat type, bool getBaseStat)
+    {
+        switch (type)
+        {
+            case CharacterStat.HP :
+                return getBaseStat ? baseHP : curHP;
+            case CharacterStat.ATK :
+                return getBaseStat ? baseATK : curATK;
+            case CharacterStat.DEF :
+                return getBaseStat ? baseDEF : curDEF;
+            case CharacterStat.SPEED :
+                return getBaseStat ? baseSPEED : curSPEED;
+            case CharacterStat.STAMINA :
+                return getBaseStat ? baseSTAMINA : curSTAMINA;
+        }
+        return 0;
     }
 }

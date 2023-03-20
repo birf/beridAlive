@@ -15,8 +15,8 @@ MonoBehaviour:
   characterSprites: []
   characterData:
     CharType: 2
-    curHP: 2
-    baseHP: 2
+    curHP: 3
+    baseHP: 3
     curATK: 1
     baseATK: 1
     curDEF: 0

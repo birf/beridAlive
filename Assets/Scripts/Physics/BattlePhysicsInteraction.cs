@@ -144,7 +144,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
         isGrounded = false;
         isHit = true;
         
-        _characterBody.characterData.AddToStat(CharacterStats.HP, -damage, false);
+        _characterBody.characterData.AddToStat(CharacterStat.HP, -damage, false);
     }
     public void Jump()
     {

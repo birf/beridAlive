@@ -17,6 +17,7 @@ public class ATKScript_Tester_Shoot : ATKScript
     void Awake()
     {
         _launchTimer.OnTimerEnd += Increment;
+        BeginMove();
     }
     protected override void LateUpdate()
     {

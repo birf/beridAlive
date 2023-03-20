@@ -71,9 +71,9 @@ public class ATKScript_Beri_FryerBall : ATKScript
         else if (_charge > 0 && _charge < 50)
             localDamage = 1;
         else if (_charge > 50 && _charge < 99)
-            localDamage = parentMove.bonusDamage;
+            localDamage = parentMove.damage + 1;
         else
-            localDamage = parentMove.bonusDamage + 1;
+            localDamage = parentMove.damage + 2;
     }
     void SecondPhase()
     {

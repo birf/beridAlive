@@ -16,4 +16,4 @@ MonoBehaviour:
   potency: 5
   itemName: Cute Heart
   itemDesc: I don't think this is how hearts actually look.
-  itemType: 0
+  statAffected: 2

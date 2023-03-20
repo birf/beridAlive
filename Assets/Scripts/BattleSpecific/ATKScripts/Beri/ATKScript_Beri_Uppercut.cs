@@ -7,6 +7,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
 
     bool _isCharging = false;
     bool _isPunching = false;
+    bool _isInPosition = false;
     float _timer;
     
     PrimaryControls controls;
@@ -19,17 +20,41 @@ public class ATKScript_Beri_Uppercut : ATKScript
         timer.OnTimerEnd += OnFailure;
         controls = new PrimaryControls();
         controls.Enable();
+        BeginMove();
+        battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState
+            = BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT;
     }
     protected override void Update()
     {
-        timer.Tick(Time.deltaTime);
-        if (!_isPunching)
-            FirstPhase();
-        else
-            SecondPhase();
+        if (!_isInPosition)
+            WalkingPhase();
+        if (!_isPunching && _isInPosition)
+            ChargingPhase();
+        else if (_isPunching && _isInPosition)
+            PunchingPhase();
+
+        if (_isInPosition)
+            timer.Tick(Time.deltaTime);
     }
-    void FirstPhase()
+
+    void WalkingPhase()
     {
+        battleManager.currentActiveCharacter.GetComponent<SpriteRenderer>().color = Color.black;
+        Vector3 targetPos = battleManager.currentActiveCharacter.transform.position;
+        if (previousMoveType != MoveType.GRAB && previousMoveType != MoveType.PUNCH)
+        {
+            targetPos = targetEnemy.transform.position + Vector3.left * 2.5f;
+            battleManager.currentActiveCharacter.characterBattlePhysics.MoveToPosition(targetPos);
+            gameObject.transform.position = battleManager.currentActiveCharacter.transform.position;
+        }
+        
+        if (battleManager.currentActiveCharacter.transform.position == targetPos)
+            _isInPosition = true;
+    }
+    void ChargingPhase()
+    {
+        battleManager.currentActiveCharacter.GetComponent<SpriteRenderer>().color = Color.white;
+
         if (controls.Battle.Primary.triggered)
         {
             _isCharging = true;
@@ -51,7 +76,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
 
         }
     }
-    void SecondPhase()
+    void PunchingPhase()
     {
         _timer += Time.deltaTime;
         if (_timer >= 3 * Time.deltaTime)
@@ -69,7 +94,6 @@ public class ATKScript_Beri_Uppercut : ATKScript
                         if( _hitBuffer[i].gameObject.layer == 8 && _hitBuffer[i].gameObject == targetEnemy.gameObject)
                         {
                             OnSuccess();
-                            Destroy(gameObject);
                         }
                 }
             }
@@ -82,6 +106,8 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnFailure()
     {
+        battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState 
+                                = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
         controls.Disable();
         battleManager.PlayerAttackFailure();
         base.OnFailure();
@@ -89,6 +115,8 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnSuccess()
     {
+        battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState 
+                                = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
         base.OnSuccess();
         controls.Disable();
         Destroy(gameObject);

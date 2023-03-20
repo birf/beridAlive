@@ -12,6 +12,8 @@ public class BattleManager : GameManager
             NOTE : Simply setting a "previousMoveType" from when we feed the moves into the queue WILL NOT WORK. 
     */
 
+    public int battleManagerMoveQueueIndex = 0;
+
     public List<ItemData> playerItems = new List<ItemData>();
     public List<BattleMove> playerMoves = new List<BattleMove>();
     public List<CharacterGameBattleEntity> playerCharacters = new List<CharacterGameBattleEntity>();
@@ -22,7 +24,7 @@ public class BattleManager : GameManager
 
     public static BattleManagerState CurrentBattleManagerState;
 
-    [SerializeField] List<BattleMove> _moveQueue = new List<BattleMove>();
+    public List<BattleMove> battleManagerMoveQueue = new List<BattleMove>();
     [SerializeField] GameObject _PlayerUI;
     Timer startupTimer;
     Timer endTimer;
@@ -226,66 +228,61 @@ public class BattleManager : GameManager
     ///</summary>                                                            
     public void FeedMoveQueue(List<BattleMove> playerMoves, CharacterGameBattleEntity targetEnemy)
     {
-        _moveQueue = new List<BattleMove>(playerMoves);
-        for (int i = 0; i < _moveQueue.Count; i++)
+        battleManagerMoveQueue = new List<BattleMove>(playerMoves);
+        for (int i = 0; i < battleManagerMoveQueue.Count; i++)
         {
-            if (_moveQueue[i].mainMoveGameObject == null)
+            if (battleManagerMoveQueue[i].mainMoveGameObject == null)
             {
-                Debug.Log("ERROR : " + _moveQueue[i].moveName + " has no hitbox! Aborting.");
+                Debug.Log("ERROR : " + battleManagerMoveQueue[i].moveName + " has no hitbox! Aborting.");
                 break;
             }
-            if (i == 0)
-                _moveQueue[i].SetupMainMoveGameObject(targetEnemy, _moveQueue[i], this, MoveType.NONE);
-            else
-                _moveQueue[i].SetupMainMoveGameObject(targetEnemy, _moveQueue[i], this, _moveQueue[i-1].moveType);
-            // ^ ----------------------------------------------------------------------------------------------- ^
-            // | THIS DOES NOT WORK CORRECTLY. Setting this is directly modifying the scriptable object. Data    |
-            // | contamination is inevitable. We would like to have this functionality within the final game as  |
-            // | it can allow individual moves that require the enemy to be close to have them be close without  |
-            // | using a move that brings them closer beforehand. (i.e., uppercut without grab).                 |
-            // | _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
+    
+            battleManagerMoveQueue[i].SetupMainMoveGameObject(targetEnemy, battleManagerMoveQueue[i], this);
             
-            _moveQueue[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
+            battleManagerMoveQueue[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
         }
     }
     // start attacking.
     public void StartAttack()
     {
-        _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
+        battleManagerMoveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
 
-        Instantiate(_moveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
-        _moveQueue.RemoveAt(0);
+        Instantiate(battleManagerMoveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
     }
 
     // the player or enemy has successfully performed a move/portion of their move. advance to next move (if any)
     public void AttackSuccess()
     {
-        if (_moveQueue.Count == 0)
+        // last move was a success, clear queue.
+        if (battleManagerMoveQueue.Count-1 == battleManagerMoveQueueIndex)
         {
             currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
+            battleManagerMoveQueueIndex = 0;
+            battleManagerMoveQueue.Clear();
         }
         // if the target character died from the previous move, force an attack chain to succeed, refund the player's stamina
-        else if (_moveQueue.Count > 0 && currentTargetCharacter.characterData.curHP <= 0)
+        else if (currentTargetCharacter.characterData.curHP <= 0)
         {
-            for (int i = 0; i < _moveQueue.Count; i++)
-                currentActiveCharacter.characterData.curSTAMINA += _moveQueue[i].staminaCost;
+            for (int i = battleManagerMoveQueueIndex; i < battleManagerMoveQueue.Count; i++)
+                currentActiveCharacter.characterData.curSTAMINA += battleManagerMoveQueue[i].staminaCost;
             currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
-            _moveQueue.Clear();
+            battleManagerMoveQueue.Clear();
+            battleManagerMoveQueueIndex = 0;
         }
-        else // feed next move into the queue.
+        else // advance to next move in the queue.
         {
-            _moveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
-            Instantiate(_moveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
-            _moveQueue.RemoveAt(0);
+            battleManagerMoveQueueIndex++;
+            Instantiate(battleManagerMoveQueue[battleManagerMoveQueueIndex].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
         }
     }
 
     // when the player fails their move, this function should be called. 
     public void PlayerAttackFailure()
     {
-        _moveQueue.Clear();
+        battleManagerMoveQueue.Clear();
+        battleManagerMoveQueueIndex = 0;
         CurrentBattleManagerState = BattleManagerState.ANALYSIS;
     }
     // sort the current player queue and decide the turn order. (selection sort)
@@ -325,7 +322,7 @@ public class BattleManager : GameManager
 
         // if the next turn is the player's turn, add 1 back to their stamina
         if (CurrentBattleManagerState == BattleManagerState.PLAYERTURN)
-            currentActiveCharacter.characterData.AddToStat(CharacterStats.STAMINA, 1, false);
+            currentActiveCharacter.characterData.AddToStat(CharacterStat.STAMINA, 1, false);
 
         CheckStatusEffects(currentActiveCharacter.characterData);
     }
@@ -337,8 +334,7 @@ public class BattleManager : GameManager
             statusEffect.duration -= 1;
             if (statusEffect.duration == 0)
             {
-                Debug.Log("in here");
-                statusEffect.ChangeStat(false);
+                statusEffect.RevertChanges(true);
                 activeChar.statusEffects.Remove(statusEffect);
             }
         }

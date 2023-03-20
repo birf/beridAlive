@@ -34,22 +34,23 @@ public class BattleMove : ScriptableObject, IDisplayable
     public RuntimeAnimatorController moveSpecificAnimations;
     public Sprite moveSpriteSmall;
     public MoveType moveType;
-    public int bonusDamage;
+    public int damage;
     public int staminaCost;
     public string moveName;
     public string moveDescription;
 
-    public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager, MoveType prev)
+    public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
     {
         mainMoveGameObject.GetComponent<ATKScript>().targetEnemy = targetEnemy;
         mainMoveGameObject.GetComponent<ATKScript>().parentMove = parentMove;
         mainMoveGameObject.GetComponent<ATKScript>().battleManager = battleManager;
-        mainMoveGameObject.GetComponent<ATKScript>().previousMoveType = prev;
-    }    
+        
+        damage = battleManager.currentActiveCharacter.characterData.curATK;
+    }   
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
         sprites = new Sprite[]{moveSpriteSmall};
-        ints = new int[]{staminaCost,bonusDamage,-1};
+        ints = new int[]{staminaCost,damage,-1};
         strings = new string[]{moveName,moveDescription};
     }
 }

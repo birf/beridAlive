@@ -458,14 +458,18 @@ public class PlayerTurnUI : MonoBehaviour
 
                     if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                     {
+                        CharacterBase curChar = battleManager.currentActiveCharacter.characterData;
                         ItemData t = (ItemData)currentSelectedItem.displayable;
-                        t.UseItem(battleManager.currentActiveCharacter.characterData, CharacterStats.HP); // <-- tester
-
-                        battleManager.playerItems.RemoveAt(currentSelectedItem.index);
-                        ClearCurrentSubMenu();
-                        _currentState = _playerTurnUIStates[0];
-                        SetupActionIcons();
-                        currentSelectedItem = null;
+                        // only use an item if the value you are trying to change is actually different than it's base max value. 
+                        if ((curChar.GetStateByStatType(t.statAffected,false) != curChar.GetStateByStatType(t.statAffected,true)))   
+                        {
+                            t.UseItem(curChar, t.statAffected);
+                            battleManager.playerItems.RemoveAt(currentSelectedItem.index);
+                            ClearCurrentSubMenu();
+                            _currentState = _playerTurnUIStates[0];
+                            SetupActionIcons();
+                            currentSelectedItem = null;
+                        }
                     }
                     if (controls.Battle.Secondary.triggered)
                     {
@@ -515,7 +519,7 @@ public class PlayerTurnUI : MonoBehaviour
                     
                     battleManager.currentActiveCharacter.characterBattlePhysics.Jump();
                     battleManager.currentActiveCharacter.characterData.statusEffects.Add(new CharacterStatusEffect(
-                        2,1,battleManager.currentActiveCharacter.characterData.baseATK,CharacterStats.ATK,battleManager.currentActiveCharacter.characterData
+                        2,1,battleManager.currentActiveCharacter.characterData.baseATK,CharacterStat.ATK,battleManager.currentActiveCharacter.characterData
                     ));
                     
                     

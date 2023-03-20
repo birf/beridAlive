@@ -62,6 +62,10 @@ public class ATKScript : MonoBehaviour
             Destroy(gameObject);
 
         battleManager.currentTargetCharacter = targetEnemy;
+        if (battleManager.battleManagerMoveQueue.Count != 0 && battleManager.battleManagerMoveQueueIndex != 0)
+            previousMoveType = battleManager.battleManagerMoveQueue[battleManager.battleManagerMoveQueueIndex-1].moveType;
+        else
+            previousMoveType = MoveType.NONE;
     }  
     
     ///<summary>
@@ -73,10 +77,13 @@ public class ATKScript : MonoBehaviour
     public virtual void OnSuccess()
     {
         targetEnemy.characterBattlePhysics.HitTarget(
-            parentMove.mainLaunchVelocity, battleManager.currentActiveCharacter.characterData.curATK + parentMove.bonusDamage);
+            parentMove.mainLaunchVelocity, parentMove.damage);
+        Debug.Log("did damage");
         battleManager.AttackSuccess();
         targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
         previousMoveType = MoveType.NONE;
+
+        parentMove.damage = battleManager.currentActiveCharacter.characterData.baseATK;
     }
     public virtual void OnSuccess(int damageOverride)
     {
@@ -84,10 +91,14 @@ public class ATKScript : MonoBehaviour
         battleManager.AttackSuccess();
         targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
         previousMoveType = MoveType.NONE;
+
+        parentMove.damage = battleManager.currentActiveCharacter.characterData.baseATK;
     }
     public virtual void OnFailure()
     {
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
         previousMoveType = MoveType.NONE;
+
+        parentMove.damage = battleManager.currentActiveCharacter.characterData.baseATK;
     }
 }
