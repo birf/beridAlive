@@ -11,7 +11,6 @@ public class ATKScript_Beri_TossUp : ATKScript
     */
     [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
     int subPhase = 0;
-
     ///<summary>
     ///Physical GameObject to grab the enemy.   
     ///</summary>
@@ -77,7 +76,7 @@ public class ATKScript_Beri_TossUp : ATKScript
                 subPhase++;
                 targetEnemy.transform.parent = grabber.transform;
                 targetEnemy.characterBattlePhysics.isGrounded = true;
-                targetEnemy.characterBattlePhysics.isHit = false;
+                targetEnemy.characterBattlePhysics.isLaunched = false;
             }
             else
                 OnFailure();
@@ -108,7 +107,7 @@ public class ATKScript_Beri_TossUp : ATKScript
             else
             {
                 // player let go too early or late, drop enemy
-                targetEnemy.characterBattlePhysics.isHit = true;
+                targetEnemy.characterBattlePhysics.isLaunched = true;
                 OnFailure();
             }
         }
@@ -185,10 +184,10 @@ public class ATKScript_Beri_TossUp : ATKScript
     public override void OnFailure()
     {
         
-        if (targetEnemy.characterBattlePhysics.isHit)
+        if (targetEnemy.characterBattlePhysics.isLaunched)
             targetEnemy.characterBattlePhysics.HitTarget(new Vector2(-1f,0),0);
         
-        else { targetEnemy.characterBattlePhysics.isHit = true; targetEnemy.characterBattlePhysics.isGrounded = true; }
+        else { targetEnemy.characterBattlePhysics.isLaunched = true; targetEnemy.characterBattlePhysics.isGrounded = true; }
         
         controls.Disable();
         battleManager.PlayerAttackFailure();

@@ -29,10 +29,8 @@ public class ATKScript : MonoBehaviour
 
     protected virtual void Update()
     {
-        // StateCheck();
     }
-    protected virtual void LateUpdate()
-    {}
+
     protected void StateCheck()
     {
         // tbh idk why this is here.
@@ -78,7 +76,6 @@ public class ATKScript : MonoBehaviour
     {
         targetEnemy.characterBattlePhysics.HitTarget(
             parentMove.mainLaunchVelocity, parentMove.damage);
-        Debug.Log("did damage");
         battleManager.AttackSuccess();
         targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
         previousMoveType = MoveType.NONE;

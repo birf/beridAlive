@@ -19,7 +19,7 @@ public class ATKScript_Tester_Shoot : ATKScript
         _launchTimer.OnTimerEnd += Increment;
         BeginMove();
     }
-    protected override void LateUpdate()
+    protected override void Update()
     {
         _launchTimer.Tick(Time.deltaTime);
         if (subPhase == 1)
@@ -39,7 +39,6 @@ public class ATKScript_Tester_Shoot : ATKScript
     public override void OnSuccess()
     {
         base.OnSuccess();
-        battleManager.currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
     }
     public override void OnFailure()
     {

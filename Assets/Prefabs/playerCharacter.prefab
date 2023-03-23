@@ -251,6 +251,8 @@ MonoBehaviour:
   _characterPhysics: {fileID: 1670955905530388891}
   _dropShadow: {fileID: 1670955907325620215}
   _dropDistance: 2.25
+  _characterBody: {fileID: 0}
+  dropShadowSize: {x: 3, y: 0.5}
 --- !u!1 &1670955907325620208
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +279,7 @@ Transform:
   m_GameObject: {fileID: 1670955907325620208}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1670955905530388887}
   m_RootOrder: 0

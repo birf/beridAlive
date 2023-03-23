@@ -22,7 +22,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
 
 #region Primitives
     public bool isGrounded = true;
-    public bool isHit = false;
+    public bool isLaunched = false;
     public bool jumping = false;
     public float localGroundYCoordinate; // <-- where in the world their current "ground floor" is 
     public int maxGroundBounces = 3;
@@ -77,7 +77,8 @@ public class BattlePhysicsInteraction : MonoBehaviour
                 characterPhysicsState = CharacterPhysicsState.DEFAULT;
                 SetState();
             }
-            if (isHit && isGrounded) // <-- tester just for now. 
+            // if they've just been launched and are now grounded, recover to initial position.
+            if (isLaunched && isGrounded)  
             {
                 characterPhysicsState = CharacterPhysicsState.RECOVERY;
             }
@@ -118,16 +119,16 @@ public class BattlePhysicsInteraction : MonoBehaviour
     }
     void RecoverToInitialPosition()
     {
-        MoveToPosition((Vector3)startPosition);
+        MoveToPosition((Vector3)startPosition, moveSpeed);
     }
-    public void MoveToPosition(Vector3 destination)
+    public void MoveToPosition(Vector3 destination, float speed = 10.0f)
     {
-        transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * moveSpeed);
+        transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * speed);
         MoveGroundCoordinate(transform.position.y);
         // when character reaches the initial position, update their state.
         if (Vector3.Distance(transform.position,destination) < MINMOVEDISTANCE)
         {
-            isHit = false;
+            isLaunched = false;
             isGrounded = true;
             characterPhysicsState = CharacterPhysicsState.DEFAULT;
             transform.position = destination;
@@ -142,13 +143,20 @@ public class BattlePhysicsInteraction : MonoBehaviour
         _internalVelocity = inputVelocity/(10.0f + _characterBody.characterData.curDEF);
         characterPhysicsState = CharacterPhysicsState.HITSTUN;
         isGrounded = false;
-        isHit = true;
+        isLaunched = true;
         
         _characterBody.characterData.AddToStat(CharacterStat.HP, -damage, false);
     }
+    public void LaunchTarget(Vector2 inputVelocity)
+    {
+        _internalVelocity = inputVelocity/(10.0f);
+        characterPhysicsState = CharacterPhysicsState.HITSTUN;
+        isGrounded = false;
+        isLaunched = true;
+    }
     public void Jump()
     {
-        HitTarget(new Vector2(0f,2.5f), 0);
+        LaunchTarget(new Vector2(0f,2.5f));
         jumping = true;
     }
     public void MoveGroundCoordinate(float position)

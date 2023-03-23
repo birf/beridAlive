@@ -16,6 +16,7 @@ public class CharacterScriptable : ScriptableObject , IDisplayable
     public CharacterBase characterData;
     public RuntimeAnimatorController charAnimations;
     public Vector2 battleHitBoxSize; // The size of the hitbox for the character in battle. 
+    public Vector2 battleDropShadowSize; // The size of the drop shadow underneath their sprite.
     public List<BattleMove> characterMoves = new List<BattleMove>();
     public List<ItemData> characterItems = new List<ItemData>();
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)

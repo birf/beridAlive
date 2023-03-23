@@ -29,6 +29,7 @@ MonoBehaviour:
     CharacterDescription: Almost cute... Almost...
   charAnimations: {fileID: 9100000, guid: 5addc4d46e6499141aaa6449042ca38f, type: 2}
   battleHitBoxSize: {x: 2, y: 3}
+  battleDropShadowSize: {x: 3, y: 0.5}
   characterMoves:
   - {fileID: 11400000, guid: ae101b5bf30722743aa2407c905d881b, type: 2}
   characterItems: []

@@ -89,7 +89,7 @@ public class CharacterGameBattleEntity : CharacterGameEntity
             b.playerCharacters.Remove(this);
         
         b.CharacterGameBattleEntities.Remove(this);
-        Destroy(gameObject); // <-- for now. tester
+        Destroy(gameObject); 
     }
 }
 public enum BattleEntityState

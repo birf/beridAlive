@@ -82,6 +82,7 @@ public class BattleManager : GameManager
         // done to make sure that all characters on field are initialized with correct values
         if (startupTimer.GetRemaingingSeconds() > 0)
             startupTimer.Tick(Time.deltaTime);
+        Debug.Log(CurrentBattleManagerState);
 
         switch (CurrentBattleManagerState)
         {
@@ -164,10 +165,6 @@ public class BattleManager : GameManager
     }
 
     // initialize all entities and values in scene.
-    /*
-        Note that this entire function will need to be rewritten when actually starting a battle. 
-        This function relies on all objects already being present.
-    */
     void BattleManagerSetup()
     {
         CentralManager.SetStateManager(this);
@@ -199,8 +196,6 @@ public class BattleManager : GameManager
         _PlayerUI = FindObjectByName("PlayerTurnUI");
 
         SetTurnOrder();
-
-        currentActiveCharacter = CharacterGameBattleEntities[0];
     }
     void DetermineStateBasedOnActiveCharacter()
     {
@@ -245,15 +240,17 @@ public class BattleManager : GameManager
     // start attacking.
     public void StartAttack()
     {
-        battleManagerMoveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
-
         Instantiate(battleManagerMoveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
+        battleManagerMoveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
     }
 
     // the player or enemy has successfully performed a move/portion of their move. advance to next move (if any)
     public void AttackSuccess()
     {
         // last move was a success, clear queue.
+        if (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
+            currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
+
         if (battleManagerMoveQueue.Count-1 == battleManagerMoveQueueIndex)
         {
             currentTargetCharacter = null;
@@ -264,6 +261,7 @@ public class BattleManager : GameManager
         // if the target character died from the previous move, force an attack chain to succeed, refund the player's stamina
         else if (currentTargetCharacter.characterData.curHP <= 0)
         {
+            Debug.Log("Character died!");
             for (int i = battleManagerMoveQueueIndex; i < battleManagerMoveQueue.Count; i++)
                 currentActiveCharacter.characterData.curSTAMINA += battleManagerMoveQueue[i].staminaCost;
             currentTargetCharacter = null;

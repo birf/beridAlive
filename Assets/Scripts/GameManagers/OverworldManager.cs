@@ -46,6 +46,7 @@ public class OverworldManager : GameManager
         CharacterGameBattleEntity entity = enemy.GetComponent<CharacterGameBattleEntity>();
         entity.characterScriptable = characterScriptable;
         entity.characterAnimations = characterScriptable.charAnimations;
+        entity.GetComponent<BattleDropShadow>().SetDropShadowSize(entity.characterScriptable.battleDropShadowSize);
 
         entity.CharacterSetup();
         return enemy;

@@ -68,6 +68,7 @@
      <Compile Include="Assets\OverworldAssets\Scripts\cameraControl.cs" />
      <Compile Include="Assets\OverworldAssets\_External\2d-techdemos\Rule Tiles\Scripts\HexagonalRuleTile.cs" />
      <Compile Include="Assets\Scripts\OverworldSpecific\Levels\OverworldLevel.cs" />
+     <Compile Include="Assets\Scripts\BaseClasses\Character\CharacterStatusEffect.cs" />
      <Compile Include="Assets\OverworldAssets\_External\2d-techdemos\Rule Tiles\Scripts\RuleTile.cs" />
      <Compile Include="Assets\OverworldAssets\Scripts\HideTilemapColliderOnPlay.cs" />
      <Compile Include="Assets\Scripts\OverworldSpecific\PlayerSpecific\OverworldPlayerMove.cs" />
@@ -86,7 +87,8 @@
      <Compile Include="Assets\Utils\BeriUtils.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\UI\StaminaBar.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\Tactics\Tactics.cs" />
-     <Compile Include="Assets\Scripts\BaseClasses\Character\CharacterStatusEffect.cs" />
+     <Compile Include="Assets\Scripts\BattleSpecific\ATKScripts\Enemies\Baron\ATKScript_BaronLeap.cs" />
+     <Compile Include="Assets\Scripts\BattleSpecific\ATKScripts\Beri\ATKScript_Beri_Backthrow.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

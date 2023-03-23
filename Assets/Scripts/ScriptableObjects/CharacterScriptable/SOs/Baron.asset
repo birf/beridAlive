@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c48856c5b772ef24ba821410565d88b2, type: 3}
+  m_Name: Baron
+  m_EditorClassIdentifier: 
+  characterSprites: []
+  characterData:
+    CharType: 2
+    curHP: 5
+    baseHP: 5
+    curATK: 2
+    baseATK: 2
+    curDEF: 0
+    baseDEF: 0
+    curSPEED: 10
+    baseSPEED: 10
+    curSTAMINA: 0
+    baseSTAMINA: 0
+    CharacterName: Baron
+    CharacterDescription: Their shyness compels them to place that skull on their
+      head. They aren't shy enough to not try and kill you, however.
+  charAnimations: {fileID: 9100000, guid: 3fec3819ced57e1478a92146049a5569, type: 2}
+  battleHitBoxSize: {x: 4, y: 4}
+  battleDropShadowSize: {x: 5, y: 2}
+  characterMoves:
+  - {fileID: 11400000, guid: 6a8c04e60e8b4a74ab80b55dd83b07b8, type: 2}
+  characterItems: []
