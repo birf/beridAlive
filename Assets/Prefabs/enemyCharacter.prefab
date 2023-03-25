@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -205,7 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPhysicsState: 0
   isGrounded: 1
-  isHit: 0
+  isLaunched: 0
   jumping: 0
   localGroundYCoordinate: 0
   maxGroundBounces: 3
@@ -244,6 +244,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characterPhysics: {fileID: 1620040660392433551}
   _dropShadow: {fileID: 6211141689623441757}
+  _dropDistance: 2.25
+  dropShadowSize: {x: 0, y: 0}
 --- !u!1 &5522966020652567227
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,9 +9,6 @@ public class ATKScript_BaronLeap : ATKScript
     */
     int subphase = 0;
 
-    public override void BeginMove()
-    {
-    }
     protected override void Update() 
     {
         transform.position = battleManager.currentActiveCharacter.transform.position;

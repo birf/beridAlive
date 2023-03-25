@@ -23,8 +23,8 @@ MonoBehaviour:
     baseDEF: 0
     curSPEED: 5
     baseSPEED: 5
-    curSTAMINA: 3
-    baseSTAMINA: 3
+    curSTAMINA: 5
+    baseSTAMINA: 5
     CharacterName: Beri
     CharacterDescription: The living legend herself. (Minus the living (and the legend.).)
   charAnimations: {fileID: 9100000, guid: 4e15e88423d6a9741b0dc29a05bda2c5, type: 2}

@@ -44,5 +44,9 @@ public class UIListEntry : MonoBehaviour
             displayNumber.text = "";
         else
             displayNumber.text = "" + ints[0];
+        if (ints.Length == 4 && ints[3] == -1)
+            displayNumber.color = Color.green;
+        else
+            displayNumber.color = Color.red;
     }
 }

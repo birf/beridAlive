@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using BeriUtils;
+using BeriUtils.Core;
 using TMPro;
 
 public class PlayerTurnUI : MonoBehaviour
@@ -316,8 +316,19 @@ public class PlayerTurnUI : MonoBehaviour
                             BattleMove current = (BattleMove)currentActiveUIElement.displayable;
                             if (curStamina - current.staminaCost >= 0)
                             {
-                                playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
-                                curStamina -= current.staminaCost;
+                                if (playerMoveQueue.Count > 0)
+                                {
+                                    if (!playerMoveQueue[playerMoveQueue.Count - 1].isFinisher)
+                                    {
+                                        playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
+                                        curStamina -= current.staminaCost;    
+                                    }
+                                }
+                                else
+                                {
+                                    playerMoveQueue.Add((BattleMove)currentActiveUIElement.displayable);
+                                    curStamina -= current.staminaCost;
+                                }
                             }
                         }
                         // player selected moves to perform, select target.
@@ -522,8 +533,13 @@ public class PlayerTurnUI : MonoBehaviour
                         2,1,battleManager.currentActiveCharacter.characterData.baseATK,CharacterStat.ATK,battleManager.currentActiveCharacter.characterData
                     ));
                     
+
+                    battleManager.currentTargetCharacter = battleManager.currentActiveCharacter;
+                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
                     
-                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
+                    battleManager.waitTimer = new Timer(3.5f);
+                    battleManager.waitTimer.OnTimerEnd += battleManager.GetNextTurn;
+
                     
                     ClearCurrentSubMenu();
                     _currentState = _playerTurnUIStates[6];

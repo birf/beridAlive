@@ -25,6 +25,7 @@ public class BattleManager : GameManager
     public static BattleManagerState CurrentBattleManagerState;
 
     public List<BattleMove> battleManagerMoveQueue = new List<BattleMove>();
+    public Timer waitTimer;
     [SerializeField] GameObject _PlayerUI;
     Timer startupTimer;
     Timer endTimer;
@@ -43,6 +44,7 @@ public class BattleManager : GameManager
     {
         DEFAULT,
         ANALYSIS, // <-- this state is only in effect in between turns and is what ultimately decides the next turn.
+        WAIT,
         PLAYERTURN,
         PLAYERATTACK,
         ENEMYTURN,
@@ -70,6 +72,7 @@ public class BattleManager : GameManager
         if (CurrentBattleManagerState == BattleManagerState.WIN)
         {
             currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
+            FindObjectOfType<AudioManager>().EndTrack();
             Destroy(om.currentEnemyEncounter.gameObject);
             om.gameObject.SetActive(true);
             gameObject.SetActive(false);
@@ -90,9 +93,14 @@ public class BattleManager : GameManager
                 {
                     break;
                 }
+            case (BattleManagerState.WAIT) :
+                {
+                    waitTimer.Tick(Time.deltaTime);
+                    break;
+                }
             case (BattleManagerState.ANALYSIS):
                 {
-                    AnaylizeGameState();
+                    AnalyzeGameState();
                     break;
                 }
             case (BattleManagerState.PLAYERTURN):
@@ -115,7 +123,6 @@ public class BattleManager : GameManager
                     endTimer.Tick(Time.deltaTime);
                     break;
                 }
-
         }
     }
 
@@ -127,7 +134,7 @@ public class BattleManager : GameManager
         }
     }
 
-    void AnaylizeGameState()
+    void AnalyzeGameState()
     {
         bool flag = false;
 
@@ -152,8 +159,14 @@ public class BattleManager : GameManager
 
         }
         if (!flag)
-            GetNextTurn();
-
+        {
+            if (waitTimer == null)
+            {
+                waitTimer = new Timer(1);
+                waitTimer.OnTimerEnd += GetNextTurn;
+            }
+            CurrentBattleManagerState = BattleManagerState.WAIT;
+        }
     }
     void EnemyTurnState()
     {
@@ -253,7 +266,6 @@ public class BattleManager : GameManager
 
         if (battleManagerMoveQueue.Count-1 == battleManagerMoveQueueIndex)
         {
-            currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
             battleManagerMoveQueueIndex = 0;
             battleManagerMoveQueue.Clear();
@@ -264,7 +276,6 @@ public class BattleManager : GameManager
             Debug.Log("Character died!");
             for (int i = battleManagerMoveQueueIndex; i < battleManagerMoveQueue.Count; i++)
                 currentActiveCharacter.characterData.curSTAMINA += battleManagerMoveQueue[i].staminaCost;
-            currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
             battleManagerMoveQueue.Clear();
             battleManagerMoveQueueIndex = 0;
@@ -323,6 +334,7 @@ public class BattleManager : GameManager
             currentActiveCharacter.characterData.AddToStat(CharacterStat.STAMINA, 1, false);
 
         CheckStatusEffects(currentActiveCharacter.characterData);
+        waitTimer = null;
     }
     public void CheckStatusEffects(CharacterBase activeChar)
     {

@@ -71,9 +71,9 @@ public class ATKScript_Beri_FryerBall : ATKScript
         else if (_charge > 0 && _charge < 50)
             localDamage = 1;
         else if (_charge > 50 && _charge < 99)
-            localDamage = parentMove.damage + 1;
+            localDamage = parentMove.damage;
         else
-            localDamage = parentMove.damage + 2;
+            localDamage = parentMove.damage + 1;
     }
     void SecondPhase()
     {
@@ -86,6 +86,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     public override void BeginMove()
     {
         base.BeginMove();
+        parentMove.damage += 1;
     }
     public override void OnSuccess()
     {

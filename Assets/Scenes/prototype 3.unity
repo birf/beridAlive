@@ -131696,5 +131696,85 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerTurnUI
       objectReference: {fileID: 0}
+    - target: {fileID: 2147785852922267703, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564788, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -2978955890619177012, guid: f881189a8c0e16d4db908a35506d706f, type: 2}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontSize
+      value: 7.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: f881189a8c0e16d4db908a35506d706f, type: 2}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_lineSpacing
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -2978955890619177012, guid: f881189a8c0e16d4db908a35506d706f, type: 2}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_characterSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_paragraphSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785853176564789, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_wordWrappingRatios
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785854361612818, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_Size.x
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785854361612818, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_Size.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785854361612818, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2200dc456df16a6429e48c630e8c14c4, type: 3}
+    - target: {fileID: 2147785854361612818, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2147785854361612819, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 140455d915d844048a9453fc5cbe9e1e, type: 3}

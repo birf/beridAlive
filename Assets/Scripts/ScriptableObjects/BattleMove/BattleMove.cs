@@ -38,6 +38,7 @@ public class BattleMove : ScriptableObject, IDisplayable
     public int staminaCost;
     public string moveName;
     public string moveDescription;
+    public bool isFinisher;
 
     public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
     {
@@ -50,7 +51,13 @@ public class BattleMove : ScriptableObject, IDisplayable
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
         sprites = new Sprite[]{moveSpriteSmall};
-        ints = new int[]{staminaCost,damage,-1};
+
+        // ints[2], don't display number
+        // ints[3], -1 -> move is finisher, 0 -> move isn't finisher
+        ints = new int[]{staminaCost,damage,-1, 0};
+        if (isFinisher)
+            ints[3] = -1;
+
         strings = new string[]{moveName,moveDescription};
     }
 }

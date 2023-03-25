@@ -24,5 +24,9 @@ public class AudioManager : MonoBehaviour
         audioSource.clip = audioSO.GetAudioClip(clipName);
         audioSource.Play();
     }
+    public void EndTrack()
+    {
+        audioSource.Stop();
+    }
 
 }
