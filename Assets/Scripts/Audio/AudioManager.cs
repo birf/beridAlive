@@ -29,4 +29,9 @@ public class AudioManager : MonoBehaviour
         audioSource.Stop();
     }
 
+    public void StopTrack()
+    {
+        audioSource.Stop();
+    }
+
 }

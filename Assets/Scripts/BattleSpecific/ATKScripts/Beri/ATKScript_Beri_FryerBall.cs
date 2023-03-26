@@ -13,7 +13,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     [SerializeField] TextMeshPro chargeText;
     [SerializeField] int _charge = 0;
     [SerializeField] int _maxCharge = 110;
-    [Range(1.0f,100.0f)][SerializeField] float _speed = 15.0f;
+    [Range(1.0f, 100.0f)] [SerializeField] float _speed = 15.0f;
 
     int subPhase = 0;
     int localDamage = 0;
@@ -27,21 +27,21 @@ public class ATKScript_Beri_FryerBall : ATKScript
         controls = new PrimaryControls();
         controls.Enable();
     }
-    
+
     void FixedUpdate()
     {
         switch (subPhase)
         {
-            case (0) :
-            {
-                FirstPhase();
-                break;
-            }
-            case (1) :
-            {
-                SecondPhase();
-                break;
-            }
+            case (0):
+                {
+                    FirstPhase();
+                    break;
+                }
+            case (1):
+                {
+                    SecondPhase();
+                    break;
+                }
         }
     }
     protected override void Update()
@@ -58,7 +58,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     void FirstPhase()
     {
-        timer.Tick(Time.fixedDeltaTime); 
+        timer.Tick(Time.fixedDeltaTime);
         _charge -= 1;
         if (_charge < 0)
             _charge = 0;
@@ -77,7 +77,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     void SecondPhase()
     {
-        _fireBall.transform.position = Vector3.MoveTowards(_fireBall.transform.position,targetEnemy.transform.position, _speed * Time.fixedDeltaTime);
+        _fireBall.transform.position = Vector3.MoveTowards(_fireBall.transform.position, targetEnemy.transform.position, _speed * Time.fixedDeltaTime);
         if (Vector3.Distance(_fireBall.transform.position, targetEnemy.transform.position) < 0.01f)
         {
             OnSuccess();
