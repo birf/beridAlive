@@ -112,12 +112,12 @@ public class OverworldManager : GameManager
     {
         if (activeLevel)
             activeLevel.gameObject.SetActive(false);
-        
+
         activeLevel = overworldLevels[levelNumber];
         activeLevel.gameObject.SetActive(true);
         activeLevel.initializeLevel();
 
-        foreach(GameObject enemy in activeLevel.getEnemies())
+        foreach (GameObject enemy in activeLevel.getEnemies())
         {
             Characters.Add(enemy.GetComponent<CharacterGameOverworldEntity>().characterData);
         }

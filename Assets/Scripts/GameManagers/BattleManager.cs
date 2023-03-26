@@ -67,6 +67,11 @@ public class BattleManager : GameManager
     void ReturnToOverworld()
     {
         OverworldManager om = ChildObjects[0].GetComponent<OverworldManager>();
+
+        //Zay's Code
+        FindObjectOfType<HealthDisplay>().RemoveAllHudEntities();
+        FindObjectOfType<AudioManager>().StopTrack();
+        //
         if (CurrentBattleManagerState == BattleManagerState.WIN)
         {
             currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
@@ -76,6 +81,9 @@ public class BattleManager : GameManager
         }
         else
             RestartGame();
+
+
+
     }
     void Update()
     {
@@ -195,6 +203,8 @@ public class BattleManager : GameManager
 
         _PlayerUI = FindObjectByName("PlayerTurnUI");
 
+        FindObjectOfType<HealthDisplay>().InitializeHealthUI();
+
         SetTurnOrder();
     }
     void DetermineStateBasedOnActiveCharacter()
@@ -231,9 +241,9 @@ public class BattleManager : GameManager
                 Debug.Log("ERROR : " + battleManagerMoveQueue[i].moveName + " has no hitbox! Aborting.");
                 break;
             }
-    
+
             battleManagerMoveQueue[i].SetupMainMoveGameObject(targetEnemy, battleManagerMoveQueue[i], this);
-            
+
             battleManagerMoveQueue[i].mainMoveGameObject.transform.position = currentActiveCharacter.transform.position;
         }
     }
@@ -251,7 +261,13 @@ public class BattleManager : GameManager
         if (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
             currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
 
-        if (battleManagerMoveQueue.Count-1 == battleManagerMoveQueueIndex)
+        Debug.Log(currentTargetCharacter.transform.position);
+
+
+        DamagePopup.Create(currentTargetCharacter.transform.position, currentActiveCharacter.characterScriptable.characterData.baseATK);
+        FindObjectOfType<HealthDisplay>().UpdateHealthUI();
+
+        if (battleManagerMoveQueue.Count - 1 == battleManagerMoveQueueIndex)
         {
             currentTargetCharacter = null;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
@@ -268,6 +284,7 @@ public class BattleManager : GameManager
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
             battleManagerMoveQueue.Clear();
             battleManagerMoveQueueIndex = 0;
+            //FindObjectOfType<HealthDisplay>().RemoveHudEntity(currentActiveCharacter.GetComponent<HudEntity>())
         }
         else // advance to next move in the queue.
         {
@@ -327,7 +344,7 @@ public class BattleManager : GameManager
     public void CheckStatusEffects(CharacterBase activeChar)
     {
         List<CharacterStatusEffect> curList = new List<CharacterStatusEffect>(activeChar.statusEffects);
-        foreach(CharacterStatusEffect statusEffect in curList)
+        foreach (CharacterStatusEffect statusEffect in curList)
         {
             statusEffect.duration -= 1;
             if (statusEffect.duration == 0)

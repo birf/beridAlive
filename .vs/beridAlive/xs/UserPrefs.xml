@@ -1,19 +1,20 @@
 ﻿<Properties StartupConfiguration="{444DD62D-C2D1-3AA9-2B76-E9013A3D6706}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BattleSpecific/EnemyAI/BasicEnemyAI.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Audio/AudioManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/Audio/AudioManager.cs" Line="25" Column="28" />
-      <File FileName="Assets/Scripts/ScriptableObjects/Audio/AudioSO.cs" Line="8" Column="17" />
-      <File FileName="Assets/Scripts/ScriptableObjects/Audio/AudioClipNames.cs" Line="17" Column="12" />
-      <File FileName="Assets/Scripts/OverworldSpecific/PlayerSpecific/OverworldPlayerMove.cs" Line="49" Column="59" />
-      <File FileName="Assets/Scripts/GameManagers/OverworldManager.cs" Line="16" Column="50" />
-      <File FileName="Assets/Scripts/BattleSpecific/UI/PlayerTurnUI.cs" Line="368" Column="1" />
-      <File FileName="Assets/Scripts/GameManagers/BattleManager.cs" Line="240" Column="32" />
-      <File FileName="Assets/Scripts/BattleSpecific/EnemyAI/BasicEnemyAI.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/ScriptableObjects/HUD/DamagePopup.cs" Line="37" Column="43" />
+      <File FileName="Assets/Scripts/GameManagers/OverworldManager.cs" Line="73" Column="37" />
+      <File FileName="Assets/Scripts/GameManagers/BattleManager.cs" Line="6" Column="1" />
+      <File FileName="Assets/Scripts/ScriptableObjects/HUD/HudEntity.cs" Line="52" Column="23" />
+      <File FileName="Assets/Scripts/ScriptableObjects/HUD/HealthDisplay.cs" Line="69" Column="1" />
+      <File FileName="Assets/Scripts/BaseClasses/Character/CharacterGameBattleEntity.cs" Line="93" Column="59" />
+      <File FileName="Assets/Scripts/BattleSpecific/ATKScripts/Beri/ATKScript_Beri_FryerBall.cs" Line="93" Column="34" />
+      <File FileName="Assets/Scripts/BaseClasses/ATKScript/ATKScript.cs" Line="87" Column="90" />
+      <File FileName="Assets/Scripts/Audio/AudioManager.cs" Line="22" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="b0231ac8-7130-404a-894f-2e8b0c82ff90" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="604eb487-8ab1-4918-9f06-1d789d6cda82" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

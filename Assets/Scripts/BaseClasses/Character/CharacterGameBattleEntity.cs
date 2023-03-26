@@ -17,7 +17,7 @@ public class CharacterGameBattleEntity : CharacterGameEntity
     public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
     public BoxCollider2D boxCol;
-    
+
     void Awake()
     {
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
@@ -56,7 +56,7 @@ public class CharacterGameBattleEntity : CharacterGameEntity
                     break;
                 }
         }
-        
+
         characterBattlePhysics = GetComponent<BattlePhysicsInteraction>();
         characterBattlePhysics.localGroundYCoordinate = transform.position.y;
     }
@@ -71,25 +71,28 @@ public class CharacterGameBattleEntity : CharacterGameEntity
 
         // i fucking hate unity lmao. for some reason, even though the collider object exists upon instantiation, setting this up in 
         // character setup is a null reference. if someone smarter than me can fix this that'd be swell. 
-        
+
         if (GetComponent<BoxCollider2D>().size != characterScriptable.battleHitBoxSize)
             GetComponent<BoxCollider2D>().size = characterScriptable.battleHitBoxSize;
-        
-        
+
+
     }
 
     public void KillCharacterInBattle()
     {
         BattleManager b = (BattleManager)entityBattleManager;
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
-        
+        Debug.Log("INFO HERE");
         if (characterData.CharType == CharacterBase.CharacterType.ENEMY)
             b.enemyCharacters.Remove(this);
         else if (characterData.CharType == CharacterBase.CharacterType.PLAYER)
             b.playerCharacters.Remove(this);
-        
+
         b.CharacterGameBattleEntities.Remove(this);
-        Destroy(gameObject); 
+
+        FindObjectOfType<HealthDisplay>().RemoveHudEntity(GetComponent<HudEntity>());
+
+        Destroy(gameObject);
     }
 }
 public enum BattleEntityState
