@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: BaronLeapTest
   m_EditorClassIdentifier: 
   mainMoveGameObject: {fileID: 2368279014457218813, guid: 70b24c055ca9443448f531baf732f7a6, type: 3}
-  mainLaunchVelocity: {x: -2, y: 3, z: 0}
+  mainLaunchVelocity: {x: -4, y: 2, z: 0}
   moveSpecificAnimations: {fileID: 0}
   moveSpriteSmall: {fileID: 0}
-  moveType: 0
-  damage: 2
+  moveType: 2
+  damage: 3
+  bonus: 0
   staminaCost: 0
   moveName: Baron Leap
   moveDescription: What else are they supposed to do with those muscles?
+  isFinisher: 0

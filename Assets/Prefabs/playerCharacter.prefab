@@ -182,11 +182,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPhysicsState: 0
   isGrounded: 1
-  isHit: 0
+  isLaunched: 0
   jumping: 0
   localGroundYCoordinate: 0
   maxGroundBounces: 3
-  moveSpeed: 10
+  moveSpeed: 12.5
   startPosition: {x: 0, y: 0, z: 0}
   _boxCol: {fileID: 0}
   _validHits:
@@ -251,7 +251,6 @@ MonoBehaviour:
   _characterPhysics: {fileID: 1670955905530388891}
   _dropShadow: {fileID: 1670955907325620215}
   _dropDistance: 2.25
-  _characterBody: {fileID: 0}
   dropShadowSize: {x: 3, y: 0.5}
 --- !u!1 &1670955907325620208
 GameObject:

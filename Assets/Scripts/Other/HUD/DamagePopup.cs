@@ -8,11 +8,12 @@ public class DamagePopup : MonoBehaviour
 
     public static DamagePopup Create(Vector3 position, int damageAmount)
     {
+        int absolute = damageAmount > 0 ? damageAmount : 0;
+        
         Transform damagePopUpTransform = Instantiate(GameAssets.i.pfDamagePopup, position, Quaternion.identity);
 
-
         DamagePopup damagePopup = damagePopUpTransform.GetComponent<DamagePopup>();
-        damagePopup.Setup(damageAmount);
+        damagePopup.Setup(absolute);
 
 
         return damagePopup;
@@ -30,10 +31,16 @@ public class DamagePopup : MonoBehaviour
     }
     public void Setup(int damageAmount)
     {
-        textMesh.SetText(damageAmount.ToString());
+        string txt = "";
+        if (damageAmount > 0)
+            txt = damageAmount.ToString();
+        textMesh.SetText(txt);
+        
+        
         textColor = textMesh.color;
         dissapearTimer = 1f;
-
+        if (damageAmount <= 0)
+            transform.localScale = transform.localScale * 0.4f;
         moveVector = new Vector3(0, 1) * 20f;
     }
     // Start is called before the first frame update
@@ -69,7 +76,7 @@ public class DamagePopup : MonoBehaviour
             float dissapearSpeed = 1.5f;
             textColor.a -= dissapearSpeed * Time.deltaTime;
             textMesh.color = textColor;
-            if (textColor.a < 0)
+            if (textColor.a < 0 || transform.localScale.x < 0)
             {
                 Destroy(gameObject);
             }

@@ -43,15 +43,11 @@ public class BlockScript : MonoBehaviour
         _test = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    void LateUpdate()
     {
         // only ever have this script function if the current state is "ENEMYTURN".
         if (BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN)
         {
-            if (CheckCollisions())
-            {
-                CompleteReset();
-            }
             if (controls.Battle.Primary.triggered && _currentBlockPhase == BlockPhase.NONE)
                 _currentBlockPhase = BlockPhase.PARRY;
             switch (_currentBlockPhase)
@@ -77,24 +73,26 @@ public class BlockScript : MonoBehaviour
             }
         }
         else
-            ResetTimers();
+            CompleteReset();
+        if (CheckCollisions())
+            CompleteReset();
     }
     
     void ParryingPhase()
     {
-        _characterBody.characterData.curDEF = 99;
+        // _characterBody.characterData.curDEF = 99;
         _parryTimer.Tick(Time.deltaTime);
         _test.color = Color.yellow; 
     }
     void BlockingPhase()
     {
-        _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF + 1;
+        // _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF + 1;
         _blockTimer.Tick(Time.deltaTime);
         _test.color = Color.green;
     }
     void CooldownPhase()
     {
-        _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF;
+        // _characterBody.characterData.curDEF = _characterBody.characterData.baseDEF;
         _cooldownTimer.Tick(Time.deltaTime);
         _test.color = Color.blue;
     }
@@ -129,4 +127,28 @@ public class BlockScript : MonoBehaviour
             return true;
         return false;
     }
+    public bool CheckCollisions(out int damageReduction)
+    {
+        Collider2D[] buffer = new Collider2D[1];
+        int hits = Physics2D.OverlapBoxNonAlloc(transform.position,_characterBody.characterScriptable.battleHitBoxSize,0f,buffer,_validLayers);
+        if (hits > 0)
+        {
+            switch (_currentBlockPhase)
+            {
+                case BlockPhase.PARRY :
+                    damageReduction = 999;
+                    return true;
+                case BlockPhase.BLOCK :
+                    damageReduction = 1;
+                    return true;
+                case BlockPhase.NONE :
+                case BlockPhase.COOLDOWN :
+                    damageReduction = 0;
+                    return true;
+            }
+        }
+        damageReduction = 0;
+        return false;
+    }
+
 }

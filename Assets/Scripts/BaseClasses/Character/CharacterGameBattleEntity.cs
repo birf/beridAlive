@@ -16,7 +16,6 @@ public class CharacterGameBattleEntity : CharacterGameEntity
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
-    public BoxCollider2D boxCol;
 
     void Awake()
     {
@@ -80,19 +79,19 @@ public class CharacterGameBattleEntity : CharacterGameEntity
 
     public void KillCharacterInBattle()
     {
-        BattleManager b = (BattleManager)entityBattleManager;
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
-        Debug.Log("INFO HERE");
         if (characterData.CharType == CharacterBase.CharacterType.ENEMY)
-            b.enemyCharacters.Remove(this);
+            entityBattleManager.enemyCharacters.Remove(this);
         else if (characterData.CharType == CharacterBase.CharacterType.PLAYER)
-            b.playerCharacters.Remove(this);
+            entityBattleManager.playerCharacters.Remove(this);
 
-        b.CharacterGameBattleEntities.Remove(this);
-
-        FindObjectOfType<HealthDisplay>().RemoveHudEntity(GetComponent<HudEntity>());
+        entityBattleManager.CharacterGameBattleEntities.Remove(this);
 
         Destroy(gameObject);
+    }
+    void CompleteKill()
+    {
+
     }
 }
 public enum BattleEntityState

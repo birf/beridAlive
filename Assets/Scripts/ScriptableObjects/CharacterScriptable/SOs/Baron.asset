@@ -17,12 +17,12 @@ MonoBehaviour:
     CharType: 2
     curHP: 5
     baseHP: 5
-    curATK: 2
-    baseATK: 2
+    curATK: 3
+    baseATK: 3
     curDEF: 0
     baseDEF: 0
-    curSPEED: 10
-    baseSPEED: 10
+    curSPEED: 7
+    baseSPEED: 7
     curSTAMINA: 0
     baseSTAMINA: 0
     CharacterName: Baron

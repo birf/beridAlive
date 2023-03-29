@@ -239,6 +239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentMove: {fileID: 11400000, guid: dc728c79119b1f147ba3742494ef29f1, type: 2}
   targetEnemy: {fileID: 0}
+  caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
   speedInverse: 1.5

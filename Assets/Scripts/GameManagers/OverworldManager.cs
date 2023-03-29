@@ -5,6 +5,7 @@ using UnityEngine;
 public class OverworldManager : GameManager
 {
     public CharacterGameOverworldEntity currentEnemyEncounter;
+    public CharacterGameOverworldEntity playerCharacter;
 
     [SerializeField] GameObject enemyPrefab;
 
@@ -47,6 +48,8 @@ public class OverworldManager : GameManager
         entity.characterScriptable = characterScriptable;
         entity.characterAnimations = characterScriptable.charAnimations;
         entity.GetComponent<BattleDropShadow>().SetDropShadowSize(entity.characterScriptable.battleDropShadowSize);
+        entity.GetComponentInChildren<HudEnemyHealthBar>().curHealth = characterScriptable.characterData.curHP;
+        entity.GetComponentInChildren<HudEnemyHealthBar>().maxHealth= characterScriptable.characterData.baseHP;
 
         entity.CharacterSetup();
         return enemy;
@@ -78,11 +81,15 @@ public class OverworldManager : GameManager
         for (int i = 0; i < characterEntities.Length; i++)
         {
             Characters.Add(characterEntities[i].characterData);
+            if (characterEntities[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
+                playerCharacter = characterEntities[i];
         }
         overworldLevels = new List<OverworldLevel>(FindObjectsOfType<OverworldLevel>(true));
         //enable the first level
         levelNumber = 0;
         nextLevel();
+
+
     }
 
 

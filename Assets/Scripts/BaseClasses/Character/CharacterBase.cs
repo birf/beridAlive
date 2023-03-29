@@ -81,7 +81,7 @@ public class CharacterBase
             case(CharacterStat.HP) :
             {
                 // if the input is negative, assume that this is an attack, add it to curHP - curDEF. else, just add.
-                curHP += input < 0 ? ((int) Math.Floor(input)) + curDEF : (int)Math.Floor(input); 
+                curHP += input < 0 ? ((int) Math.Floor(input)) : (int)Math.Floor(input); 
                 
                 if (!ignoreBaseStat)
                 {   
@@ -104,6 +104,13 @@ public class CharacterBase
             {
                 curATK += (int) input;
                 if (curATK >= baseATK && !ignoreBaseStat)
+                    curATK = baseATK;
+                break;
+            }
+            case(CharacterStat.DEF) :
+            {
+                curDEF += (int)input;                
+                if (curDEF >= baseDEF && !ignoreBaseStat)
                     curATK = baseATK;
                 break;
             }
@@ -134,7 +141,7 @@ public class CharacterBase
     ///<summary>
     ///Return the stat value by the given type, either by it's current value or it's base value.
     ///<\summary>
-    public int GetStateByStatType(CharacterStat type, bool getBaseStat)
+    public int GetStatByStatType(CharacterStat type, bool getBaseStat)
     {
         switch (type)
         {

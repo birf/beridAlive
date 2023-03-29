@@ -11,6 +11,8 @@ public class ItemData : ScriptableObject , IDisplayable
     public string itemName;
     public string itemDesc;
     public CharacterStat statAffected;
+    public int duration;
+    public bool inflictsStatusEffect;
 
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
@@ -22,6 +24,9 @@ public class ItemData : ScriptableObject , IDisplayable
     // TODO : Make it so that the player can't use items if it isn't necessary to do so. 
     public void UseItem(CharacterBase character, CharacterStat effect)
     {
-        character.AddToStat(effect, potency, false);
+        if (!inflictsStatusEffect)
+            character.AddToStat(effect, potency, false);
+        else
+            character.statusEffects.Add(new CharacterStatusEffect(duration,potency,character.GetStatByStatType(effect,true),effect,character));
     }
 }

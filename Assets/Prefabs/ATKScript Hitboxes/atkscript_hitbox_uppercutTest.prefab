@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentMove: {fileID: 11400000, guid: 2ed15a36307df374ca4a924c5da83f36, type: 2}
   targetEnemy: {fileID: 0}
+  caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
   puncher: {fileID: 6276873158994220388}

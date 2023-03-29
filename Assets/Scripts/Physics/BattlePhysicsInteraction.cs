@@ -86,7 +86,12 @@ public class BattlePhysicsInteraction : MonoBehaviour
 
         else
         {
-            RecoverToInitialPosition(); // character is grounded and was just hit by something.                 
+            RecoverToInitialPosition(); // character is grounded and was just hit by something.               
+        }
+
+        if (characterPhysicsState == CharacterPhysicsState.RECOVERY && _characterBody.characterData.curHP <= 0)
+        {
+            _characterBody.KillCharacterInBattle();  
         }
     }
     void GetState()
@@ -138,9 +143,9 @@ public class BattlePhysicsInteraction : MonoBehaviour
     public void HitTarget(Vector2 inputVelocity, int damage)
     {
         // called when we hit the target. check if we are blocking and set the appropriate damage.
-        if (10 + _characterBody.characterData.curDEF > 99)
+        if (damage <= 0)
             return;
-        _internalVelocity = inputVelocity/(10.0f + _characterBody.characterData.curDEF);
+        _internalVelocity = inputVelocity / 10.0f;
         characterPhysicsState = CharacterPhysicsState.HITSTUN;
         isGrounded = false;
         isLaunched = true;

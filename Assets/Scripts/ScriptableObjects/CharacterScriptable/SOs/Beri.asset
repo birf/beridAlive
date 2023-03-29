@@ -15,8 +15,8 @@ MonoBehaviour:
   characterSprites: []
   characterData:
     CharType: 1
-    curHP: 5
-    baseHP: 5
+    curHP: 10
+    baseHP: 10
     curATK: 1
     baseATK: 1
     curDEF: 0
@@ -38,4 +38,6 @@ MonoBehaviour:
   characterItems:
   - {fileID: 11400000, guid: 3e3fbf73696bf66438a685cd8739d73d, type: 2}
   - {fileID: 11400000, guid: 3e3fbf73696bf66438a685cd8739d73d, type: 2}
-  - {fileID: 11400000, guid: 3e3fbf73696bf66438a685cd8739d73d, type: 2}
+  - {fileID: 11400000, guid: f1082e0289e004e4d9992423fc492c06, type: 2}
+  - {fileID: 11400000, guid: f1082e0289e004e4d9992423fc492c06, type: 2}
+  - {fileID: 11400000, guid: 4505c457db947094d92661cb34ed9308, type: 2}

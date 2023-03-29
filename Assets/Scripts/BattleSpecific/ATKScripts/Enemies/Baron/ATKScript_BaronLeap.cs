@@ -12,22 +12,34 @@ public class ATKScript_BaronLeap : ATKScript
     protected override void Update() 
     {
         transform.position = battleManager.currentActiveCharacter.transform.position;
-        if (subphase == 0)
+        
+        if (subphase <= 1)
+            JumpPhase();
+        else
             LeapToTarget();
-        if (subphase == 1)
-            OnSuccess();
+    }
+    void JumpPhase()
+    {
+        if (subphase == 0)
+        {
+            battleManager.currentActiveCharacter.characterBattlePhysics.Jump();
+            subphase++;
+        }
+        else
+        {
+            if (battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState 
+                == BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT)
+                subphase++;
+        }
     }
     void LeapToTarget()
     {
         battleManager.currentActiveCharacter.characterBattlePhysics.MoveToPosition(targetEnemy.transform.position,20.0f);
-        if (transform.position == targetEnemy.transform.position)
-            subphase++;
+        if (targetEnemy.GetComponent<BlockScript>().CheckCollisions(out int damageReduction))
+        {
+            battleManager.currentActiveCharacter.characterBattlePhysics.LaunchTarget(new Vector2(-1,2));
+            base.OnSuccess(parentMove.damage - damageReduction);
+            Destroy(gameObject);
+        }
     }    
-    public override void OnSuccess()
-    {
-        battleManager.currentActiveCharacter.characterBattlePhysics.LaunchTarget(new Vector2(-1,2));
-        base.OnSuccess();
-        Destroy(gameObject);
-    }
-
 }

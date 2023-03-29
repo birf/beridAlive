@@ -15,19 +15,23 @@ public class BattleCameraFollow : MonoBehaviour
         battleManager = (BattleManager)CentralManager.GetStateManager();
         cameraObj = GetComponent<Camera>();
     }
-    void Update()
+    void FixedUpdate()
     {
-        ZoomCamera();
+        MoveCamera();
     }
-    void ZoomCamera()
+    void MoveCamera()
     {
-        // cameraObj.orthographicSize = Mathf.Lerp(6.7f,5.0f,slider);
+        // only move camera when the game state calls for it
         if (BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.PLAYERATTACK
             || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN
-            || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ANALYSIS)
+            || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ANALYSIS
+            || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.WIN
+            || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.LOSE)
         {
             CharacterGameBattleEntity activeChar = battleManager.currentActiveCharacter;
             CharacterGameBattleEntity targetChar = battleManager.currentTargetCharacter;
+            if (!activeChar || !targetChar)
+                return;
             
             float distanceRatio = 0;
             if (targetChar != activeChar)

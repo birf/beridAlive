@@ -7,22 +7,11 @@ public class ATKScript : MonoBehaviour
     /*
         Script from which all battle moves' attack script field should be placed. These scripts are responsible for instantiating the
         hitboxes required for the move as well as assign animations to the caster, among other features.
-
-        
-        IMPORTANT : 
-        When making a new ATKScript, make sure that each Update method (if used) is prefaced by :
-            "protected override void"
-        This is done to inherit any base functionality from this script's update loop. For now it simply checks if at any point the 
-        player times out (i.e. : their target enemy is in recovery ) their move will fail.
-
-    */
-
-    /*
-        TODO : Find a way to have previousMoveType attached to the game object when it spawns, not when fed. 
     */
 
     public BattleMove parentMove;
     public CharacterGameBattleEntity targetEnemy;
+    public CharacterGameBattleEntity caster;
     public BattleManager battleManager;
     public MoveType previousMoveType;
 
@@ -60,6 +49,9 @@ public class ATKScript : MonoBehaviour
             Destroy(gameObject);
 
         battleManager.currentTargetCharacter = targetEnemy;
+        caster = battleManager.currentActiveCharacter;
+
+        
         if (battleManager.battleManagerMoveQueue.Count != 0 && battleManager.battleManagerMoveQueueIndex != 0)
             previousMoveType = battleManager.battleManagerMoveQueue[battleManager.battleManagerMoveQueueIndex-1].moveType;
         else
@@ -74,28 +66,28 @@ public class ATKScript : MonoBehaviour
 
     public virtual void OnSuccess()
     {
-        targetEnemy.characterBattlePhysics.HitTarget(
-            parentMove.mainLaunchVelocity, parentMove.damage);
+        DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
+                            parentMove.damage - targetEnemy.characterData.curDEF);
+
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         battleManager.AttackSuccess();
-        targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
         previousMoveType = MoveType.NONE;
 
-        parentMove.damage = battleManager.currentActiveCharacter.characterData.baseATK;
     }
     public virtual void OnSuccess(int damageOverride)
     {
-        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity,damageOverride);
+        DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
+                            damageOverride - targetEnemy.characterData.curDEF);
+
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity,
+                                                     damageOverride - targetEnemy.characterData.curDEF);
         battleManager.AttackSuccess();
-        targetEnemy.characterData.curDEF = targetEnemy.characterData.baseDEF;
         previousMoveType = MoveType.NONE;
 
-        parentMove.damage = battleManager.currentActiveCharacter.characterData.baseATK;
     }
     public virtual void OnFailure()
     {
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
         previousMoveType = MoveType.NONE;
-
-        parentMove.damage = battleManager.currentActiveCharacter.characterData.baseATK;
     }
 }

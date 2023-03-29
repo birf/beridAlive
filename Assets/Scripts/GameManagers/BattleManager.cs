@@ -71,8 +71,6 @@ public class BattleManager : GameManager
         OverworldManager om = ChildObjects[0].GetComponent<OverworldManager>();
 
         //Zay's Code
-        FindObjectOfType<HealthDisplay>().RemoveAllHudEntities();
-        FindObjectOfType<AudioManager>().StopTrack();
         //
         if (CurrentBattleManagerState == BattleManagerState.WIN)
         {
@@ -84,16 +82,12 @@ public class BattleManager : GameManager
         }
         else
             RestartGame();
-
-
-
     }
     void Update()
     {
         // done to make sure that all characters on field are initialized with correct values
         if (startupTimer.GetRemaingingSeconds() > 0)
             startupTimer.Tick(Time.deltaTime);
-        Debug.Log(CurrentBattleManagerState);
 
         switch (CurrentBattleManagerState)
         {
@@ -150,13 +144,12 @@ public class BattleManager : GameManager
         for (int i = 0; i < CharacterGameBattleEntities.Count; i++)
         {
             // character is dead.
-            if (CharacterGameBattleEntities[i].characterData.curHP <= 0 &&
-                    CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
-            { flag = true; CharacterGameBattleEntities[i].KillCharacterInBattle(); break; }
+            // if (CharacterGameBattleEntities[i].characterData.curHP <= 0 )
+            // { flag = true; CharacterGameBattleEntities[i].KillCharacterInBattle(); break; }
 
             // a character has been hit and is either in hitstun or recovering from it.
-            if (CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.HITSTUN ||
-                    CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
+            if (CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.HITSTUN
+            ||  CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
             { flag = true; break; }
 
             if (playerCharacters.Count == 0)
@@ -216,7 +209,6 @@ public class BattleManager : GameManager
 
         _PlayerUI = FindObjectByName("PlayerTurnUI");
 
-        FindObjectOfType<HealthDisplay>().InitializeHealthUI();
 
         SetTurnOrder();
     }
@@ -270,16 +262,12 @@ public class BattleManager : GameManager
     // the player or enemy has successfully performed a move/portion of their move. advance to next move (if any)
     public void AttackSuccess()
     {
-        // last move was a success, clear queue.
         if (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
             currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
 
-        Debug.Log(currentTargetCharacter.transform.position);
+        // FindObjectOfType<HealthDisplay>().UpdateHealthUI();
 
-
-        DamagePopup.Create(currentTargetCharacter.transform.position, currentActiveCharacter.characterScriptable.characterData.baseATK);
-        FindObjectOfType<HealthDisplay>().UpdateHealthUI();
-
+        // last move was a success, clear queue.
         if (battleManagerMoveQueue.Count - 1 == battleManagerMoveQueueIndex)
         {
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
@@ -289,7 +277,6 @@ public class BattleManager : GameManager
         // if the target character died from the previous move, force an attack chain to succeed, refund the player's stamina
         else if (currentTargetCharacter.characterData.curHP <= 0)
         {
-            Debug.Log("Character died!");
             for (int i = battleManagerMoveQueueIndex; i < battleManagerMoveQueue.Count; i++)
                 currentActiveCharacter.characterData.curSTAMINA += battleManagerMoveQueue[i].staminaCost;
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentMove: {fileID: 11400000, guid: acf2432b66e0380459fd22e855f83442, type: 2}
   targetEnemy: {fileID: 0}
+  caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
   speedInverse: 1.5
@@ -49,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7234881991214017967, guid: 93c7940a4b609e545a096f0152e296a2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 7234881991214017967, guid: 93c7940a4b609e545a096f0152e296a2, type: 3}
       propertyPath: m_LocalPosition.z

@@ -30,9 +30,9 @@ public class ATKScript_Tester_Shoot : ATKScript
         _launcherHitbox.transform.position = Vector3.MoveTowards(_launcherHitbox.transform.position, targetEnemy.transform.position,
                                                                         Time.deltaTime * _launcherSpeed);
         
-        if (targetEnemy.GetComponent<BlockScript>().CheckCollisions())
+        if (targetEnemy.GetComponent<BlockScript>().CheckCollisions(out int damageReduction))
         {
-            OnSuccess();
+            OnSuccess(parentMove.damage - damageReduction);
             Destroy(gameObject);
         }
     }

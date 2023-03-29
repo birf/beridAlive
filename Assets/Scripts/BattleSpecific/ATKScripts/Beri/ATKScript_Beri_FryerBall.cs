@@ -46,13 +46,21 @@ public class ATKScript_Beri_FryerBall : ATKScript
     }
     protected override void Update()
     {
+        chargeText.color = Color.black;
+        chargeText.outlineColor = Color.black;
+
         if (controls.Battle.Primary.triggered)
         {
             _charge += 15;
+            
         }
         chargeText.text = "" + _charge;
         if (_charge >= 100)
+        {
             chargeText.text = "100";
+            chargeText.outlineColor = Color.yellow;
+            chargeText.color = Color.yellow;
+        }
         if (_charge >= _maxCharge)
             _charge = _maxCharge;
     }
@@ -69,11 +77,11 @@ public class ATKScript_Beri_FryerBall : ATKScript
         if (_charge == 0)
             OnFailure();
         else if (_charge > 0 && _charge < 50)
-            localDamage = 1;
-        else if (_charge > 50 && _charge < 99)
             localDamage = parentMove.damage;
-        else
+        else if (_charge > 50 && _charge < 99)
             localDamage = parentMove.damage + 1;
+        else
+            localDamage = parentMove.damage + 2;
     }
     void SecondPhase()
     {
@@ -86,7 +94,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
     public override void BeginMove()
     {
         base.BeginMove();
-        parentMove.damage += 1;
+        parentMove.damage = caster.characterData.curATK + 1;
     }
     public override void OnSuccess()
     {

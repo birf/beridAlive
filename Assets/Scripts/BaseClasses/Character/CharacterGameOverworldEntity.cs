@@ -27,11 +27,12 @@ public class CharacterGameOverworldEntity : CharacterGameEntity
                 gameObject.layer = 8;
                 break;
         }
+    
+
     }
     void Update()
     {
         if (!overworldManager)
-            overworldManager = (OverworldManager)CentralManager.GetStateManager();
-        
+            overworldManager = (OverworldManager)CentralManager.GetStateManager();        
     }
 }

@@ -101,6 +101,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
             if (EnemyInSafeArea())
             {
                 subPhase++;  
+                targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
                 targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
                 targetEnemy.transform.parent = null;
                 Destroy(grabber); 
@@ -175,6 +176,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
     public override void OnSuccess()
     {
         targetEnemy.transform.parent = null;
+        targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
         Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
         base.OnSuccess();

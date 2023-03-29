@@ -46,7 +46,6 @@ public class BattleMove : ScriptableObject, IDisplayable
         mainMoveGameObject.GetComponent<ATKScript>().parentMove = parentMove;
         mainMoveGameObject.GetComponent<ATKScript>().battleManager = battleManager;
         
-        damage = battleManager.currentActiveCharacter.characterData.curATK;
     }   
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {

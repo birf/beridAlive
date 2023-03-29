@@ -18,6 +18,7 @@ MonoBehaviour:
   moveSpriteSmall: {fileID: 21300000, guid: a88d1d6c8a91e0d46b0ab6c4818e40c0, type: 3}
   moveType: 1
   damage: 1
+  bonus: 2
   staminaCost: 3
   moveName: Backthrow
   moveDescription: You've had enough..

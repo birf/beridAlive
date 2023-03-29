@@ -101,6 +101,7 @@ public class ATKScript_Beri_TossUp : ATKScript
             {
                 subPhase++;  
                 targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
+                targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
                 targetEnemy.transform.parent = null;
                 Destroy(grabber); 
             }
@@ -174,6 +175,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     public override void OnSuccess()
     {
         targetEnemy.transform.parent = null;
+        targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
         Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
         base.OnSuccess();
