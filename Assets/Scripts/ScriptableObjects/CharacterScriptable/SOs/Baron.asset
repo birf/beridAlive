@@ -15,10 +15,10 @@ MonoBehaviour:
   characterSprites: []
   characterData:
     CharType: 2
-    curHP: 5
-    baseHP: 5
-    curATK: 3
-    baseATK: 3
+    curHP: 4
+    baseHP: 4
+    curATK: 2
+    baseATK: 2
     curDEF: 0
     baseDEF: 0
     curSPEED: 7

@@ -50,7 +50,7 @@ public class ATKScript : MonoBehaviour
 
         battleManager.currentTargetCharacter = targetEnemy;
         caster = battleManager.currentActiveCharacter;
-
+        parentMove.damage = caster.characterData.curATK;
         
         if (battleManager.battleManagerMoveQueue.Count != 0 && battleManager.battleManagerMoveQueueIndex != 0)
             previousMoveType = battleManager.battleManagerMoveQueue[battleManager.battleManagerMoveQueueIndex-1].moveType;
