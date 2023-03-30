@@ -37,6 +37,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
     }
     protected override void Update()
     {
+        base.Update();
         if (subPhase == 0)
         {
             GrabberMove();
@@ -172,6 +173,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
     public override void BeginMove()
     {
         base.BeginMove();
+        parentMove.damage += 2;
     }
     public override void OnSuccess()
     {

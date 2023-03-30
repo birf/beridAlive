@@ -49,6 +49,7 @@ MonoBehaviour:
   caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
+  canStart: 0
   _launcherHitbox: {fileID: 1081917865122827884}
   _launcherSpeed: 20
   _validLayers:

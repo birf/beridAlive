@@ -25,23 +25,32 @@ public class BattleCameraFollow : MonoBehaviour
         if (BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.PLAYERATTACK
             || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN
             || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ANALYSIS
-            || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.WIN
+            || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.WAIT
             || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.LOSE)
         {
             CharacterGameBattleEntity activeChar = battleManager.currentActiveCharacter;
             CharacterGameBattleEntity targetChar = battleManager.currentTargetCharacter;
-            if (!activeChar || !targetChar)
-                return;
+
             
-            float distanceRatio = 0;
+            float distanceRatio = 1;
+            Vector3 cameraPos = new Vector3(0,0,-10);
+            if (!activeChar || !targetChar)
+            {
+                transform.position = Vector3.Lerp(transform.position,new Vector3(0,0,-10),Time.deltaTime * 2.0f);
+                cameraObj.orthographicSize = Mathf.Lerp(cameraObj.orthographicSize, minZoom, Time.deltaTime);
+                return;
+            }
+            
             if (targetChar != activeChar)
+            {
                 distanceRatio = 
                     Vector2.Distance(activeChar.transform.position,targetChar.transform.position) /
                     Vector2.Distance(activeChar.characterBattlePhysics.startPosition, targetChar.characterBattlePhysics.startPosition);
+                cameraPos = new Vector3(activeChar.transform.position.x + targetChar.transform.position.x, 0, -10);
+            }
             
             cameraObj.orthographicSize = Mathf.Lerp(minZoom, maxZoom, 1f - distanceRatio);
             
-            Vector3 cameraPos = new Vector3(activeChar.transform.position.x + targetChar.transform.position.x, 0, -10);
             Mathf.Clamp(cameraPos.x,-10.0f,10.0f);
             Mathf.Clamp(transform.position.x,-10.0f,10.0f);
 
@@ -50,6 +59,7 @@ public class BattleCameraFollow : MonoBehaviour
         }
         else
         {
+            
             transform.position = Vector3.Lerp(transform.position,new Vector3(0,0,-10),Time.deltaTime * 2.0f);
             cameraObj.orthographicSize = Mathf.Lerp(cameraObj.orthographicSize, minZoom, Time.deltaTime);
         }

@@ -106,8 +106,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnFailure()
     {
-        battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState 
-                                = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
+        cooldownTimer.OnTimerEnd += SetRecovery;
         controls.Disable();
         battleManager.PlayerAttackFailure();
         base.OnFailure();
@@ -115,10 +114,14 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     public override void OnSuccess()
     {
-        battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState 
-                                = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
+        cooldownTimer.OnTimerEnd += SetRecovery;
         base.OnSuccess();
         controls.Disable();
         Destroy(gameObject);
+    }
+    void SetRecovery()
+    {
+        caster.characterBattlePhysics.characterPhysicsState 
+                                = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
     }
 }

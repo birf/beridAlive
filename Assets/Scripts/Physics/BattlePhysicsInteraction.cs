@@ -27,7 +27,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     public float localGroundYCoordinate; // <-- where in the world their current "ground floor" is 
     public int maxGroundBounces = 3;
     [Range(0.1f,50.0f)] public float moveSpeed = 10.0f;
-    int _groundBounces = 5;
+    int _groundBounces = 3;
     float _gravity = 9.81f;
     float _lerpTime;
     const float MINMOVEDISTANCE = 0.01f;
@@ -147,6 +147,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
             return;
         _internalVelocity = inputVelocity / 10.0f;
         characterPhysicsState = CharacterPhysicsState.HITSTUN;
+        _groundBounces = 0;
         isGrounded = false;
         isLaunched = true;
         
@@ -156,6 +157,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     {
         _internalVelocity = inputVelocity/(10.0f);
         characterPhysicsState = CharacterPhysicsState.HITSTUN;
+        _groundBounces = 0;
         isGrounded = false;
         isLaunched = true;
     }

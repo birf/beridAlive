@@ -21,7 +21,7 @@ MonoBehaviour:
   grabber: {fileID: 1769542253824298645}
   safeArea: {fileID: 4770709687722753848}
   grabberHitBox: {fileID: 7503712952462733149}
-  grabberSpeed: 10
+  grabberSpeed: 15
   validLayers:
     serializedVersion: 2
     m_Bits: 256

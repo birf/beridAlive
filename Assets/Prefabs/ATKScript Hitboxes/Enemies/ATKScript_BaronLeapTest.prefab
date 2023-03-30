@@ -48,3 +48,4 @@ MonoBehaviour:
   caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
+  canStart: 0

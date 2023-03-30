@@ -49,7 +49,8 @@ public class BattleManager : GameManager
         PLAYERATTACK,
         ENEMYTURN,
         WIN,
-        LOSE
+        LOSE,
+        RUNAWAY
     }
 
     void OnEnable()
@@ -70,13 +71,13 @@ public class BattleManager : GameManager
     {
         OverworldManager om = ChildObjects[0].GetComponent<OverworldManager>();
 
-        //Zay's Code
-        //
-        if (CurrentBattleManagerState == BattleManagerState.WIN)
+        // still tryna make runaway work.
+        if (CurrentBattleManagerState == BattleManagerState.WIN || CurrentBattleManagerState == BattleManagerState.RUNAWAY)
         {
             currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
             FindObjectOfType<AudioManager>().EndTrack();
-            Destroy(om.currentEnemyEncounter.gameObject);
+            if (CurrentBattleManagerState == BattleManagerState.WIN)
+                Destroy(om.currentEnemyEncounter.gameObject);
             om.gameObject.SetActive(true);
             gameObject.SetActive(false);
         }
@@ -88,6 +89,8 @@ public class BattleManager : GameManager
         // done to make sure that all characters on field are initialized with correct values
         if (startupTimer.GetRemaingingSeconds() > 0)
             startupTimer.Tick(Time.deltaTime);
+
+        Debug.Log(CurrentBattleManagerState);
 
         switch (CurrentBattleManagerState)
         {
@@ -121,6 +124,7 @@ public class BattleManager : GameManager
                 }
             case BattleManagerState.LOSE:
             case BattleManagerState.WIN:
+            case BattleManagerState.RUNAWAY:
                 {
                     endTimer.Tick(Time.deltaTime);
                     break;
@@ -156,12 +160,18 @@ public class BattleManager : GameManager
             { flag = true; CurrentBattleManagerState = BattleManagerState.LOSE; Debug.Log("You lose!"); break; }
 
             if (enemyCharacters.Count == 0)
-            { flag = true; CurrentBattleManagerState = BattleManagerState.WIN; Debug.Log("You Win!"); break; }
+            { 
+                flag = true; 
+                currentTargetCharacter = playerCharacters[0]; 
+                CurrentBattleManagerState = BattleManagerState.WIN; 
+                Debug.Log("You Win!");
+                break;
+            }
 
         }
         if (!flag)
         {
-            if (waitTimer == null)
+            if (waitTimer == null || waitTimer.GetRemaingingSeconds() <= 0)
             {
                 waitTimer = new Timer(1);
                 waitTimer.OnTimerEnd += GetNextTurn;

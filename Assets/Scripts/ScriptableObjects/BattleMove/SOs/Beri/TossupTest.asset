@@ -17,8 +17,9 @@ MonoBehaviour:
   moveSpecificAnimations: {fileID: 0}
   moveSpriteSmall: {fileID: 21300000, guid: a88d1d6c8a91e0d46b0ab6c4818e40c0, type: 3}
   moveType: 1
+  startupTime: 1
+  cooldownTime: 0.25
   damage: 1
-  bonus: 0
   staminaCost: 1
   moveName: Tossup
   moveDescription: 'Grab an opponent and launch them upwards with the strength of

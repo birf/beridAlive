@@ -10,7 +10,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         Beri launches her hand and drags opponents inward. Launches Upward.
     */
     [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
-    int subPhase = 0;
+    int subPhase = -1;
     ///<summary>
     ///Physical GameObject to grab the enemy.   
     ///</summary>
@@ -21,14 +21,12 @@ public class ATKScript_Beri_TossUp : ATKScript
     
     PrimaryControls controls;
     [SerializeField] LayerMask validLayers;
-    Vector3 _initialPosition;
     Vector3 _internalVelocity;
     Collider2D[] _hitBuffer = new Collider2D[3];
     Timer timer = new Timer(3);
 
     void Awake()
     {
-        _initialPosition = transform.position;
         timer.OnTimerEnd += OnFailure;
         controls = new PrimaryControls();
         controls.Enable();
@@ -36,6 +34,14 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     protected override void Update()
     {
+        if (transform.position != caster.characterBattlePhysics.startPosition && subPhase == -1)
+        {
+            caster.characterBattlePhysics.MoveToPosition(caster.characterBattlePhysics.startPosition);
+            transform.position = caster.transform.position;
+            subPhase = -1;
+        }
+        else if (transform.position == caster.characterBattlePhysics.startPosition && subPhase == -1)
+            subPhase++;
         if (subPhase == 0)
         {
             GrabberMove();
@@ -54,7 +60,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         if (subPhase == 0)
             grabber.transform.position = Vector3.MoveTowards(grabber.transform.position, targetEnemy.transform.position, grabberSpeed * Time.deltaTime);
         else
-            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,_initialPosition, grabberSpeed * Time.deltaTime);
+            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,caster.transform.position, grabberSpeed * Time.deltaTime);
 
     }
     void FirstPhase()
@@ -114,7 +120,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         }
 
         // player reeled in enemy too close.
-        if (Vector3.Distance(grabber.transform.position, _initialPosition) < 0.01f)
+        if (Vector3.Distance(grabber.transform.position, caster.transform.position - new Vector3(-0.5f,0,0)) < 0.01f)
         {
             targetEnemy.characterBattlePhysics.HitTarget(new Vector2(-1f,-0.5f), 0);
             OnFailure();
@@ -174,11 +180,11 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     public override void OnSuccess()
     {
+        base.OnSuccess();
         targetEnemy.transform.parent = null;
         targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
         Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
-        base.OnSuccess();
         targetEnemy.characterBattlePhysics.MoveGroundCoordinate(t.y - 0.5f);
         targetEnemy.transform.parent = null;
         Destroy(gameObject);

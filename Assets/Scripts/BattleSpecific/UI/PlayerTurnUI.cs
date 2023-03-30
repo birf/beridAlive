@@ -535,7 +535,7 @@ public class PlayerTurnUI : MonoBehaviour
                     
                     BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
                     
-                    battleManager.waitTimer = new Timer(3.5f);
+                    battleManager.waitTimer = new Timer(1.5f);
                     battleManager.waitTimer.OnTimerEnd += battleManager.GetNextTurn;
 
                     

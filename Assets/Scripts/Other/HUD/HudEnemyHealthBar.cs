@@ -26,7 +26,7 @@ public class HudEnemyHealthBar : MonoBehaviour
 
         Vector3 newScale = new Vector3(-(1-ratio),1,1);
 
-        mask.transform.localScale = newScale;
+        mask.transform.localScale = Vector3.Lerp(mask.transform.localScale,newScale,Time.deltaTime*10f);
         
         numberText.text = curHealth.ToString();
     }

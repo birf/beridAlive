@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using BeriUtils.Core;
 
 public enum MoveType
 {
@@ -34,6 +34,7 @@ public class BattleMove : ScriptableObject, IDisplayable
     public RuntimeAnimatorController moveSpecificAnimations;
     public Sprite moveSpriteSmall;
     public MoveType moveType;
+    public float cooldownTime;
     public int damage;
     public int staminaCost;
     public string moveName;

@@ -17,8 +17,7 @@ MonoBehaviour:
   moveSpecificAnimations: {fileID: 0}
   moveSpriteSmall: {fileID: 0}
   moveType: 2
-  damage: 3
-  bonus: 0
+  damage: 2
   staminaCost: 0
   moveName: Baron Leap
   moveDescription: What else are they supposed to do with those muscles?

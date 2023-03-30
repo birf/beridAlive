@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using BeriUtils.Core;
 public class ATKScript : MonoBehaviour
 {
     /*
@@ -14,12 +14,11 @@ public class ATKScript : MonoBehaviour
     public CharacterGameBattleEntity caster;
     public BattleManager battleManager;
     public MoveType previousMoveType;
-
+    public Timer cooldownTimer;
+    public bool canStart = false;
 
     protected virtual void Update()
-    {
-    }
-
+    {}
     protected void StateCheck()
     {
         // tbh idk why this is here.
@@ -51,6 +50,7 @@ public class ATKScript : MonoBehaviour
         battleManager.currentTargetCharacter = targetEnemy;
         caster = battleManager.currentActiveCharacter;
         parentMove.damage = caster.characterData.curATK;
+        cooldownTimer = new Timer(parentMove.cooldownTime);
         
         if (battleManager.battleManagerMoveQueue.Count != 0 && battleManager.battleManagerMoveQueueIndex != 0)
             previousMoveType = battleManager.battleManagerMoveQueue[battleManager.battleManagerMoveQueueIndex-1].moveType;
@@ -70,7 +70,14 @@ public class ATKScript : MonoBehaviour
                             parentMove.damage - targetEnemy.characterData.curDEF);
 
         targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
-        battleManager.AttackSuccess();
+        if (cooldownTimer.GetRemaingingSeconds() == 0)
+            { battleManager.AttackSuccess(); Debug.Log("no timer set"); }
+        else
+        {
+            battleManager.waitTimer = cooldownTimer;
+            battleManager.waitTimer.OnTimerEnd += battleManager.AttackSuccess;
+            BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
+        }
         previousMoveType = MoveType.NONE;
 
     }

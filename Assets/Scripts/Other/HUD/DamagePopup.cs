@@ -41,7 +41,7 @@ public class DamagePopup : MonoBehaviour
         dissapearTimer = 1f;
         if (damageAmount <= 0)
             transform.localScale = transform.localScale * 0.4f;
-        moveVector = new Vector3(0, 1) * 20f;
+        moveVector = new Vector3(Random.Range(-0.25f,0.25f), 1) * 20f;
     }
     // Start is called before the first frame update
     void Start()
