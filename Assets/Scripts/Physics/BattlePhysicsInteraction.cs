@@ -23,13 +23,15 @@ public class BattlePhysicsInteraction : MonoBehaviour
 #region Primitives
     public bool isGrounded = true;
     public bool isLaunched = false;
-    public bool jumping = false;
+    public bool isJumping = false;
+    public bool shouldImmediatelyRecover = true;
     public float localGroundYCoordinate; // <-- where in the world their current "ground floor" is 
     public int maxGroundBounces = 3;
     [Range(0.1f,50.0f)] public float moveSpeed = 10.0f;
     int _groundBounces = 3;
     float _gravity = 9.81f;
     float _lerpTime;
+    float _xLastFrame;
     const float MINMOVEDISTANCE = 0.01f;
 #endregion
 
@@ -73,12 +75,12 @@ public class BattlePhysicsInteraction : MonoBehaviour
             }
             else if (isGrounded) // character is grounded.
             {
-                _internalVelocity = Vector2.zero; _groundBounces = 0;  jumping = false;
+                _internalVelocity = Vector2.zero; _groundBounces = 0;  isJumping = false;
                 characterPhysicsState = CharacterPhysicsState.DEFAULT;
                 SetState();
             }
             // if they've just been launched and are now grounded, recover to initial position.
-            if (isLaunched && isGrounded)  
+            if (isLaunched && isGrounded && shouldImmediatelyRecover)  
             {
                 characterPhysicsState = CharacterPhysicsState.RECOVERY;
             }
@@ -97,7 +99,6 @@ public class BattlePhysicsInteraction : MonoBehaviour
     void GetState()
     {
         _internalPosition = transform.position;
-
         // if (_internalVelocity == Vector2.zero)
         //     transform.position = startPosition;
     }
@@ -113,7 +114,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
             _internalVelocity.y = -_internalVelocity.y * 0.5f;
             _internalVelocity.x *= 0.5f;
             _groundBounces++;
-            if (jumping || (_groundBounces >= maxGroundBounces && !jumping))
+            if (isJumping || (_groundBounces >= maxGroundBounces && !isJumping))
                 isGrounded = true;
         }
     }
@@ -129,6 +130,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     public void MoveToPosition(Vector3 destination, float speed = 10.0f)
     {
         transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * speed);
+        _internalPosition = transform.position;
         MoveGroundCoordinate(transform.position.y);
         // when character reaches the initial position, update their state.
         if (Vector3.Distance(transform.position,destination) < MINMOVEDISTANCE)
@@ -150,6 +152,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
         _groundBounces = 0;
         isGrounded = false;
         isLaunched = true;
+        shouldImmediatelyRecover = true;
         
         _characterBody.characterData.AddToStat(CharacterStat.HP, -damage, false);
     }
@@ -161,13 +164,26 @@ public class BattlePhysicsInteraction : MonoBehaviour
         isGrounded = false;
         isLaunched = true;
     }
+    public void Jump(Vector2 jumpVector)
+    {
+        LaunchTarget(jumpVector);
+        isJumping = true;
+    }
     public void Jump()
     {
         LaunchTarget(new Vector2(0f,2.5f));
-        jumping = true;
+        isJumping = true;
     }
     public void MoveGroundCoordinate(float position)
     {
         localGroundYCoordinate = position;
+    }
+    public void ResetToDefaultState()
+    {
+        characterPhysicsState = CharacterPhysicsState.DEFAULT;
+        isJumping = false;
+        isGrounded = true;
+        isLaunched = false;
+        shouldImmediatelyRecover = true;
     }
 }

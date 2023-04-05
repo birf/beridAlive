@@ -9,9 +9,11 @@ public class ATKScript_BaronLeap : ATKScript
     */
     int subphase = 0;
 
+
+
     protected override void Update() 
     {
-        transform.position = battleManager.currentActiveCharacter.transform.position;
+        transform.position = caster.transform.position;
         
         if (subphase <= 1)
             JumpPhase();
@@ -22,13 +24,12 @@ public class ATKScript_BaronLeap : ATKScript
     {
         if (subphase == 0)
         {
-            battleManager.currentActiveCharacter.characterBattlePhysics.Jump();
+            caster.characterBattlePhysics.Jump();
             subphase++;
         }
         else
         {
-            if (battleManager.currentActiveCharacter.characterBattlePhysics.characterPhysicsState 
-                == BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT)
+            if (caster.characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.DEFAULT)
                 subphase++;
         }
     }
@@ -41,5 +42,5 @@ public class ATKScript_BaronLeap : ATKScript
             base.OnSuccess(parentMove.damage - damageReduction);
             Destroy(gameObject);
         }
-    }    
+    }   
 }

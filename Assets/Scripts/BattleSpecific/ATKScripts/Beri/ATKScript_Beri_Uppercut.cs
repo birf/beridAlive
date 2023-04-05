@@ -4,7 +4,6 @@ using BeriUtils.Core;
 public class ATKScript_Beri_Uppercut : ATKScript
 {
     public BoxCollider2D puncher;
-
     bool _isCharging = false;
     bool _isPunching = false;
     bool _isInPosition = false;
@@ -107,21 +106,22 @@ public class ATKScript_Beri_Uppercut : ATKScript
     public override void OnFailure()
     {
         cooldownTimer.OnTimerEnd += SetRecovery;
+        base.OnFailure();
         controls.Disable();
         battleManager.PlayerAttackFailure();
-        base.OnFailure();
         Destroy(gameObject);
     }
     public override void OnSuccess()
     {
         cooldownTimer.OnTimerEnd += SetRecovery;
+        caster.characterBattlePhysics.Jump(new Vector2(0,1.5f));
+        caster.characterBattlePhysics.shouldImmediatelyRecover = false;
         base.OnSuccess();
         controls.Disable();
         Destroy(gameObject);
     }
     void SetRecovery()
     {
-        caster.characterBattlePhysics.characterPhysicsState 
-                                = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
+        caster.characterBattlePhysics.characterPhysicsState = BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY;
     }
 }

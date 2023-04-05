@@ -481,6 +481,8 @@ public class PlayerTurnUI : MonoBehaviour
                             SetupActionIcons();
                             currentSelectedItem = null;
                         }
+                        else
+                        { GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.DESELECT);}
                     }
                     if (controls.Battle.Secondary.triggered)
                     {

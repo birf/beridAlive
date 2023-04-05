@@ -90,7 +90,6 @@ public class BattleManager : GameManager
         if (startupTimer.GetRemaingingSeconds() > 0)
             startupTimer.Tick(Time.deltaTime);
 
-        Debug.Log(CurrentBattleManagerState);
 
         switch (CurrentBattleManagerState)
         {
@@ -272,10 +271,9 @@ public class BattleManager : GameManager
     // the player or enemy has successfully performed a move/portion of their move. advance to next move (if any)
     public void AttackSuccess()
     {
+        // if enemy was attacking, reset their execute flag so that they can execute again. 
         if (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
             currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
-
-        // FindObjectOfType<HealthDisplay>().UpdateHealthUI();
 
         // last move was a success, clear queue.
         if (battleManagerMoveQueue.Count - 1 == battleManagerMoveQueueIndex)
@@ -292,7 +290,6 @@ public class BattleManager : GameManager
             CurrentBattleManagerState = BattleManagerState.ANALYSIS;
             battleManagerMoveQueue.Clear();
             battleManagerMoveQueueIndex = 0;
-            //FindObjectOfType<HealthDisplay>().RemoveHudEntity(currentActiveCharacter.GetComponent<HudEntity>())
         }
         else // advance to next move in the queue.
         {

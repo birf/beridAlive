@@ -242,11 +242,11 @@ MonoBehaviour:
   caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
-  speedInverse: 1.5
+  canStart: 0
   grabber: {fileID: 3707467223883067982}
   safeArea: {fileID: 7622847795286983651}
   grabberHitBox: {fileID: 4890829675711959942}
-  grabberSpeed: 15
+  grabberSpeed: 12.5
   validLayers:
     serializedVersion: 2
     m_Bits: 256

@@ -9,7 +9,8 @@ public class ATKScript_Beri_TossUp : ATKScript
         Attack script for the move 'Toss Up,' used by Beri.
         Beri launches her hand and drags opponents inward. Launches Upward.
     */
-    [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
+
+    // TODO : Revamp EnemyInSafeArea to always return true if enemy was already in the safe area. 
     int subPhase = -1;
     ///<summary>
     ///Physical GameObject to grab the enemy.   
@@ -24,6 +25,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     Vector3 _internalVelocity;
     Collider2D[] _hitBuffer = new Collider2D[3];
     Timer timer = new Timer(3);
+    Timer animationTimer = new Timer(1);
 
     void Awake()
     {
@@ -31,9 +33,12 @@ public class ATKScript_Beri_TossUp : ATKScript
         controls = new PrimaryControls();
         controls.Enable();
         BeginMove();
+
     }
     protected override void Update()
     {
+        caster.GetComponent<Animator>().runtimeAnimatorController = parentMove.moveSpecificAnimations;
+        // first unofficial phase //
         if (transform.position != caster.characterBattlePhysics.startPosition && subPhase == -1)
         {
             caster.characterBattlePhysics.MoveToPosition(caster.characterBattlePhysics.startPosition);
@@ -42,7 +47,14 @@ public class ATKScript_Beri_TossUp : ATKScript
         }
         else if (transform.position == caster.characterBattlePhysics.startPosition && subPhase == -1)
             subPhase++;
-        if (subPhase == 0)
+        ///////////////////////////
+
+        if (animationTimer.GetRemaingingSeconds() > 0 && subPhase == 0)
+        {
+            animationTimer.Tick(Time.deltaTime);
+            PlayAnimation("tossup_start");
+        }
+        else if (animationTimer.GetRemaingingSeconds() <= 0 && subPhase == 0)
         {
             GrabberMove();
             FirstPhase();
@@ -65,15 +77,16 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     void FirstPhase()
     {
+        PlayAnimation("tossup_deploy");
+
         // First phase of the move. Send out the grabber and drag back as player holds enter. 
         // Failure if player hits the button and there is no target. 
-
         if (EnemyInGrabberBounds())
         {
             grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
         }
 
-        if (controls.Battle.Primary.triggered && subPhase == 0)
+        if (controls.Battle.Primary.triggered && subPhase >= 0)
         {
             if (EnemyInGrabberBounds())
             {
@@ -81,11 +94,13 @@ public class ATKScript_Beri_TossUp : ATKScript
                 grabber.transform.position = targetEnemy.transform.position;
                 subPhase++;
                 targetEnemy.transform.parent = grabber.transform;
-                targetEnemy.characterBattlePhysics.isGrounded = true;
-                targetEnemy.characterBattlePhysics.isLaunched = false;
+                targetEnemy.characterBattlePhysics.ResetToDefaultState();
             }
             else
+            {
+                Debug.Log("how");
                 OnFailure();
+            }
         }
         if (Vector3.Distance(grabber.transform.position, targetEnemy.transform.position ) < 0.01f && subPhase == 0)
             OnFailure();
@@ -94,16 +109,17 @@ public class ATKScript_Beri_TossUp : ATKScript
     {
         // Second phase of the move. 
         // Drag back the enemy only if the player is still holding onto enter.
+        PlayAnimation("tossup_reel_back");
 
         targetEnemy.characterBattlePhysics.MoveGroundCoordinate(targetEnemy.transform.position.y - 0.5f);
 
         if (EnemyInSafeArea())
         {
-            grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
+            grabber.GetComponent<SpriteRenderer>().color = Color.blue; // <-- tester.
         }
         if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
         {
-            if (EnemyInSafeArea())
+            if (EnemyInSafeArea() || grabber.GetComponent<SpriteRenderer>().color == Color.blue) // <-- what...
             {
                 subPhase++;  
                 targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
@@ -128,10 +144,13 @@ public class ATKScript_Beri_TossUp : ATKScript
     }
     void ThirdPhase()
     {
-        // Third phase. Throw up the opponent and deal damage. 
+        // Third phase. Throw up the opponent and deal damage.
+
         timer.Tick(Time.deltaTime);
+        PlayAnimation("tossup_grabbed");
         if (controls.Battle.Direction.ReadValue<Vector2>().y == 1.0f)
         {
+            PlayAnimation("tossup_throw");
             OnSuccess();
             Destroy(gameObject);
         }
@@ -202,5 +221,9 @@ public class ATKScript_Beri_TossUp : ATKScript
         targetEnemy.transform.parent = null;
         base.OnFailure();
         Destroy(gameObject);
+    }
+    void PlayAnimation(string animation)
+    {
+        battleManager.currentActiveCharacter.PlayAnimation(animation);
     }
 }

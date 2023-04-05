@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - enemy_projectile
   - Default
+  - ice_collider
   layers:
   - Default
   - TransparentFX
@@ -41,9 +42,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: UI
+    uniqueID: 1353266561
+    locked: 0
+  - name: Background
+    uniqueID: 4119544443
+    locked: 0
+  - name: Foreground
+    uniqueID: 2984369863
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: UI
-    uniqueID: 1353266561
+  - name: Special
+    uniqueID: 3545674169
     locked: 0

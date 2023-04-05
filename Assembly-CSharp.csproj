@@ -101,7 +101,8 @@
      <Compile Include="Assets\Animations\Menu\HUD\battle_health\hudTester.cs" />
      <Compile Include="Assets\Scripts\BattleSpecific\UI\StaminaBar.cs" />
      <Compile Include="Assets\Scripts\ScriptableObjects\Tactics\Tactics.cs" />
-     <Compile Include="Assets\Scripts\Other\HUD\hudEnemyHealthBar.cs" />
+     <Compile Include="Assets\Scripts\Other\HUD\HudEnemyHealthBar.cs" />
+     <Compile Include="Assets\Scripts\Other\Aesthetic\BackgroundElementScroll.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

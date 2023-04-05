@@ -50,6 +50,7 @@ public class ATKScript : MonoBehaviour
         battleManager.currentTargetCharacter = targetEnemy;
         caster = battleManager.currentActiveCharacter;
         parentMove.damage = caster.characterData.curATK;
+
         cooldownTimer = new Timer(parentMove.cooldownTime);
         
         if (battleManager.battleManagerMoveQueue.Count != 0 && battleManager.battleManagerMoveQueueIndex != 0)
@@ -70,14 +71,7 @@ public class ATKScript : MonoBehaviour
                             parentMove.damage - targetEnemy.characterData.curDEF);
 
         targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
-        if (cooldownTimer.GetRemaingingSeconds() == 0)
-            { battleManager.AttackSuccess(); Debug.Log("no timer set"); }
-        else
-        {
-            battleManager.waitTimer = cooldownTimer;
-            battleManager.waitTimer.OnTimerEnd += battleManager.AttackSuccess;
-            BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
-        }
+        CheckForNullTimer(true);
         previousMoveType = MoveType.NONE;
 
     }
@@ -88,13 +82,41 @@ public class ATKScript : MonoBehaviour
 
         targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity,
                                                      damageOverride - targetEnemy.characterData.curDEF);
-        battleManager.AttackSuccess();
-        previousMoveType = MoveType.NONE;
 
+        CheckForNullTimer(true);
+        previousMoveType = MoveType.NONE;
     }
     public virtual void OnFailure()
     {
+        CheckForNullTimer(false);
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
         previousMoveType = MoveType.NONE;
+    }
+    void CheckForNullTimer(bool success)
+    {
+        if (cooldownTimer == null || cooldownTimer.GetRemaingingSeconds() == 0)
+        {
+            battleManager.AttackSuccess(); 
+            Debug.Log("No cooldown timer set for " + parentMove.moveName); 
+        }
+        else
+        {
+            battleManager.waitTimer = cooldownTimer;
+            if (success)
+            {
+                battleManager.waitTimer.OnTimerEnd += battleManager.AttackSuccess;
+                battleManager.waitTimer.OnTimerEnd += SetDefaultAnimations;
+            }
+            else
+            {
+                battleManager.waitTimer.OnTimerEnd += battleManager.PlayerAttackFailure;
+                SetDefaultAnimations();
+            }
+            BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
+        }
+    }
+    void SetDefaultAnimations()
+    {
+        caster.GetComponent<Animator>().runtimeAnimatorController = parentMove.defaultAnimations;
     }
 }

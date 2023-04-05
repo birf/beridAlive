@@ -8,7 +8,7 @@ public class Iceblock : InteractableObject
     
     public GameObject hole; //hole that gets filled when colliding with the block
     public GameObject block; //the iceblock
-    public float speed; //sliding speed of the block 
+    [Range(0.5f,20.0f)]public float speed; //sliding speed of the block 
     public bool isMoving; //is the block currently sliding
     public Vector3 moveVector; //direction block is sliding in
     
@@ -60,6 +60,7 @@ public class Iceblock : InteractableObject
             moveVector = new Vector3(0.5f, -0.25f, 0);
         }
 
+        moveVector *= Time.deltaTime;
         isMoving = true;
 
     }

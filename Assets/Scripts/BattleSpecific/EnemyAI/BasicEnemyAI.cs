@@ -22,6 +22,11 @@ public class BasicEnemyAI : MonoBehaviour
     {
         // for now, just do this;
         List<BattleMove> l = new List<BattleMove>();
+        
+        enemyEntity.characterScriptable.characterMoves[0].mainMoveGameObject.GetComponent<ATKScript>().caster = enemyEntity;
+
+        // ^ this is the single dumbest fucking line i've ever written in my life ^ //
+
         l.Add(enemyEntity.characterScriptable.characterMoves[0]);
         enemyEntity.entityBattleManager.FeedMoveQueue(l, enemyEntity.entityBattleManager.playerCharacters[0]);
         enemyEntity.entityBattleManager.StartAttack();

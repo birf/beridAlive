@@ -42,9 +42,8 @@ namespace BeriUtils
                 RemaingSeconds = duration;
             }
 
-            public event Action OnTimerStart;
+            public event Action OnTimerStart; // <-- currently unused
             public event Action OnTimerEnd;
-            // public event Action OnTimerStart; // <-- currently unused
             public void Tick(float deltaTime)
             {
                 if (RemaingSeconds == 0f) return;

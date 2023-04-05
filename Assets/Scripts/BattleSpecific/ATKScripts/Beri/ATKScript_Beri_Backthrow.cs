@@ -10,6 +10,9 @@ public class ATKScript_Beri_Backthrow : ATKScript
         The exact same as Toss up, with the only difference being she
         flings her opponent in the opposite direction.
     */
+    /*
+        TODO : Rewrite this to be the *exact* same as Toss up, since toss up had some major changes before this. 
+    */
     [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
     int subPhase = 0;
     ///<summary>

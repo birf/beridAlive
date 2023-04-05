@@ -91,7 +91,11 @@ public class CharacterGameBattleEntity : CharacterGameEntity
     }
     void CompleteKill()
     {
-
+        // to implement later. this is a space where we can definitively remove the character entity after some specific events have occurred.
+    }
+    public void PlayAnimation(string animation)
+    {
+        GetComponent<Animator>().Play(animation);
     }
 }
 public enum BattleEntityState

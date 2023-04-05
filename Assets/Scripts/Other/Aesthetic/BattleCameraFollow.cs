@@ -9,11 +9,18 @@ public class BattleCameraFollow : MonoBehaviour
     [SerializeField] Camera cameraObj;
     [SerializeField] BattleManager battleManager;
     [SerializeField] [Range(0f,1f)] float slider = 0;
+    CharacterGameBattleEntity activeChar;
+    CharacterGameBattleEntity targetChar;
+
 
     void Awake()
     {
         battleManager = (BattleManager)CentralManager.GetStateManager();
         cameraObj = GetComponent<Camera>();
+    }
+    void OnEnable()
+    {
+        transform.position = new Vector3(0,0,-10f);
     }
     void FixedUpdate()
     {
@@ -28,8 +35,8 @@ public class BattleCameraFollow : MonoBehaviour
             || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.WAIT
             || BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.LOSE)
         {
-            CharacterGameBattleEntity activeChar = battleManager.currentActiveCharacter;
-            CharacterGameBattleEntity targetChar = battleManager.currentTargetCharacter;
+            activeChar = battleManager.currentActiveCharacter;
+            targetChar = battleManager.currentTargetCharacter;
 
             
             float distanceRatio = 1;
@@ -63,5 +70,9 @@ public class BattleCameraFollow : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position,new Vector3(0,0,-10),Time.deltaTime * 2.0f);
             cameraObj.orthographicSize = Mathf.Lerp(cameraObj.orthographicSize, minZoom, Time.deltaTime);
         }
+    }
+    public void OverrideTargetCharacter(CharacterGameBattleEntity newTarget)
+    {
+        targetChar = newTarget;
     }
 }

@@ -32,6 +32,7 @@ public class BattleMove : ScriptableObject, IDisplayable
     /// of animations instead of a large web of unrelated animations in Beri's main animation controller, for example. 
     ///</summary>
     public RuntimeAnimatorController moveSpecificAnimations;
+    public RuntimeAnimatorController defaultAnimations;
     public Sprite moveSpriteSmall;
     public MoveType moveType;
     public float cooldownTime;
@@ -46,6 +47,9 @@ public class BattleMove : ScriptableObject, IDisplayable
         mainMoveGameObject.GetComponent<ATKScript>().targetEnemy = targetEnemy;
         mainMoveGameObject.GetComponent<ATKScript>().parentMove = parentMove;
         mainMoveGameObject.GetComponent<ATKScript>().battleManager = battleManager;
+        mainMoveGameObject.GetComponent<ATKScript>().caster = battleManager.currentActiveCharacter;
+        
+        defaultAnimations = battleManager.currentActiveCharacter.GetComponent<Animator>().runtimeAnimatorController;
         
     }   
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
