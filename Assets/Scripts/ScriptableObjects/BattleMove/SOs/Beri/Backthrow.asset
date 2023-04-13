@@ -15,10 +15,12 @@ MonoBehaviour:
   mainMoveGameObject: {fileID: 6250760370195694854, guid: ab48a57b0746cb24f827809d039cb78c, type: 3}
   mainLaunchVelocity: {x: -3, y: 3, z: 0}
   moveSpecificAnimations: {fileID: 0}
+  defaultAnimations: {fileID: 9100000, guid: 4e15e88423d6a9741b0dc29a05bda2c5, type: 2}
   moveSpriteSmall: {fileID: 21300000, guid: a88d1d6c8a91e0d46b0ab6c4818e40c0, type: 3}
   moveType: 1
+  cooldownTime: 0
   damage: 3
-  staminaCost: 3
+  staminaCost: 2
   moveName: Backthrow
   moveDescription: You've had enough..
   isFinisher: 1

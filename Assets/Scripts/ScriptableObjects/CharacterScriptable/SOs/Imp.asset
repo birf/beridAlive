@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48856c5b772ef24ba821410565d88b2, type: 3}
   m_Name: Imp
   m_EditorClassIdentifier: 
-  characterSprites: []
+  characterSprites:
+  - {fileID: 21300000, guid: 049dc0634a42cfe42bbd7d9c6783be2f, type: 3}
   characterData:
     CharType: 2
     curHP: 2

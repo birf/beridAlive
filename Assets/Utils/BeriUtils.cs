@@ -42,7 +42,7 @@ namespace BeriUtils
                 RemaingSeconds = duration;
             }
 
-            public event Action OnTimerStart; // <-- currently unused
+            // public event Action OnTimerStart; // <-- currently unused
             public event Action OnTimerEnd;
             public void Tick(float deltaTime)
             {

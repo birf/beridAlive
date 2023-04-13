@@ -8,7 +8,6 @@ public class BattleCameraFollow : MonoBehaviour
     public float minZoom = 6.7f;
     [SerializeField] Camera cameraObj;
     [SerializeField] BattleManager battleManager;
-    [SerializeField] [Range(0f,1f)] float slider = 0;
     CharacterGameBattleEntity activeChar;
     CharacterGameBattleEntity targetChar;
 

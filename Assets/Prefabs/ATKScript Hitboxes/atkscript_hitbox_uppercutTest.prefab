@@ -49,6 +49,7 @@ MonoBehaviour:
   caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
+  canStart: 0
   puncher: {fileID: 6276873158994220388}
   validLayers:
     serializedVersion: 2

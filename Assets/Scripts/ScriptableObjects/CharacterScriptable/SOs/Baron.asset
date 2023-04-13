@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48856c5b772ef24ba821410565d88b2, type: 3}
   m_Name: Baron
   m_EditorClassIdentifier: 
-  characterSprites: []
+  characterSprites:
+  - {fileID: 21300000, guid: 93cb031eb2b760c49ae1f6cb3dc39907, type: 3}
   characterData:
     CharType: 2
     curHP: 4

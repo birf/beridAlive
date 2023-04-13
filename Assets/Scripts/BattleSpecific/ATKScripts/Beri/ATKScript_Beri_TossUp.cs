@@ -25,7 +25,7 @@ public class ATKScript_Beri_TossUp : ATKScript
     Vector3 _internalVelocity;
     Collider2D[] _hitBuffer = new Collider2D[3];
     Timer timer = new Timer(3);
-    Timer animationTimer = new Timer(1);
+    Timer animationTimer = new Timer(0.5f);
 
     void Awake()
     {

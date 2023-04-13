@@ -21,6 +21,7 @@ public class BattleManager : GameManager
     public CharacterGameBattleEntity currentActiveCharacter;
     public CharacterGameBattleEntity currentTargetCharacter;
     public List<CharacterGameBattleEntity> CharacterGameBattleEntities = new List<CharacterGameBattleEntity>();
+    public BattleOpeningMovie openingMovie;
 
     public static BattleManagerState CurrentBattleManagerState;
 
@@ -55,7 +56,7 @@ public class BattleManager : GameManager
 
     void OnEnable()
     {
-        startupTimer = new Timer(1);
+        startupTimer = new Timer(7.5f);
         endTimer = new Timer(1);
         CurrentBattleManagerState = BattleManagerState.DEFAULT;
         CentralManager.CurrentContext = CentralManager.Context.BATTLE;

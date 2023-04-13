@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48856c5b772ef24ba821410565d88b2, type: 3}
   m_Name: Beri
   m_EditorClassIdentifier: 
-  characterSprites: []
+  characterSprites:
+  - {fileID: 21300000, guid: fe3dcdf61e27222408a8e0feadac01ea, type: 3}
   characterData:
     CharType: 1
     curHP: 5

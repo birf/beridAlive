@@ -12,6 +12,7 @@ public class OverworldManager : GameManager
 
     [SerializeField] GameObject entities;
 
+    [SerializeField] GameObject battleOpeningMovie;
     [SerializeField] List<Vector2> battlePositions;
 
     //[SerializeField] AudioManager audioManager;
@@ -20,9 +21,6 @@ public class OverworldManager : GameManager
     private int levelNumber;
     public OverworldLevel activeLevel;
     public List<OverworldLevel> overworldLevels = new List<OverworldLevel>();
-
-
-
 
     void Start()
     {
@@ -60,17 +58,18 @@ public class OverworldManager : GameManager
     {
         BattleManager bm = ChildObjects[0].GetComponent<BattleManager>();
         FindObjectOfType<AudioManager>().PlayTrack(AUDIOCLIPS.BATTLE_THEME);
-
-
         bm.gameObject.SetActive(true);
-
+        bm.openingMovie.gameObject.SetActive(true);
 
         for (int i = 0; i < currentEnemyEncounter.partnerCharacters.Count; i++)
         {
+            bm.openingMovie.enemiesToDisplay.Add(currentEnemyEncounter.partnerCharacters[i]);
+
             GameObject enemy = CreateEnemy(currentEnemyEncounter.partnerCharacters[i]);
             enemy.transform.localPosition = battlePositions[i];
             enemy.GetComponent<BattlePhysicsInteraction>().startPosition = battlePositions[i];
             enemy.GetComponent<BattlePhysicsInteraction>().localGroundYCoordinate = battlePositions[i].y;
+
         }
 
         gameObject.SetActive(false);
