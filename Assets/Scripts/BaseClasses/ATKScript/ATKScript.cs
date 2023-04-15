@@ -115,6 +115,10 @@ public class ATKScript : MonoBehaviour
             BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
         }
     }
+    protected void PlayAnimation(string animation)
+    {
+        caster.PlayAnimation(animation);
+    }
     void SetDefaultAnimations()
     {
         caster.GetComponent<Animator>().runtimeAnimatorController = parentMove.defaultAnimations;

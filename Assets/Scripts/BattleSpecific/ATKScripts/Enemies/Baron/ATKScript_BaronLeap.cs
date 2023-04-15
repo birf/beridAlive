@@ -10,7 +10,10 @@ public class ATKScript_BaronLeap : ATKScript
     int subphase = 0;
 
 
-
+    void Awake()
+    {
+        base.BeginMove();
+    }
     protected override void Update() 
     {
         transform.position = caster.transform.position;

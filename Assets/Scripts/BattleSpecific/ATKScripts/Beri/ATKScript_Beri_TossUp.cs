@@ -222,8 +222,4 @@ public class ATKScript_Beri_TossUp : ATKScript
         base.OnFailure();
         Destroy(gameObject);
     }
-    void PlayAnimation(string animation)
-    {
-        battleManager.currentActiveCharacter.PlayAnimation(animation);
-    }
 }

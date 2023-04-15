@@ -16,16 +16,16 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fe3dcdf61e27222408a8e0feadac01ea, type: 3}
   characterData:
     CharType: 1
-    curHP: 5
-    baseHP: 5
+    curHP: 10
+    baseHP: 10
     curATK: 1
     baseATK: 1
     curDEF: 0
     baseDEF: 0
     curSPEED: 5
     baseSPEED: 5
-    curSTAMINA: 4
-    baseSTAMINA: 4
+    curSTAMINA: 5
+    baseSTAMINA: 5
     CharacterName: Beri
     CharacterDescription: The living legend herself. (Minus the living (and the legend.).)
   charAnimations: {fileID: 9100000, guid: 4e15e88423d6a9741b0dc29a05bda2c5, type: 2}

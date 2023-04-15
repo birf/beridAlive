@@ -266,7 +266,7 @@ public class BattleManager : GameManager
     public void StartAttack()
     {
         Instantiate(battleManagerMoveQueue[0].mainMoveGameObject, currentActiveCharacter.transform.position, Quaternion.identity);
-        battleManagerMoveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
+        // battleManagerMoveQueue[0].mainMoveGameObject.GetComponent<ATKScript>().BeginMove();
     }
 
     // the player or enemy has successfully performed a move/portion of their move. advance to next move (if any)

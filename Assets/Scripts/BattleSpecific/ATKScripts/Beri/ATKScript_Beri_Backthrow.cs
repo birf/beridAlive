@@ -6,15 +6,13 @@ using BeriUtils.Core;
 public class ATKScript_Beri_Backthrow : ATKScript
 {
     /*
-        Attack script for the move 'Backthrow,' used by Beri.
-        The exact same as Toss up, with the only difference being she
-        flings her opponent in the opposite direction.
+        Attack script for the move 'Back Throw,' used by Beri.
+        Functionally identical to 'Toss Up,' with the differences
+        being higher damage and launch angle.
     */
-    /*
-        TODO : Rewrite this to be the *exact* same as Toss up, since toss up had some major changes before this. 
-    */
-    [Range(1.0f,4.0f)]public float speedInverse = 1.5f;
-    int subPhase = 0;
+
+    // TODO : Revamp EnemyInSafeArea to always return true if enemy was already in the safe area. 
+    int subPhase = -1;
     ///<summary>
     ///Physical GameObject to grab the enemy.   
     ///</summary>
@@ -25,14 +23,13 @@ public class ATKScript_Beri_Backthrow : ATKScript
     
     PrimaryControls controls;
     [SerializeField] LayerMask validLayers;
-    Vector3 _initialPosition;
     Vector3 _internalVelocity;
     Collider2D[] _hitBuffer = new Collider2D[3];
     Timer timer = new Timer(3);
+    Timer animationTimer = new Timer(0.5f);
 
     void Awake()
     {
-        _initialPosition = transform.position;
         timer.OnTimerEnd += OnFailure;
         controls = new PrimaryControls();
         controls.Enable();
@@ -40,8 +37,24 @@ public class ATKScript_Beri_Backthrow : ATKScript
     }
     protected override void Update()
     {
-        base.Update();
-        if (subPhase == 0)
+        caster.GetComponent<Animator>().runtimeAnimatorController = parentMove.moveSpecificAnimations;
+        // first unofficial phase //
+        if (transform.position != caster.characterBattlePhysics.startPosition && subPhase == -1)
+        {
+            caster.characterBattlePhysics.MoveToPosition(caster.characterBattlePhysics.startPosition);
+            transform.position = caster.transform.position;
+            subPhase = -1;
+        }
+        else if (transform.position == caster.characterBattlePhysics.startPosition && subPhase == -1)
+            subPhase++;
+        ///////////////////////////
+
+        if (animationTimer.GetRemaingingSeconds() > 0 && subPhase == 0)
+        {
+            animationTimer.Tick(Time.deltaTime);
+            PlayAnimation("tossup_start");
+        }
+        else if (animationTimer.GetRemaingingSeconds() <= 0 && subPhase == 0)
         {
             GrabberMove();
             FirstPhase();
@@ -59,20 +72,21 @@ public class ATKScript_Beri_Backthrow : ATKScript
         if (subPhase == 0)
             grabber.transform.position = Vector3.MoveTowards(grabber.transform.position, targetEnemy.transform.position, grabberSpeed * Time.deltaTime);
         else
-            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,_initialPosition, grabberSpeed * Time.deltaTime);
+            grabber.transform.position = Vector3.MoveTowards(grabber.transform.position,caster.transform.position, grabberSpeed * Time.deltaTime);
 
     }
     void FirstPhase()
     {
+        PlayAnimation("tossup_deploy");
+
         // First phase of the move. Send out the grabber and drag back as player holds enter. 
         // Failure if player hits the button and there is no target. 
-
         if (EnemyInGrabberBounds())
         {
             grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
         }
 
-        if (controls.Battle.Primary.triggered && subPhase == 0)
+        if (controls.Battle.Primary.triggered && subPhase >= 0)
         {
             if (EnemyInGrabberBounds())
             {
@@ -80,11 +94,13 @@ public class ATKScript_Beri_Backthrow : ATKScript
                 grabber.transform.position = targetEnemy.transform.position;
                 subPhase++;
                 targetEnemy.transform.parent = grabber.transform;
-                targetEnemy.characterBattlePhysics.isGrounded = true;
-                targetEnemy.characterBattlePhysics.isLaunched = false;
+                targetEnemy.characterBattlePhysics.ResetToDefaultState();
             }
             else
+            {
+                Debug.Log("how");
                 OnFailure();
+            }
         }
         if (Vector3.Distance(grabber.transform.position, targetEnemy.transform.position ) < 0.01f && subPhase == 0)
             OnFailure();
@@ -93,20 +109,21 @@ public class ATKScript_Beri_Backthrow : ATKScript
     {
         // Second phase of the move. 
         // Drag back the enemy only if the player is still holding onto enter.
+        PlayAnimation("tossup_reel_back");
 
         targetEnemy.characterBattlePhysics.MoveGroundCoordinate(targetEnemy.transform.position.y - 0.5f);
 
         if (EnemyInSafeArea())
         {
-            grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
+            grabber.GetComponent<SpriteRenderer>().color = Color.blue; // <-- tester.
         }
         if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
         {
-            if (EnemyInSafeArea())
+            if (EnemyInSafeArea() || grabber.GetComponent<SpriteRenderer>().color == Color.blue) // <-- what...
             {
                 subPhase++;  
-                targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
                 targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
+                targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
                 targetEnemy.transform.parent = null;
                 Destroy(grabber); 
             }
@@ -119,7 +136,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
         }
 
         // player reeled in enemy too close.
-        if (Vector3.Distance(grabber.transform.position, _initialPosition) < 0.01f)
+        if (Vector3.Distance(grabber.transform.position, caster.transform.position - new Vector3(-0.5f,0,0)) < 0.01f)
         {
             targetEnemy.characterBattlePhysics.HitTarget(new Vector2(-1f,-0.5f), 0);
             OnFailure();
@@ -127,10 +144,13 @@ public class ATKScript_Beri_Backthrow : ATKScript
     }
     void ThirdPhase()
     {
-        // Third phase. Throw up the opponent and deal damage. 
+        // Third phase. Throw up the opponent and deal damage.
+
         timer.Tick(Time.deltaTime);
+        PlayAnimation("tossup_grabbed");
         if (controls.Battle.Direction.ReadValue<Vector2>().x == -1.0f)
         {
+            PlayAnimation("tossup_throw");
             OnSuccess();
             Destroy(gameObject);
         }
@@ -176,15 +196,16 @@ public class ATKScript_Beri_Backthrow : ATKScript
     public override void BeginMove()
     {
         base.BeginMove();
-        parentMove.damage += 2;
+        parentMove.damage = caster.characterData.baseATK + 2;
     }
     public override void OnSuccess()
     {
+        base.OnSuccess();
         targetEnemy.transform.parent = null;
         targetEnemy.characterBattlePhysics.localGroundYCoordinate = transform.position.y;
         Vector3 t = battleManager.currentActiveCharacter.transform.position;
         controls.Disable();
-        base.OnSuccess();
+        targetEnemy.characterBattlePhysics.MoveGroundCoordinate(t.y - 0.5f);
         targetEnemy.transform.parent = null;
         Destroy(gameObject);
     }

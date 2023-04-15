@@ -7,7 +7,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
     bool _isCharging = false;
     bool _isPunching = false;
     bool _isInPosition = false;
-    float _timer;
+    float _chargeTimer;
     
     PrimaryControls controls;
     Timer timer = new Timer(2);
@@ -25,6 +25,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
     }
     protected override void Update()
     {
+        caster.GetComponent<Animator>().runtimeAnimatorController = parentMove.moveSpecificAnimations;
         if (!_isInPosition)
             WalkingPhase();
         if (!_isPunching && _isInPosition)
@@ -38,7 +39,8 @@ public class ATKScript_Beri_Uppercut : ATKScript
 
     void WalkingPhase()
     {
-        battleManager.currentActiveCharacter.GetComponent<SpriteRenderer>().color = Color.black;
+        PlayAnimation("beri_battle_idle");
+
         Vector3 targetPos = battleManager.currentActiveCharacter.transform.position;
         if (previousMoveType != MoveType.GRAB && previousMoveType != MoveType.PUNCH)
         {
@@ -46,39 +48,54 @@ public class ATKScript_Beri_Uppercut : ATKScript
             battleManager.currentActiveCharacter.characterBattlePhysics.MoveToPosition(targetPos);
             gameObject.transform.position = battleManager.currentActiveCharacter.transform.position;
         }
-        
         if (battleManager.currentActiveCharacter.transform.position == targetPos)
             _isInPosition = true;
     }
     void ChargingPhase()
     {
         battleManager.currentActiveCharacter.GetComponent<SpriteRenderer>().color = Color.white;
-
-        if (controls.Battle.Primary.triggered)
+        bool chargeReady = (_chargeTimer >= 0.25f);
+        
+        // if her charge is ready, flash to let player know.
+        if (chargeReady)
         {
-            _isCharging = true;
+            if (_chargeTimer > 0.25f)
+                caster.GetComponent<SpriteRenderer>().color = Color.grey;
+            else if (_chargeTimer >= 0.5f)
+            {
+                caster.GetComponent<SpriteRenderer>().color = Color.white;
+                _chargeTimer = 0;
+            }
         }
+        // commence charging when player hits enter.
+        if (controls.Battle.Primary.triggered)
+            _isCharging = true;
+
         if (_isCharging)
         {
-            _timer += Time.deltaTime;
+            PlayAnimation("beri_uppercut_windup");
+            _chargeTimer += Time.deltaTime;
+            // only let go of the punch when button is releasted.
             if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
             {
-                if (_timer >= 0.25f)
+                if (chargeReady)
                 {
-                    _timer = 0;
+                    _chargeTimer = 0;
                     _isPunching = true;
                 }
                 else
                     OnFailure();
                 
             }
-
         }
+        
     }
     void PunchingPhase()
     {
-        _timer += Time.deltaTime;
-        if (_timer >= 3 * Time.deltaTime)
+        PlayAnimation("beri_uppercut_punch");
+        caster.GetComponent<SpriteRenderer>().color = Color.white;
+        _chargeTimer += Time.deltaTime;
+        if (_chargeTimer >= 3 * Time.deltaTime)
             OnFailure();
         else
         {
@@ -101,7 +118,9 @@ public class ATKScript_Beri_Uppercut : ATKScript
 
     public override void BeginMove()
     {
+        Debug.Log("in beginmove for uppercut");
         base.BeginMove();
+        Debug.Log(caster.name);
     }
     public override void OnFailure()
     {
@@ -114,7 +133,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
     public override void OnSuccess()
     {
         cooldownTimer.OnTimerEnd += SetRecovery;
-        caster.characterBattlePhysics.Jump(new Vector2(0,1.5f));
+        caster.characterBattlePhysics.Jump(new Vector2(0,2.5f));
         caster.characterBattlePhysics.shouldImmediatelyRecover = false;
         base.OnSuccess();
         controls.Disable();

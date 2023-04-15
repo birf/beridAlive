@@ -26,6 +26,7 @@ public class ATKScript_Beri_FryerBall : ATKScript
         timer.OnTimerEnd += CheckCharge;
         controls = new PrimaryControls();
         controls.Enable();
+        BeginMove();
     }
 
     void FixedUpdate()
