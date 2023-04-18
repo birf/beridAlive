@@ -26,12 +26,6 @@ public class PlayerHPDisplay : MonoBehaviour
             Debug.Log("ERROR : Player HP Display lacks all components.");
             Destroy(gameObject);
         }
-
-        OverworldManager ow = (OverworldManager)CentralManager.GetStateManager();
-
-        curHealth = ow.playerCharacter.characterData.curHP;
-        maxHealth = ow.playerCharacter.characterData.baseHP;
-
     }
 
     void CheckForDamage()

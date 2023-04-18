@@ -16,6 +16,7 @@ public class BattleManager : GameManager
 
     public List<ItemData> playerItems = new List<ItemData>();
     public List<BattleMove> playerMoves = new List<BattleMove>();
+    public CharacterGameBattleEntity beriCharacter;
     public List<CharacterGameBattleEntity> playerCharacters = new List<CharacterGameBattleEntity>();
     public List<CharacterGameBattleEntity> enemyCharacters = new List<CharacterGameBattleEntity>();
     public CharacterGameBattleEntity currentActiveCharacter;
@@ -77,10 +78,12 @@ public class BattleManager : GameManager
         {
             currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
             FindObjectOfType<AudioManager>().EndTrack();
+            FindObjectByName("hud_playerHP").SetActive(false);
             if (CurrentBattleManagerState == BattleManagerState.WIN)
                 Destroy(om.currentEnemyEncounter.gameObject);
             om.gameObject.SetActive(true);
             gameObject.SetActive(false);
+
         }
         else
             RestartGame();
@@ -218,6 +221,8 @@ public class BattleManager : GameManager
         }
 
         _PlayerUI = FindObjectByName("PlayerTurnUI");
+        FindObjectByName("hud_playerHP").SetActive(true);
+        FindObjectByName("hud_playerHP").GetComponent<Animator>().Play("ready");
 
 
         SetTurnOrder();

@@ -30,7 +30,7 @@ MonoBehaviour:
     CharacterDescription: 'Ungodly spectre with a Godly pair of.... claws. '
   charAnimations: {fileID: 9100000, guid: 1f91ccc3c0b82644787441ba56359f91, type: 2}
   battleHitBoxSize: {x: 3, y: 4}
-  battleDropShadowSize: {x: 0, y: 0}
+  battleDropShadowSize: {x: 3, y: 1}
   characterMoves:
   - {fileID: 11400000, guid: 6a8c04e60e8b4a74ab80b55dd83b07b8, type: 2}
   characterItems: []

@@ -117,8 +117,10 @@ public class OverworldManager : GameManager
     public void nextLevel()
     {
         if (activeLevel)
+        {
             activeLevel.gameObject.SetActive(false);
-
+            activeLevel.battleBackground.SetActive(false);
+        }
         activeLevel = overworldLevels[levelNumber];
         activeLevel.gameObject.SetActive(true);
         activeLevel.initializeLevel();

@@ -45,6 +45,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
     [SerializeField] BoxCollider2D _boxCol;
     [SerializeField] LayerMask _validHits;
     [SerializeField][Range(0f,5.0f)] float _gravityScale = 2.0f;
+    [SerializeField] Animator _characterAnimator;
 
 
 #endregion
@@ -57,6 +58,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
         isGrounded = true;
         startPosition = transform.position;
         characterPhysicsState = CharacterPhysicsState.DEFAULT;
+        _characterAnimator = GetComponent<Animator>();
     }
 
     void FixedUpdate()
@@ -82,6 +84,7 @@ public class BattlePhysicsInteraction : MonoBehaviour
             // if they've just been launched and are now grounded, recover to initial position.
             if (isLaunched && isGrounded && shouldImmediatelyRecover)  
             {
+                _characterAnimator.Play("battle_idle");
                 characterPhysicsState = CharacterPhysicsState.RECOVERY;
             }
         }
@@ -153,6 +156,8 @@ public class BattlePhysicsInteraction : MonoBehaviour
         isGrounded = false;
         isLaunched = true;
         shouldImmediatelyRecover = true;
+
+        _characterAnimator.Play("hurt");
         
         _characterBody.characterData.AddToStat(CharacterStat.HP, -damage, false);
     }

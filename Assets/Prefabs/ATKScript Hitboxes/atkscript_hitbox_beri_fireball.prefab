@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5185726159893179123}
   - component: {fileID: 5185726159893179122}
+  - component: {fileID: 6368009348627185213}
   m_Layer: 0
   m_Name: fireball
   m_TagString: Untagged
@@ -72,7 +73,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 100
   m_Sprite: {fileID: -2413806693520163455, guid: 4adeaf2d2b1c7417e89f026626d8264f, type: 3}
-  m_Color: {r: 1, g: 0.75456905, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -82,6 +83,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &6368009348627185213
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5185726159893179124}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 413007fd580443843b1aae595b9efbd5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5185726159987682088
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,6 +321,7 @@ MonoBehaviour:
   caster: {fileID: 0}
   battleManager: {fileID: 0}
   previousMoveType: 0
+  canStart: 0
   _fireBall: {fileID: 5185726159893179124}
   chargeText: {fileID: 5185726159987682102}
   _charge: 0

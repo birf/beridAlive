@@ -11,7 +11,6 @@ public class ATKScript_Beri_Backthrow : ATKScript
         being higher damage and launch angle.
     */
 
-    // TODO : Revamp EnemyInSafeArea to always return true if enemy was already in the safe area. 
     int subPhase = -1;
     ///<summary>
     ///Physical GameObject to grab the enemy.   

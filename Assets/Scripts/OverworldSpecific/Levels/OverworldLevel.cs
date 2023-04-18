@@ -7,6 +7,7 @@ public class OverworldLevel : MonoBehaviour
     [SerializeField] Vector3 playerOrigin;
 
     public OverworldManager overworldManager;
+    public GameObject battleBackground;
     [SerializeField] List<GameObject> enemies;
 
     public List<GameObject> getEnemies(){ return enemies;}
@@ -24,6 +25,7 @@ public class OverworldLevel : MonoBehaviour
 
     public void initializeLevel(){
         initializeEnemies();
+        battleBackground.SetActive(true);
         GameObject.Find("player").transform.position = playerOrigin;
         levelInitialized = true;
     }

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8856b0fa3559d96439aca31124a3f17d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - parentMove: {fileID: 11400000, guid: 6a8c04e60e8b4a74ab80b55dd83b07b8, type: 2}
+  - targetEnemy: {instanceID: 0}
+  - caster: {instanceID: 0}
+  - battleManager: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

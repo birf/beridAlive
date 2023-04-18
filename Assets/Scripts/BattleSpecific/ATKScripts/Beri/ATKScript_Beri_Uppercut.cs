@@ -118,9 +118,7 @@ public class ATKScript_Beri_Uppercut : ATKScript
 
     public override void BeginMove()
     {
-        Debug.Log("in beginmove for uppercut");
         base.BeginMove();
-        Debug.Log(caster.name);
     }
     public override void OnFailure()
     {
