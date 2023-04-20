@@ -3932,3 +3932,4 @@ Received Import Request.
 Start importing Assets/Assets.index using Guid(fdc639d2342f7554ea5bf80635f28a65) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '627452ec4f6f1bac75d890a3ac28cdce') in 0.012638 seconds
   Import took 0.020389 seconds .
 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
