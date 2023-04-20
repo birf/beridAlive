@@ -7,6 +7,7 @@ public class ItemData : ScriptableObject , IDisplayable
         Item data for easily creating new item objects. Everything here should be readonly.
     */
     public Sprite itemSpriteSmall;
+    public Sprite itemSpriteLarge;
     public int potency;
     public string itemName;
     public string itemDesc;
@@ -16,7 +17,7 @@ public class ItemData : ScriptableObject , IDisplayable
 
     public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
-        sprites = new Sprite[] {itemSpriteSmall};
+        sprites = new Sprite[] {itemSpriteSmall,itemSpriteLarge};
         ints = new int[] {-1,-1,potency};
         strings = new string[] {itemName,itemDesc};
     }
@@ -27,6 +28,6 @@ public class ItemData : ScriptableObject , IDisplayable
         if (!inflictsStatusEffect)
             character.AddToStat(effect, potency, false);
         else
-            character.statusEffects.Add(new CharacterStatusEffect(duration,potency,character.GetStatByStatType(effect,true),effect,character));
+            character.statusEffects.Add(new CharacterStatusEffect(duration,potency,character.GetStatValueByStatType(effect,true),effect,character));
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bandage
   m_EditorClassIdentifier: 
   itemSpriteSmall: {fileID: 21300000, guid: 307a7c34160c21f4eb04ee07a4922acb, type: 3}
+  itemSpriteLarge: {fileID: 21300000, guid: 47fe27c567f58734e8bca24b0541e364, type: 3}
   potency: 1
   itemName: Bandage
   itemDesc: Even zombies get boo-boos. Temporarily adds 1 to your defense.

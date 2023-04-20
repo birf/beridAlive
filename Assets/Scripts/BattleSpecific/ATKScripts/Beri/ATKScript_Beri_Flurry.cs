@@ -100,7 +100,7 @@ public class ATKScript_Beri_Flurry : ATKScript
                             DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
                             parentMove.damage - targetEnemy.characterData.curDEF);
 
-                            targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,-5f),parentMove.damage);
+                            targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,-5f),1);
                             _characterPhysics.LaunchTarget(new Vector2(0.5f,3.0f));
                             subphase++;
                             _timeoutTimer = new Timer(0.25f);
@@ -131,12 +131,12 @@ public class ATKScript_Beri_Flurry : ATKScript
     
                             if (subphase < 5)
                             {
-                                targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,2.0f),parentMove.damage);
+                                targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,3.0f),1);
                                 DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
                                 parentMove.damage - targetEnemy.characterData.curDEF);
                             }
                             Debug.Log(subphase);
-                            _characterPhysics.LaunchTarget(new Vector2(0.5f,2.0f));
+                            _characterPhysics.LaunchTarget(new Vector2(0.5f,2.5f));
                             _timeoutTimer = new Timer(0.25f);
                             subphase++;
                             break;

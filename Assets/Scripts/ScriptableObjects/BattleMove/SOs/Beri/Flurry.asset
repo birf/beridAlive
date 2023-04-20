@@ -23,4 +23,4 @@ MonoBehaviour:
   staminaCost: 3
   moveName: Flurry Fury
   moveDescription: They'll wish they never died.
-  isFinisher: 0
+  isFinisher: 1

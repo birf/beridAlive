@@ -1,32 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using BeriUtils.Core;
 public class OverworldManager : GameManager
 {
     public CharacterGameOverworldEntity currentEnemyEncounter;
     public CharacterGameOverworldEntity playerCharacter;
 
     [SerializeField] GameObject enemyPrefab;
-
-
     [SerializeField] GameObject entities;
-
     [SerializeField] GameObject battleOpeningMovie;
     [SerializeField] List<Vector2> battlePositions;
 
-    //[SerializeField] AudioManager audioManager;
-
-    //current level
     private int levelNumber;
+    public Timer generalTimer = new Timer(1);
     public OverworldLevel activeLevel;
     public List<OverworldLevel> overworldLevels = new List<OverworldLevel>();
 
+    void Update()
+    {
+        generalTimer.Tick(Time.deltaTime);
+    }
     void Start()
     {
         CentralManager.SetStateManager(this);
         CentralManager.CurrentContext = CentralManager.Context.OVERWORLD;
         OverworldManagerSetup();
+        TogglePlayerController(false);
+        generalTimer.OnTimerEnd += Stupid;
     }
     void OnEnable()
     {
@@ -56,8 +57,8 @@ public class OverworldManager : GameManager
 
     public void BattleStart()
     {
+        bool playBossTheme = false;
         BattleManager bm = ChildObjects[0].GetComponent<BattleManager>();
-        FindObjectOfType<AudioManager>().PlayTrack(AUDIOCLIPS.BATTLE_THEME);
         bm.gameObject.SetActive(true);
         bm.openingMovie.gameObject.SetActive(true);
 
@@ -65,12 +66,20 @@ public class OverworldManager : GameManager
         {
             bm.openingMovie.enemiesToDisplay.Add(currentEnemyEncounter.partnerCharacters[i]);
 
+            if (currentEnemyEncounter.partnerCharacters[i].characterData.CharType == CharacterBase.CharacterType.BOSS ||
+                currentEnemyEncounter.partnerCharacters[i].characterData.CharacterName == "Satan")
+                playBossTheme = true;
+
             GameObject enemy = CreateEnemy(currentEnemyEncounter.partnerCharacters[i]);
             enemy.transform.localPosition = battlePositions[i];
             enemy.GetComponent<BattlePhysicsInteraction>().startPosition = battlePositions[i];
             enemy.GetComponent<BattlePhysicsInteraction>().localGroundYCoordinate = battlePositions[i].y;
-
         }
+        if (playBossTheme)
+            ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.BOSS_THEME);
+        else
+            ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.BATTLE_THEME);
+
 
         gameObject.SetActive(false);
     }
@@ -83,37 +92,36 @@ public class OverworldManager : GameManager
             if (characterEntities[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
                 playerCharacter = characterEntities[i];
         }
-        overworldLevels = new List<OverworldLevel>(FindObjectsOfType<OverworldLevel>(true));
-        //enable the first level
         levelNumber = 0;
         nextLevel();
-
-
     }
 
-
-    //load the next level
-    // public void nextLevel()
-    // {
-    //     string[] levelNames = new string[] { "test_level_1", "test_level_2" };
-    //     GameObject levels = GameObject.Find("Levels");
-    //     if (activeLevel != null) activeLevel.SetActive(false); //deactivate current level
-    //     //find and enable level
-    //     Debug.Log(levelNames[levelNumber]);
-    //     activeLevel = levels.transform.Find(levelNames[levelNumber]).gameObject;
-    //     activeLevel.SetActive(true);
-    //     activeLevel.GetComponent<OverworldLevel>().initializeLevel();
-
-    //     //add each enemy to Characters and change their parent to entities
-    //     foreach (GameObject enemy in activeLevel.GetComponent<OverworldLevel>().getEnemies())
-    //     {
-    //         Characters.Add(enemy.GetComponent<CharacterGameOverworldEntity>().characterData);
-    //         enemy.transform.parent = GameObject.Find("entities").transform;
-    //     }
-    //     levelNumber++;
-
-    // }
-
+    public void TogglePlayerController(bool active = true)
+    {
+        if (active)
+            playerCharacter.GetComponent<OverworldPlayerMove>().controls.Enable();
+        else
+            playerCharacter.GetComponent<OverworldPlayerMove>().controls.Disable();
+    }
+    public void TogglePlayerController()
+    {
+        if (playerCharacter.gameObject.activeSelf)
+            playerCharacter.GetComponent<OverworldPlayerMove>().controls.Disable();
+        else
+            playerCharacter.GetComponent<OverworldPlayerMove>().controls.Enable();
+    }
+    public void StartNextLevel()
+    {
+        Debug.Log("being Called");
+        if (activeLevel.canExit())
+        {
+            TogglePlayerController(false);
+            generalTimer = new Timer(1);
+            ChildObjects[1].GetComponent<Animator>().Play("fadeout");
+            generalTimer.Tick(Time.deltaTime);
+            generalTimer.OnTimerEnd += ToggleLevelUpScreen;
+        }
+    }
     public void nextLevel()
     {
         if (activeLevel)
@@ -132,4 +140,14 @@ public class OverworldManager : GameManager
         levelNumber++;
     }
 
+    // we are almost done so I justify this incredibly stupid, redundant function.
+    public void Stupid()
+    {
+        TogglePlayerController(true);
+    }
+    void ToggleLevelUpScreen()
+    {
+        ChildObjects[2].SetActive(true);
+        gameObject.SetActive(!gameObject.activeSelf);
+    }
 }

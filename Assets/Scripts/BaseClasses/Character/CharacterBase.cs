@@ -14,9 +14,12 @@ public class CharacterBase
     {
         DEFAULT,
         PLAYER,
-        ENEMY
+        ENEMY,
+        BOSS
     }
     public List<CharacterStatusEffect> statusEffects = new List<CharacterStatusEffect>();
+    public List<ItemData> items = new List<ItemData>();
+    public List<BattleMove> moves = new List<BattleMove>();
     public CharacterType CharType;
     public int curHP;
     public int baseHP;
@@ -57,6 +60,7 @@ public class CharacterBase
         CharacterBase inputData = input.characterData;
         CharacterName = inputData.CharacterName;
         CharacterDescription = inputData.CharacterDescription;
+
         this.baseHP = inputData.baseHP;
         this.baseATK = inputData.baseATK;
         this.baseDEF = inputData.baseDEF;
@@ -69,10 +73,14 @@ public class CharacterBase
         this.curSTAMINA = inputData.curSTAMINA;
         this.curSPEED = inputData.curSPEED;
 
+        items = new List<ItemData>(input.characterItems);
+        moves = new List<BattleMove>(input.characterMoves);
+
         CharType = inputData.CharType;
     }
     ///<summary>
-    ///Update the input statistic for this character by the input float.
+    ///Update the input statistic for this character by the input float. If IgnoreBaseStat is set to true, the stat affected
+    ///will not cap at the stat's base value.
     ///</summary>
     public void AddToStat(CharacterStat statistic, float input, bool ignoreBaseStat)
     {
@@ -141,7 +149,7 @@ public class CharacterBase
     ///<summary>
     ///Return the stat value by the given type, either by it's current value or it's base value.
     ///<\summary>
-    public int GetStatByStatType(CharacterStat type, bool getBaseStat)
+    public int GetStatValueByStatType(CharacterStat type, bool getBaseStat)
     {
         switch (type)
         {
@@ -157,5 +165,13 @@ public class CharacterBase
                 return getBaseStat ? baseSTAMINA : curSTAMINA;
         }
         return 0;
+    }
+
+    public void ResetStatsToBaseValues()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            this.SetCurrentStat((CharacterStat)i,GetStatValueByStatType((CharacterStat)i,true));
+        }
     }
 }

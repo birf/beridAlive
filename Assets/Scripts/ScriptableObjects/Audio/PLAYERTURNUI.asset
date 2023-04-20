@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: PLAYERTURNUI
   m_EditorClassIdentifier: 
   audioTracks:
-  - audioClipName: 2
-    audioClip: {fileID: 8300000, guid: 8be2c673754c140a5b435037b0f02471, type: 3}
   - audioClipName: 3
-    audioClip: {fileID: 8300000, guid: e2ec23f5755d44e44b5b98fe2442820e, type: 3}
+    audioClip: {fileID: 8300000, guid: 8be2c673754c140a5b435037b0f02471, type: 3}
   - audioClipName: 4
-    audioClip: {fileID: 8300000, guid: 1305c66a482d248cfa093ab09027bdeb, type: 3}
+    audioClip: {fileID: 8300000, guid: e2ec23f5755d44e44b5b98fe2442820e, type: 3}
   - audioClipName: 5
+    audioClip: {fileID: 8300000, guid: 1305c66a482d248cfa093ab09027bdeb, type: 3}
+  - audioClipName: 6
     audioClip: {fileID: 8300000, guid: 06b741136653e424fbb70c77d562ca7d, type: 3}

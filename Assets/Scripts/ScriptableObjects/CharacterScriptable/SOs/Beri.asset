@@ -15,6 +15,8 @@ MonoBehaviour:
   characterSprites:
   - {fileID: 21300000, guid: fe3dcdf61e27222408a8e0feadac01ea, type: 3}
   characterData:
+    items: []
+    moves: []
     CharType: 1
     curHP: 10
     baseHP: 10
@@ -24,8 +26,8 @@ MonoBehaviour:
     baseDEF: 0
     curSPEED: 5
     baseSPEED: 5
-    curSTAMINA: 50
-    baseSTAMINA: 50
+    curSTAMINA: 3
+    baseSTAMINA: 3
     CharacterName: Beri
     CharacterDescription: The living legend herself. (Minus the living (and the legend.).)
   charAnimations: {fileID: 9100000, guid: 4e15e88423d6a9741b0dc29a05bda2c5, type: 2}
@@ -34,12 +36,9 @@ MonoBehaviour:
   characterMoves:
   - {fileID: 11400000, guid: dc728c79119b1f147ba3742494ef29f1, type: 2}
   - {fileID: 11400000, guid: 2ed15a36307df374ca4a924c5da83f36, type: 2}
-  - {fileID: 11400000, guid: e281478655b524f45b3302d10c112bcc, type: 2}
   - {fileID: 11400000, guid: c9376f264bc6b0a489e66a3a8eb186c0, type: 2}
   - {fileID: 11400000, guid: acf2432b66e0380459fd22e855f83442, type: 2}
+  - {fileID: 11400000, guid: e281478655b524f45b3302d10c112bcc, type: 2}
   characterItems:
   - {fileID: 11400000, guid: 3e3fbf73696bf66438a685cd8739d73d, type: 2}
-  - {fileID: 11400000, guid: 3e3fbf73696bf66438a685cd8739d73d, type: 2}
-  - {fileID: 11400000, guid: f1082e0289e004e4d9992423fc492c06, type: 2}
-  - {fileID: 11400000, guid: f1082e0289e004e4d9992423fc492c06, type: 2}
   - {fileID: 11400000, guid: 4505c457db947094d92661cb34ed9308, type: 2}

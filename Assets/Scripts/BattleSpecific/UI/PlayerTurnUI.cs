@@ -472,7 +472,7 @@ public class PlayerTurnUI : MonoBehaviour
                         CharacterBase curChar = battleManager.currentActiveCharacter.characterData;
                         ItemData t = (ItemData)currentSelectedItem.displayable;
                         // only use an item if the value you are trying to change is actually different than it's base max value. 
-                        if ((curChar.GetStatByStatType(t.statAffected,false) != curChar.GetStatByStatType(t.statAffected,true)) || t.inflictsStatusEffect)   
+                        if ((curChar.GetStatValueByStatType(t.statAffected,false) != curChar.GetStatValueByStatType(t.statAffected,true)) || t.inflictsStatusEffect)   
                         {
                             t.UseItem(curChar, t.statAffected);
                             battleManager.playerItems.RemoveAt(currentSelectedItem.index);

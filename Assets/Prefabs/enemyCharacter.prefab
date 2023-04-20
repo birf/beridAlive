@@ -79,7 +79,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 12
+  m_SortingOrder: 10
   m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -123,6 +123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterData:
+    items: []
+    moves: []
     CharType: 0
     curHP: 0
     baseHP: 0
@@ -206,7 +208,8 @@ MonoBehaviour:
   characterPhysicsState: 0
   isGrounded: 1
   isLaunched: 0
-  jumping: 0
+  isJumping: 0
+  shouldImmediatelyRecover: 1
   localGroundYCoordinate: 0
   maxGroundBounces: 3
   moveSpeed: 12.5
@@ -216,6 +219,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _characterAnimator: {fileID: 0}
 --- !u!114 &5000868633370220043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,7 +320,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -2413806693520163455, guid: 4adeaf2d2b1c7417e89f026626d8264f, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.47843137}
   m_FlipX: 0
@@ -335,6 +339,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7093860927435293744}
     m_Modifications:
+    - target: {fileID: 736145102775778782, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 736145102900963186, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
+      propertyPath: _SortingOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 736145102900963187, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 736145103225732613, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 736145103461624665, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -382,6 +402,10 @@ PrefabInstance:
     - target: {fileID: 736145103461624743, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
       propertyPath: m_Name
       value: enemyHealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 736145103901681461, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4740610950a3c7540b61ccb59d93bebd, type: 3}

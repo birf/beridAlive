@@ -76,6 +76,7 @@ public class BattleManager : GameManager
         // still tryna make runaway work.
         if (CurrentBattleManagerState == BattleManagerState.WIN || CurrentBattleManagerState == BattleManagerState.RUNAWAY)
         {
+            
             currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
             FindObjectOfType<AudioManager>().EndTrack();
             FindObjectByName("hud_playerHP").SetActive(false);
@@ -84,6 +85,12 @@ public class BattleManager : GameManager
             om.gameObject.SetActive(true);
             gameObject.SetActive(false);
 
+            foreach(CharacterStatusEffect effect in playerCharacters[0].characterData.statusEffects)
+                effect.RevertChanges(false);
+
+            playerCharacters[0].characterData.statusEffects.Clear();
+            playerCharacters[0].characterData.items = playerItems;
+            om.playerCharacter.characterData = playerCharacters[0].characterData;            
         }
         else
             RestartGame();
@@ -94,6 +101,7 @@ public class BattleManager : GameManager
         if (startupTimer.GetRemaingingSeconds() > 0)
             startupTimer.Tick(Time.deltaTime);
 
+        Debug.Log(CurrentBattleManagerState);
 
         switch (CurrentBattleManagerState)
         {
@@ -129,6 +137,8 @@ public class BattleManager : GameManager
             case BattleManagerState.WIN:
             case BattleManagerState.RUNAWAY:
                 {
+
+                    ChildObjects[3].GetComponent<Animator>().Play("both");
                     endTimer.Tick(Time.deltaTime);
                     break;
                 }
@@ -185,7 +195,10 @@ public class BattleManager : GameManager
     void EnemyTurnState()
     {
         // make sure the current active character is an enemy.
-        if (currentActiveCharacter != null && currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
+        if (currentActiveCharacter != null && 
+        (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY ||
+         currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.BOSS)
+        )
         {
             currentActiveCharacter.GetComponent<BasicEnemyAI>().Execute();
         }
@@ -195,6 +208,7 @@ public class BattleManager : GameManager
     void BattleManagerSetup()
     {
         CentralManager.SetStateManager(this);
+        OverworldManager om = ChildObjects[0].GetComponent<OverworldManager>();
 
         CharacterGameBattleEntities = new List<CharacterGameBattleEntity>(FindObjectsOfType<CharacterGameBattleEntity>());
 
@@ -206,13 +220,14 @@ public class BattleManager : GameManager
 
             if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.PLAYER)
             {
-                playerItems = new List<ItemData>(CharacterGameBattleEntities[i].characterScriptable.characterItems);
-                playerMoves = new List<BattleMove>(CharacterGameBattleEntities[i].characterScriptable.characterMoves);
+                playerItems = new List<ItemData>(om.playerCharacter.characterData.items);
+                playerMoves = new List<BattleMove>(om.playerCharacter.characterData.moves);
                 playerCharacters.Add(CharacterGameBattleEntities[i]);
                 CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
             }
 
-            if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.ENEMY)
+            if (CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.ENEMY ||
+                CharacterGameBattleEntities[i].characterData.CharType == CharacterBase.CharacterType.BOSS)
             {
                 enemyCharacters.Add(CharacterGameBattleEntities[i]);
                 CharacterGameBattleEntities[i].characterSelectable.cyclableElements += 1;
@@ -220,18 +235,18 @@ public class BattleManager : GameManager
             Characters.Add(CharacterGameBattleEntities[i].characterData);
         }
 
+        playerCharacters[0].characterData = om.playerCharacter.characterData;
         _PlayerUI = FindObjectByName("PlayerTurnUI");
         FindObjectByName("hud_playerHP").SetActive(true);
         FindObjectByName("hud_playerHP").GetComponent<Animator>().Play("ready");
-
-
         SetTurnOrder();
     }
     void DetermineStateBasedOnActiveCharacter()
     {
         switch (currentActiveCharacter.characterData.CharType)
         {
-            case (CharacterBase.CharacterType.ENEMY):
+            case CharacterBase.CharacterType.ENEMY:
+            case CharacterBase.CharacterType.BOSS:
                 { CurrentBattleManagerState = BattleManagerState.ENEMYTURN; break; }
 
             case (CharacterBase.CharacterType.PLAYER):
@@ -278,7 +293,8 @@ public class BattleManager : GameManager
     public void AttackSuccess()
     {
         // if enemy was attacking, reset their execute flag so that they can execute again. 
-        if (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY)
+        if (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY ||
+            currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.BOSS)
             currentActiveCharacter.GetComponent<BasicEnemyAI>().canExecute = true;
 
         // last move was a success, clear queue.

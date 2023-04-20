@@ -13,26 +13,23 @@ public class CharacterGameOverworldEntity : CharacterGameEntity
         {
             characterData = new CharacterBase(characterScriptable);
         }        
-        switch (characterData.CharType)
+        if (characterData.CharType == CharacterBase.CharacterType.PLAYER)
         {
-            case (CharacterBase.CharacterType.DEFAULT) :
-                gameObject.tag = "Default";
-                break;
-            case (CharacterBase.CharacterType.PLAYER) :
-                gameObject.tag = "Player";
-                gameObject.layer = 7;
-                break;
-            case (CharacterBase.CharacterType.ENEMY) :
-                gameObject.tag = "Enemy";
-                gameObject.layer = 8;
-                break;
+            gameObject.tag = "Player";
+            gameObject.layer = 7;
+
         }
-    
+        else
+        {
+            gameObject.tag = "Enemy";
+            gameObject.layer = 8;
+        }    
 
     }
     void Update()
     {
         if (!overworldManager)
-            overworldManager = (OverworldManager)CentralManager.GetStateManager();        
+            overworldManager = (OverworldManager)CentralManager.GetStateManager();     
+           
     }
 }

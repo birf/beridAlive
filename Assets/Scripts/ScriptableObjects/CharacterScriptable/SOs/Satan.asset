@@ -15,11 +15,13 @@ MonoBehaviour:
   characterSprites:
   - {fileID: 21300000, guid: 090e7c05725e24d40abb024a1e5a8405, type: 3}
   characterData:
+    items: []
+    moves: []
     CharType: 2
-    curHP: 20
-    baseHP: 20
-    curATK: 5
-    baseATK: 5
+    curHP: 30
+    baseHP: 30
+    curATK: 4
+    baseATK: 4
     curDEF: 0
     baseDEF: 0
     curSPEED: 15
@@ -28,9 +30,9 @@ MonoBehaviour:
     baseSTAMINA: 1
     CharacterName: Satan
     CharacterDescription: 
-  charAnimations: {fileID: 9100000, guid: 5addc4d46e6499141aaa6449042ca38f, type: 2}
+  charAnimations: {fileID: 9100000, guid: 43a958d2c560ef74a8f60c10f7a10708, type: 2}
   battleHitBoxSize: {x: 5, y: 5}
-  battleDropShadowSize: {x: 0, y: 0}
+  battleDropShadowSize: {x: 5, y: 2.5}
   characterMoves:
   - {fileID: 11400000, guid: ae101b5bf30722743aa2407c905d881b, type: 2}
   characterItems: []

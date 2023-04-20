@@ -34,10 +34,9 @@ public class BattleOpeningMovie : MonoBehaviour
 
     void OnEnable()
     {
-        whiteBackgroundAnimation.Play("white_open");
-        whiteBackgroundAnimation.GetComponent<SpriteRenderer>().color = Color.white;
         mainParent.SetActive(true);
-
+        whiteBackgroundAnimation.GetComponent<SpriteRenderer>().color = Color.white;
+        whiteBackgroundAnimation.Play("white_open");
     }
     void OnDisable()
     {

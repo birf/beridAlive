@@ -7,11 +7,10 @@ using BeriUtils.Core;
 [RequireComponent(typeof(CircleCollider2D))]
 public class OverworldPlayerMove : MonoBehaviour
 {
-    // TODO : rewrite this script to just use rigidbody forces.
+    public PrimaryControls controls;
     [SerializeField] [Range(0.1f, 25.0f)] float _movementSpeed = 5.0f;
     [SerializeField] LayerMask _validLayers;
     [SerializeField] CircleCollider2D _cirCol;
-    PrimaryControls controls;
     Vector2 _internalPosition;
     Vector2 _internalVelocity;
     Collider2D[] _colliderBuffer = new Collider2D[3];
