@@ -148,6 +148,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterData:
+    items: []
+    moves: []
     CharType: 0
     curHP: 0
     baseHP: 0
@@ -167,6 +169,7 @@ MonoBehaviour:
   characterBattlePhysics: {fileID: 0}
   characterSelectable: {fileID: 1670955905530388889}
   entityBattleManager: {fileID: 0}
+  stars: {fileID: 9058500879592083331, guid: e096c5f0b40195a43b99d01a36bde295, type: 3}
 --- !u!114 &1670955905530388891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,7 +185,8 @@ MonoBehaviour:
   characterPhysicsState: 0
   isGrounded: 1
   isLaunched: 0
-  jumping: 0
+  isJumping: 0
+  shouldImmediatelyRecover: 1
   localGroundYCoordinate: 0
   maxGroundBounces: 3
   moveSpeed: 12.5
@@ -192,6 +196,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _gravityScale: 4
+  _characterAnimator: {fileID: 0}
 --- !u!114 &1670955905530388889
 MonoBehaviour:
   m_ObjectHideFlags: 0

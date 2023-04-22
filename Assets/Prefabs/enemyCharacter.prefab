@@ -144,6 +144,7 @@ MonoBehaviour:
   characterBattlePhysics: {fileID: 1620040660392433551}
   characterSelectable: {fileID: 4109566644882663378}
   entityBattleManager: {fileID: 0}
+  stars: {fileID: 9058500879592083331, guid: e096c5f0b40195a43b99d01a36bde295, type: 3}
 --- !u!114 &4109566644882663378
 MonoBehaviour:
   m_ObjectHideFlags: 0

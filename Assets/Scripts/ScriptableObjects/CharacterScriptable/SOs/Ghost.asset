@@ -15,6 +15,8 @@ MonoBehaviour:
   characterSprites:
   - {fileID: 21300000, guid: 6ef676c04131635488a986ab37f8d663, type: 3}
   characterData:
+    items: []
+    moves: []
     CharType: 2
     curHP: 7
     baseHP: 7
@@ -32,5 +34,6 @@ MonoBehaviour:
   battleHitBoxSize: {x: 3, y: 4}
   battleDropShadowSize: {x: 3, y: 1}
   characterMoves:
-  - {fileID: 11400000, guid: 6a8c04e60e8b4a74ab80b55dd83b07b8, type: 2}
+  - {fileID: 11400000, guid: e1cf9d49d67bd5a4c947eaac93342d0f, type: 2}
+  - {fileID: 11400000, guid: 3b1143d1c7ed8954da84c6437154e019, type: 2}
   characterItems: []

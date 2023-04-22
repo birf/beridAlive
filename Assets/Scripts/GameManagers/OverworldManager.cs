@@ -75,6 +75,9 @@ public class OverworldManager : GameManager
             enemy.GetComponent<BattlePhysicsInteraction>().startPosition = battlePositions[i];
             enemy.GetComponent<BattlePhysicsInteraction>().localGroundYCoordinate = battlePositions[i].y;
         }
+
+        ChildObjects[3].GetComponent<AudioManager>().StopTrack();
+
         if (playBossTheme)
             ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.BOSS_THEME);
         else
@@ -94,6 +97,7 @@ public class OverworldManager : GameManager
         }
         levelNumber = 0;
         nextLevel();
+        ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.OVERWORLD_THEME);
     }
 
     public void TogglePlayerController(bool active = true)
@@ -112,7 +116,6 @@ public class OverworldManager : GameManager
     }
     public void StartNextLevel()
     {
-        Debug.Log("being Called");
         if (activeLevel.canExit())
         {
             TogglePlayerController(false);
@@ -132,6 +135,8 @@ public class OverworldManager : GameManager
         activeLevel = overworldLevels[levelNumber];
         activeLevel.gameObject.SetActive(true);
         activeLevel.initializeLevel();
+
+        ChildObjects[3].GetComponent<AudioManager>().audioSO = activeLevel.GetComponent<AudioManager>().audioSO;
 
         foreach (GameObject enemy in activeLevel.getEnemies())
         {

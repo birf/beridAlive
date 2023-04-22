@@ -10,6 +10,7 @@ public class BasicEnemyAI : MonoBehaviour
     void Awake()
     {
         enemyEntity = GetComponent<CharacterGameBattleEntity>();
+        // ^^ why doesn't this fucking work ^^ //
     }
 
     public void Execute()
@@ -27,10 +28,15 @@ public class BasicEnemyAI : MonoBehaviour
 
         // ^ this is the single dumbest fucking line i've ever written in my life ^ //
 
-        l.Add(enemyEntity.characterScriptable.characterMoves[0]);
+        int randomMove = (int)Mathf.Floor(Random.Range(0f,enemyEntity.characterScriptable.characterMoves.Count));
+        l.Add(enemyEntity.characterScriptable.characterMoves[randomMove]);
+
         enemyEntity.entityBattleManager.FeedMoveQueue(l, enemyEntity.entityBattleManager.playerCharacters[0]);
         enemyEntity.entityBattleManager.StartAttack();
-        enemyEntity.characterAnimator.Play("attack01");
+        enemyEntity.characterAnimator.Play("attack0" + (randomMove + 1));
+
+        Debug.Log("attack0" + (randomMove + 1));
+        
         canExecute = false;
     }
 

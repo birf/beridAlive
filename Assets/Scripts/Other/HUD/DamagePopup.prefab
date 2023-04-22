@@ -78,7 +78,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1000
+  m_SortingOrder: 20
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &7129782139567968385
 MonoBehaviour:
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_renderer: {fileID: 4877528218328361755}
   m_maskType: 0
   _SortingLayerID: 0
-  _SortingOrder: 1000
+  _SortingOrder: 20
 --- !u!114 &95802424374777552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +242,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5567728123727634991, guid: cb4433862c1cd62469272d4249a7e6f3, type: 3}
       propertyPath: m_SortingOrder
-      value: 999
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb4433862c1cd62469272d4249a7e6f3, type: 3}

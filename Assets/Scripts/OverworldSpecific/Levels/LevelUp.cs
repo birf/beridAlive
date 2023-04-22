@@ -32,7 +32,6 @@ public class LevelUp : MonoBehaviour
         ClearMenu();
         cursor.gameObject.SetActive(false);
     }
-    
     void Update()
     {
         CharacterStat statToChange = 0;
@@ -173,7 +172,7 @@ public class LevelUp : MonoBehaviour
         owManager.gameObject.SetActive(true);
         owManager.ChildObjects[1].GetComponent<Animator>().Play("fadein");
         owManager.nextLevel();
-
+        Debug.Log("back to overworld");
         gameObject.SetActive(false);
     }
     void ClearMenu()

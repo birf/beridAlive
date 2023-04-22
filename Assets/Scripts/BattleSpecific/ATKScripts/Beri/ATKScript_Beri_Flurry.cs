@@ -37,12 +37,16 @@ public class ATKScript_Beri_Flurry : ATKScript
     }
     protected override void Update()
     {
+
         _characterPhysics = caster.characterBattlePhysics;
         _isJumping = _characterPhysics.isJumping;
 
         // if we aren't nearby the enemy or the previous move doesn't bring the enemy over to us, walk to them.
         if (!_isInPosition)
             WalkingPhase();
+        else
+            caster.GetComponent<Animator>().runtimeAnimatorController = parentMove.moveSpecificAnimations;
+
         if (_isJumping && _isInPosition && subphase < 3)
             JumpingPhase();
         if (subphase >= 3 && subphase < 6)
@@ -97,13 +101,13 @@ public class ATKScript_Beri_Flurry : ATKScript
                     if (_hitBuffer[i] != null)
                         if( _hitBuffer[i].gameObject.layer == 8 && _hitBuffer[i].gameObject == targetEnemy.gameObject)
                         {
-                            DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
-                            parentMove.damage - targetEnemy.characterData.curDEF);
-
+                            DamagePopup.Create(battleManager.currentTargetCharacter.transform.position,1);
+                            
                             targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,-5f),1);
                             _characterPhysics.LaunchTarget(new Vector2(0.5f,3.0f));
                             subphase++;
                             _timeoutTimer = new Timer(0.25f);
+                            PlayAnimation("punchDown");
                             break;
                         }
                 }
@@ -131,12 +135,12 @@ public class ATKScript_Beri_Flurry : ATKScript
     
                             if (subphase < 5)
                             {
-                                targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,3.0f),1);
+                                targetEnemy.characterBattlePhysics.HitTarget(new Vector2(0.5f,2.0f),1);
                                 DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
-                                parentMove.damage - targetEnemy.characterData.curDEF);
+                                1 - targetEnemy.characterData.curDEF);
                             }
-                            Debug.Log(subphase);
-                            _characterPhysics.LaunchTarget(new Vector2(0.5f,2.5f));
+                            PlayAnimation("punch" + subphase);
+                            _characterPhysics.LaunchTarget(new Vector2(0.5f,1.5f));
                             _timeoutTimer = new Timer(0.25f);
                             subphase++;
                             break;

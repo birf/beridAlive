@@ -17,6 +17,8 @@ public class BlockScript : MonoBehaviour
     [SerializeField] float _cooldownDuration; // how long the cooldown lasts.
     [SerializeField] LayerMask _validLayers;
 
+    string currentAnimation = "block";
+
     enum BlockPhase 
     {
         NONE,
@@ -46,10 +48,16 @@ public class BlockScript : MonoBehaviour
     void LateUpdate()
     {
         // only ever have this script function if the current state is "ENEMYTURN".
+        Debug.Log(currentAnimation);
         if (BattleManager.CurrentBattleManagerState == BattleManager.BattleManagerState.ENEMYTURN)
         {
+            _characterBody.PlayAnimation(currentAnimation);
+            Debug.Log(_currentBlockPhase);
             if (controls.Battle.Primary.triggered && _currentBlockPhase == BlockPhase.NONE)
+            {
                 _currentBlockPhase = BlockPhase.PARRY;
+                Debug.Log("pressed");
+            }
             switch (_currentBlockPhase)
             {
                 case (BlockPhase.PARRY) :

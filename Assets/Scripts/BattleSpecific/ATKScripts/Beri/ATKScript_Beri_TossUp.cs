@@ -18,6 +18,8 @@ public class ATKScript_Beri_TossUp : ATKScript
     public GameObject grabber;
     public BoxCollider2D safeArea;
     public BoxCollider2D grabberHitBox;
+    public Sprite closedHandSprite;
+
     [Range(1.0f, 25.0f)] public float grabberSpeed = 10.0f;
     
     PrimaryControls controls;
@@ -61,6 +63,7 @@ public class ATKScript_Beri_TossUp : ATKScript
         }
         else if (subPhase == 1)
         {
+            grabber.GetComponent<SpriteRenderer>().sprite = closedHandSprite;
             GrabberMove();
             SecondPhase();
         }
@@ -83,14 +86,18 @@ public class ATKScript_Beri_TossUp : ATKScript
         // Failure if player hits the button and there is no target. 
         if (EnemyInGrabberBounds())
         {
-            grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
+            grabber.GetComponent<SpriteRenderer>().color = new Color(1,1,1,1); // <-- tester.
+        }
+        else
+        {
+            grabber.GetComponent<SpriteRenderer>().color = new Color(0.5f,0.5f,0.5f,1); // <-- tester.
         }
 
         if (controls.Battle.Primary.triggered && subPhase >= 0)
         {
             if (EnemyInGrabberBounds())
             {
-                grabber.GetComponent<SpriteRenderer>().color = Color.red; // <-- tester.
+                grabber.GetComponent<SpriteRenderer>().color = Color.white;
                 grabber.transform.position = targetEnemy.transform.position;
                 subPhase++;
                 targetEnemy.transform.parent = grabber.transform;
@@ -115,11 +122,11 @@ public class ATKScript_Beri_TossUp : ATKScript
 
         if (EnemyInSafeArea())
         {
-            grabber.GetComponent<SpriteRenderer>().color = Color.blue; // <-- tester.
+            grabber.GetComponent<SpriteRenderer>().color = Color.white; // <-- tester.
         }
         if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
         {
-            if (EnemyInSafeArea() || grabber.GetComponent<SpriteRenderer>().color == Color.blue) // <-- what...
+            if (EnemyInSafeArea() || grabber.GetComponent<SpriteRenderer>().color == Color.white) // <-- what...
             {
                 subPhase++;  
                 targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;

@@ -16,7 +16,6 @@ public class BattleManager : GameManager
 
     public List<ItemData> playerItems = new List<ItemData>();
     public List<BattleMove> playerMoves = new List<BattleMove>();
-    public CharacterGameBattleEntity beriCharacter;
     public List<CharacterGameBattleEntity> playerCharacters = new List<CharacterGameBattleEntity>();
     public List<CharacterGameBattleEntity> enemyCharacters = new List<CharacterGameBattleEntity>();
     public CharacterGameBattleEntity currentActiveCharacter;
@@ -64,6 +63,8 @@ public class BattleManager : GameManager
         CentralManager.SetStateManager(this);
         startupTimer.OnTimerEnd += BattleManagerSetup;
         endTimer.OnTimerEnd += ReturnToOverworld;
+
+        playerCharacters.Clear();
     }
     void RestartGame()
     {
@@ -90,7 +91,9 @@ public class BattleManager : GameManager
 
             playerCharacters[0].characterData.statusEffects.Clear();
             playerCharacters[0].characterData.items = playerItems;
-            om.playerCharacter.characterData = playerCharacters[0].characterData;            
+            om.playerCharacter.characterData = playerCharacters[0].characterData;   
+
+            om.ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.OVERWORLD_THEME);
         }
         else
             RestartGame();
@@ -102,7 +105,7 @@ public class BattleManager : GameManager
             startupTimer.Tick(Time.deltaTime);
 
         Debug.Log(CurrentBattleManagerState);
-
+        
         switch (CurrentBattleManagerState)
         {
             case (BattleManagerState.DEFAULT):

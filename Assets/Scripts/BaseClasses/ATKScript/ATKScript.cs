@@ -92,7 +92,7 @@ public class ATKScript : MonoBehaviour
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
         previousMoveType = MoveType.NONE;
     }
-    void CheckForNullTimer(bool success)
+    public void CheckForNullTimer(bool success)
     {
         if (cooldownTimer == null || cooldownTimer.GetRemaingingSeconds() == 0)
         {

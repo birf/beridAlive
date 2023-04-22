@@ -16,7 +16,7 @@ public class CharacterGameBattleEntity : CharacterGameEntity
     public BattlePhysicsInteraction characterBattlePhysics; // <-- The script for basic physics interactions in battle. 
     public UISelectable characterSelectable; // <-- The selectable for this character. (if needed)
     public BattleManager entityBattleManager; // <-- reference to the battle manager. 
-
+    public GameObject stars;
     void Awake()
     {
         characterSelectable.cursorTarget = characterData.CharType == CharacterBase.CharacterType.PLAYER ? new Vector3(2f, 1f, 0) : new Vector3(-2f, 1.0f, 0);
@@ -86,7 +86,12 @@ public class CharacterGameBattleEntity : CharacterGameEntity
             entityBattleManager.playerCharacters.Remove(this);
 
         entityBattleManager.CharacterGameBattleEntities.Remove(this);
-
+        
+        GameObject obj = Instantiate(stars,transform.position,Quaternion.identity);
+        foreach(SparklyDeathStar star in obj.GetComponentsInChildren<SparklyDeathStar>())
+        {
+            star.localGroundYCoordinate = characterBattlePhysics.localGroundYCoordinate - 1f;
+        }
         Destroy(gameObject);
     }
     void CompleteKill()

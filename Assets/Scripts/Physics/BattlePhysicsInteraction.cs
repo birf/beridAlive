@@ -114,11 +114,14 @@ public class BattlePhysicsInteraction : MonoBehaviour
     {
         if ((transform.position.y + _internalVelocity.y) < localGroundYCoordinate)
         {
+            if (isJumping || (_groundBounces >= maxGroundBounces && !isJumping))
+            {
+                isGrounded = true;
+                return;
+            }
             _internalVelocity.y = -_internalVelocity.y * 0.5f;
             _internalVelocity.x *= 0.5f;
             _groundBounces++;
-            if (isJumping || (_groundBounces >= maxGroundBounces && !isJumping))
-                isGrounded = true;
         }
     }
     void UpdateVelocity()

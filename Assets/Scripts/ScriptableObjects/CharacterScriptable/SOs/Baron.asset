@@ -15,9 +15,11 @@ MonoBehaviour:
   characterSprites:
   - {fileID: 21300000, guid: 93cb031eb2b760c49ae1f6cb3dc39907, type: 3}
   characterData:
+    items: []
+    moves: []
     CharType: 2
-    curHP: 4
-    baseHP: 4
+    curHP: 5
+    baseHP: 5
     curATK: 2
     baseATK: 2
     curDEF: 0

@@ -38,10 +38,12 @@ public class ATKScript_BaronLeap : ATKScript
     }
     void LeapToTarget()
     {
+        battleManager.currentActiveCharacter.GetComponent<Animator>().Play("rollout");
         battleManager.currentActiveCharacter.characterBattlePhysics.MoveToPosition(targetEnemy.transform.position,20.0f);
         if (targetEnemy.GetComponent<BlockScript>().CheckCollisions(out int damageReduction))
         {
             battleManager.currentActiveCharacter.characterBattlePhysics.LaunchTarget(new Vector2(-1,2));
+            battleManager.currentActiveCharacter.GetComponent<Animator>().Play("reset");
             base.OnSuccess(parentMove.damage - damageReduction);
             Destroy(gameObject);
         }

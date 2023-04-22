@@ -6,11 +6,11 @@ using BeriUtils.Core;
 public class ATKScript_Beri_Backthrow : ATKScript
 {
     /*
-        Attack script for the move 'Back Throw,' used by Beri.
-        Functionally identical to 'Toss Up,' with the differences
-        being higher damage and launch angle.
+        Attack script for the move 'Toss Up,' used by Beri.
+        Beri launches her hand and drags opponents inward. Launches Upward.
     */
 
+    // TODO : Revamp EnemyInSafeArea to always return true if enemy was already in the safe area. 
     int subPhase = -1;
     ///<summary>
     ///Physical GameObject to grab the enemy.   
@@ -18,6 +18,8 @@ public class ATKScript_Beri_Backthrow : ATKScript
     public GameObject grabber;
     public BoxCollider2D safeArea;
     public BoxCollider2D grabberHitBox;
+    public Sprite closedHandSprite;
+
     [Range(1.0f, 25.0f)] public float grabberSpeed = 10.0f;
     
     PrimaryControls controls;
@@ -33,6 +35,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
         controls = new PrimaryControls();
         controls.Enable();
         BeginMove();
+
     }
     protected override void Update()
     {
@@ -60,6 +63,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
         }
         else if (subPhase == 1)
         {
+            grabber.GetComponent<SpriteRenderer>().sprite = closedHandSprite;
             GrabberMove();
             SecondPhase();
         }
@@ -82,14 +86,18 @@ public class ATKScript_Beri_Backthrow : ATKScript
         // Failure if player hits the button and there is no target. 
         if (EnemyInGrabberBounds())
         {
-            grabber.GetComponent<SpriteRenderer>().color = Color.green; // <-- tester.
+            grabber.GetComponent<SpriteRenderer>().color = new Color(1,1,1,1); // <-- tester.
+        }
+        else
+        {
+            grabber.GetComponent<SpriteRenderer>().color = new Color(0.5f,0.5f,0.5f,1); // <-- tester.
         }
 
         if (controls.Battle.Primary.triggered && subPhase >= 0)
         {
             if (EnemyInGrabberBounds())
             {
-                grabber.GetComponent<SpriteRenderer>().color = Color.red; // <-- tester.
+                grabber.GetComponent<SpriteRenderer>().color = Color.white;
                 grabber.transform.position = targetEnemy.transform.position;
                 subPhase++;
                 targetEnemy.transform.parent = grabber.transform;
@@ -114,11 +122,11 @@ public class ATKScript_Beri_Backthrow : ATKScript
 
         if (EnemyInSafeArea())
         {
-            grabber.GetComponent<SpriteRenderer>().color = Color.blue; // <-- tester.
+            grabber.GetComponent<SpriteRenderer>().color = Color.white; // <-- tester.
         }
         if (controls.Battle.Primary.phase == InputActionPhase.Waiting)
         {
-            if (EnemyInSafeArea() || grabber.GetComponent<SpriteRenderer>().color == Color.blue) // <-- what...
+            if (EnemyInSafeArea() || grabber.GetComponent<SpriteRenderer>().color == Color.white) // <-- what...
             {
                 subPhase++;  
                 targetEnemy.transform.position = safeArea.transform.position + (Vector3)safeArea.offset;
@@ -147,7 +155,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
 
         timer.Tick(Time.deltaTime);
         PlayAnimation("tossup_grabbed");
-        if (controls.Battle.Direction.ReadValue<Vector2>().x == -1.0f)
+        if (controls.Battle.Direction.ReadValue<Vector2>().y == 1.0f)
         {
             PlayAnimation("tossup_throw");
             OnSuccess();
@@ -195,7 +203,7 @@ public class ATKScript_Beri_Backthrow : ATKScript
     public override void BeginMove()
     {
         base.BeginMove();
-        parentMove.damage = caster.characterData.baseATK + 2;
+        parentMove.damage = caster.characterData.curATK + 2;
     }
     public override void OnSuccess()
     {

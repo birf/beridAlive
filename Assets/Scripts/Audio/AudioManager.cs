@@ -7,9 +7,9 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
 
-    AudioSource audioSource;
+    [SerializeField] AudioSource audioSource;
 
-    [SerializeField] AudioSO audioSO;
+    public AudioSO audioSO;
 
 
     // Start is called before the first frame update

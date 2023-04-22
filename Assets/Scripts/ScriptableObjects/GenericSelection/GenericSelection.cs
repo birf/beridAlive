@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BeriUtils.Core;
 
-public class GenericSelection : MonoBehaviour
+[CreateAssetMenu(fileName = "GenericSelection", menuName = "Scriptable/Generic Selection")]
+public class GenericSelection : ScriptableObject, IDisplayable 
 {
-    // Start is called before the first frame update
-    void Start()
+
+    /*
+        Scriptable Object just for displaying tactics options to the player.
+    */
+    public Sprite mainSprite;
+    public string selectionName;
+    public string selectionDescription;
+    public void GetDisplayData(out Sprite[] sprites, out int[] ints, out string[] strings)
     {
-        
+        ints = new int[] {-1};
+        sprites = new Sprite[] {mainSprite};
+        strings = new string[] {selectionName, selectionDescription};
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
