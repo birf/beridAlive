@@ -15,7 +15,28 @@ public enum AUDIOCLIPS
     NAVIGATE,
     SELECT,
     DESELECT,
-    CONFIRM
+    CONFIRM,
+
+    //COMBAT
+    BLOCKED,
+    DAMAGETAKEN,
+
+    //OVERWORLD
+    WALK,
+
+    //ENEMY
+    CHARGING_PROJECTILE,
+    FIREPROJECTILE,
+
+    SPARKLY,
+    CHARGE,
+
+
+    STONEMOVE,
+    ROLL,
+    PUZZLESOLVED,
+    RAISE_SLASH,
+    HEAL,
 
 
 

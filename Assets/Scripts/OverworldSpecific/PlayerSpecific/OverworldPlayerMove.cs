@@ -73,25 +73,37 @@ public class OverworldPlayerMove : MonoBehaviour
 
     void AnimationUpdate()
     {
-        float sin = Mathf.Sin((Vector2.SignedAngle(Vector2.right,controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
-        float cos = Mathf.Cos((Vector2.SignedAngle(Vector2.right,controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
+        float sin = Mathf.Sin((Vector2.SignedAngle(Vector2.right, controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
+        float cos = Mathf.Cos((Vector2.SignedAngle(Vector2.right, controls.Overworld.Move.ReadValue<Vector2>())) * Mathf.PI / 180f);
 
         if (sin > -0.5f && sin <= 0.5f && cos >= 0 && _internalVelocity.magnitude != 0f)
-        { _animator.Play("standE");}
+        {
+            _animator.Play("standE");
+        }
         else if (sin > 0.5f && sin <= 0.86f && cos >= 0)
-        { _animator.Play("standNE");}
+        { _animator.Play("standNE"); }
         else if (sin > 0.86f && sin <= 1)
         { _animator.Play("standN"); }
         else if (sin > 0.5f && sin <= 0.86f && cos <= 0)
-        { _animator.Play("standNW");}
+        { _animator.Play("standNW"); }
         if (sin > -0.5f && sin <= 0.5f && cos <= 0)
-        { _animator.Play("standW");}
+        { _animator.Play("standW"); }
         else if (sin <= -0.5f && sin > -0.86f && cos <= 0)
-        { _animator.Play("standSW");}
+        { _animator.Play("standSW"); }
         else if (sin <= -0.86f && sin <= -1f)
         { _animator.Play("standS"); }
         else if (sin <= -0.5f && sin > -0.86f && cos >= 0)
         { _animator.Play("standSE"); }
 
+
+        if (sin != 0)
+        {
+            if (!GetComponent<AudioSource>().isPlaying)
+                GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.WALK);
+        }
+        else
+        {
+            GetComponent<AudioSource>().Stop();
+        }
     }
 }

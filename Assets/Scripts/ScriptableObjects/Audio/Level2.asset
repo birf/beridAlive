@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioTracks:
   - audioClipName: 0
-    audioClip: {fileID: 8300000, guid: 40d60dfb0d89f8b40ad2e05ef317b654, type: 3}
+    audioClip: {fileID: 8300000, guid: 5b09157c7c9294e75968aab31513ec81, type: 3}
   - audioClipName: 1
     audioClip: {fileID: 8300000, guid: e7e2b9b71cb8a44a8b9cda68c3e1cf03, type: 3}
   - audioClipName: 2

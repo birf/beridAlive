@@ -48,7 +48,7 @@ public class OverworldManager : GameManager
         entity.characterAnimations = characterScriptable.charAnimations;
         entity.GetComponent<BattleDropShadow>().SetDropShadowSize(entity.characterScriptable.battleDropShadowSize);
         entity.GetComponentInChildren<HudEnemyHealthBar>().curHealth = characterScriptable.characterData.curHP;
-        entity.GetComponentInChildren<HudEnemyHealthBar>().maxHealth= characterScriptable.characterData.baseHP;
+        entity.GetComponentInChildren<HudEnemyHealthBar>().maxHealth = characterScriptable.characterData.baseHP;
 
         entity.CharacterSetup();
         return enemy;
@@ -59,6 +59,7 @@ public class OverworldManager : GameManager
     {
         bool playBossTheme = false;
         BattleManager bm = ChildObjects[0].GetComponent<BattleManager>();
+        bm.GetComponent<AudioSource>().clip = null;
         bm.gameObject.SetActive(true);
         bm.openingMovie.gameObject.SetActive(true);
 
@@ -82,6 +83,7 @@ public class OverworldManager : GameManager
             ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.BOSS_THEME);
         else
             ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.BATTLE_THEME);
+
 
 
         gameObject.SetActive(false);
@@ -127,16 +129,21 @@ public class OverworldManager : GameManager
     }
     public void nextLevel()
     {
+
+
         if (activeLevel)
         {
             activeLevel.gameObject.SetActive(false);
             activeLevel.battleBackground.SetActive(false);
+
         }
         activeLevel = overworldLevels[levelNumber];
         activeLevel.gameObject.SetActive(true);
         activeLevel.initializeLevel();
 
         ChildObjects[3].GetComponent<AudioManager>().audioSO = activeLevel.GetComponent<AudioManager>().audioSO;
+        ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.OVERWORLD_THEME);
+
 
         foreach (GameObject enemy in activeLevel.getEnemies())
         {

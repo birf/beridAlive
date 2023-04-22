@@ -86,9 +86,13 @@ public class CharacterGameBattleEntity : CharacterGameEntity
             entityBattleManager.playerCharacters.Remove(this);
 
         entityBattleManager.CharacterGameBattleEntities.Remove(this);
-        
-        GameObject obj = Instantiate(stars,transform.position,Quaternion.identity);
-        foreach(SparklyDeathStar star in obj.GetComponentsInChildren<SparklyDeathStar>())
+
+        GameObject obj = Instantiate(stars, transform.position, Quaternion.identity);
+
+        FindObjectOfType<BattleManager>().GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.SPARKLY);
+
+        //obj.GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.SPARKLY);
+        foreach (SparklyDeathStar star in obj.GetComponentsInChildren<SparklyDeathStar>())
         {
             star.localGroundYCoordinate = characterBattlePhysics.localGroundYCoordinate - 1f;
         }

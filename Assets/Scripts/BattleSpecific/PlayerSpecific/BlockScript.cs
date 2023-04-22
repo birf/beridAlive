@@ -17,9 +17,11 @@ public class BlockScript : MonoBehaviour
     [SerializeField] float _cooldownDuration; // how long the cooldown lasts.
     [SerializeField] LayerMask _validLayers;
 
+    AudioManager audioManager;
+
     string currentAnimation = "block";
 
-    enum BlockPhase 
+    enum BlockPhase
     {
         NONE,
         PARRY,
@@ -43,6 +45,9 @@ public class BlockScript : MonoBehaviour
         _cooldownTimer.OnTimerEnd += ChangeState;
 
         _test = GetComponent<SpriteRenderer>();
+
+
+        audioManager = FindObjectOfType<BattleManager>().GetComponent<AudioManager>();
     }
 
     void LateUpdate()
@@ -60,22 +65,22 @@ public class BlockScript : MonoBehaviour
             }
             switch (_currentBlockPhase)
             {
-                case (BlockPhase.PARRY) :
-                {
-                    ParryingPhase();
-                    break;
-                }
-                case (BlockPhase.BLOCK) :
-                {
-                    BlockingPhase();
-                    break;
-                }
-                case(BlockPhase.COOLDOWN) :
-                {
-                    CooldownPhase();
-                    break;
-                }
-                default :
+                case (BlockPhase.PARRY):
+                    {
+                        ParryingPhase();
+                        break;
+                    }
+                case (BlockPhase.BLOCK):
+                    {
+                        BlockingPhase();
+                        break;
+                    }
+                case (BlockPhase.COOLDOWN):
+                    {
+                        CooldownPhase();
+                        break;
+                    }
+                default:
                     _test.color = Color.white;
                     break;
             }
@@ -85,12 +90,12 @@ public class BlockScript : MonoBehaviour
         if (CheckCollisions())
             CompleteReset();
     }
-    
+
     void ParryingPhase()
     {
         // _characterBody.characterData.curDEF = 99;
         _parryTimer.Tick(Time.deltaTime);
-        _test.color = Color.yellow; 
+        _test.color = Color.yellow;
     }
     void BlockingPhase()
     {
@@ -109,7 +114,7 @@ public class BlockScript : MonoBehaviour
         _currentBlockPhase += 1;
         if ((int)_currentBlockPhase > 3)
             _currentBlockPhase = 0;
-        
+
         ResetTimers();
     }
     void ResetTimers()
@@ -130,7 +135,7 @@ public class BlockScript : MonoBehaviour
     public bool CheckCollisions()
     {
         Collider2D[] buffer = new Collider2D[1];
-        int hits = Physics2D.OverlapBoxNonAlloc(transform.position,_characterBody.characterScriptable.battleHitBoxSize,0f,buffer,_validLayers);
+        int hits = Physics2D.OverlapBoxNonAlloc(transform.position, _characterBody.characterScriptable.battleHitBoxSize, 0f, buffer, _validLayers);
         if (hits > 0)
             return true;
         return false;
@@ -138,19 +143,21 @@ public class BlockScript : MonoBehaviour
     public bool CheckCollisions(out int damageReduction)
     {
         Collider2D[] buffer = new Collider2D[1];
-        int hits = Physics2D.OverlapBoxNonAlloc(transform.position,_characterBody.characterScriptable.battleHitBoxSize,0f,buffer,_validLayers);
+        int hits = Physics2D.OverlapBoxNonAlloc(transform.position, _characterBody.characterScriptable.battleHitBoxSize, 0f, buffer, _validLayers);
         if (hits > 0)
         {
             switch (_currentBlockPhase)
             {
-                case BlockPhase.PARRY :
+                case BlockPhase.PARRY:
                     damageReduction = 999;
+                    audioManager.PlayTrack(AUDIOCLIPS.BLOCKED);
                     return true;
-                case BlockPhase.BLOCK :
+                case BlockPhase.BLOCK:
                     damageReduction = 1;
+                    audioManager.PlayTrack(AUDIOCLIPS.BLOCKED);
                     return true;
-                case BlockPhase.NONE :
-                case BlockPhase.COOLDOWN :
+                case BlockPhase.NONE:
+                case BlockPhase.COOLDOWN:
                     damageReduction = 0;
                     return true;
             }

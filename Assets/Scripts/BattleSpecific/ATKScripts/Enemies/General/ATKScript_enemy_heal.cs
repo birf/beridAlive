@@ -7,6 +7,10 @@ public class ATKScript_enemy_heal : ATKScript
 {
     Timer countdown = new Timer(2);
     [SerializeField] GameObject visualEffect;
+    bool hasPlayed;
+
+
+
 
     void Awake()
     {
@@ -19,13 +23,23 @@ public class ATKScript_enemy_heal : ATKScript
     {
         visualEffect.transform.position = targetEnemy.transform.position;
         countdown.Tick(Time.deltaTime);
+
+        if (!hasPlayed)
+        {
+            FindObjectOfType<BattleManager>().GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.HEAL);
+            hasPlayed = true;
+        }
+
+
     }
     public override void OnSuccess()
     {
+        FindObjectOfType<BattleManager>().GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.CHARGE);
         base.OnSuccess(0);
-        targetEnemy.characterData.AddToStat(CharacterStat.HP,3,false);
+        targetEnemy.characterData.AddToStat(CharacterStat.HP, 3, false);
         targetEnemy.characterBattlePhysics.Jump();
         Destroy(gameObject);
+
     }
     void FindEnemyWithLowestHealth()
     {

@@ -12,6 +12,8 @@ public class ATKScript_GhostSlash : ATKScript
     bool started = false;
     bool alreadyHit = false;
 
+    bool hasPlayed;
+
     void Awake()
     {
         BeginMove();
@@ -22,13 +24,13 @@ public class ATKScript_GhostSlash : ATKScript
         if (startTime <= 0 && started == false)
         {
             started = true;
-            foreach(Animator anim in slashAnimation.GetComponentsInChildren<Animator>())
+            foreach (Animator anim in slashAnimation.GetComponentsInChildren<Animator>())
             {
                 anim.Play("ghost_slashSlash");
             }
-            foreach(SpriteRenderer sprite in slashAnimation.GetComponentsInChildren<SpriteRenderer>())
+            foreach (SpriteRenderer sprite in slashAnimation.GetComponentsInChildren<SpriteRenderer>())
             {
-                sprite.color = new Color(sprite.color.r,sprite.color.g,sprite.color.b,1);
+                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1);
             }
             startTime = 0.1666f;
         }
@@ -38,11 +40,17 @@ public class ATKScript_GhostSlash : ATKScript
             CheckCollisions();
             if (!alreadyHit)
                 slashHitBox.gameObject.SetActive(true);
-            
+
         }
         if (alreadyHit && startTime <= 0)
         {
             Destroy(gameObject);
+        }
+
+        if (!hasPlayed)
+        {
+            FindObjectOfType<BattleManager>().GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.RAISE_SLASH);
+            hasPlayed = true;
         }
     }
     void CheckCollisions()
@@ -58,9 +66,10 @@ public class ATKScript_GhostSlash : ATKScript
     {
         base.BeginMove();
         slashAnimation.transform.position = targetEnemy.transform.position;
-        foreach(SpriteRenderer sprite in slashAnimation.GetComponentsInChildren<SpriteRenderer>())
+        foreach (SpriteRenderer sprite in slashAnimation.GetComponentsInChildren<SpriteRenderer>())
         {
-            sprite.color = new Color(sprite.color.r,sprite.color.g,sprite.color.b,0);
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
         }
+        hasPlayed = false;
     }
 }

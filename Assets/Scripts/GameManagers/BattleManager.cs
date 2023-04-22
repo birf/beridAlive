@@ -77,7 +77,7 @@ public class BattleManager : GameManager
         // still tryna make runaway work.
         if (CurrentBattleManagerState == BattleManagerState.WIN || CurrentBattleManagerState == BattleManagerState.RUNAWAY)
         {
-            
+
             currentActiveCharacter.characterData.curSTAMINA = currentActiveCharacter.characterData.baseSTAMINA;
             FindObjectOfType<AudioManager>().EndTrack();
             FindObjectByName("hud_playerHP").SetActive(false);
@@ -86,12 +86,12 @@ public class BattleManager : GameManager
             om.gameObject.SetActive(true);
             gameObject.SetActive(false);
 
-            foreach(CharacterStatusEffect effect in playerCharacters[0].characterData.statusEffects)
+            foreach (CharacterStatusEffect effect in playerCharacters[0].characterData.statusEffects)
                 effect.RevertChanges(false);
 
             playerCharacters[0].characterData.statusEffects.Clear();
             playerCharacters[0].characterData.items = playerItems;
-            om.playerCharacter.characterData = playerCharacters[0].characterData;   
+            om.playerCharacter.characterData = playerCharacters[0].characterData;
 
             om.ChildObjects[3].GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.OVERWORLD_THEME);
         }
@@ -105,14 +105,14 @@ public class BattleManager : GameManager
             startupTimer.Tick(Time.deltaTime);
 
         Debug.Log(CurrentBattleManagerState);
-        
+
         switch (CurrentBattleManagerState)
         {
             case (BattleManagerState.DEFAULT):
                 {
                     break;
                 }
-            case (BattleManagerState.WAIT) :
+            case (BattleManagerState.WAIT):
                 {
                     waitTimer.Tick(Time.deltaTime);
                     break;
@@ -169,17 +169,17 @@ public class BattleManager : GameManager
 
             // a character has been hit and is either in hitstun or recovering from it.
             if (CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.HITSTUN
-            ||  CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
+            || CharacterGameBattleEntities[i].characterBattlePhysics.characterPhysicsState == BattlePhysicsInteraction.CharacterPhysicsState.RECOVERY)
             { flag = true; break; }
 
             if (playerCharacters.Count == 0)
             { flag = true; CurrentBattleManagerState = BattleManagerState.LOSE; Debug.Log("You lose!"); break; }
 
             if (enemyCharacters.Count == 0)
-            { 
-                flag = true; 
-                currentTargetCharacter = playerCharacters[0]; 
-                CurrentBattleManagerState = BattleManagerState.WIN; 
+            {
+                flag = true;
+                currentTargetCharacter = playerCharacters[0];
+                CurrentBattleManagerState = BattleManagerState.WIN;
                 Debug.Log("You Win!");
                 break;
             }
@@ -198,7 +198,7 @@ public class BattleManager : GameManager
     void EnemyTurnState()
     {
         // make sure the current active character is an enemy.
-        if (currentActiveCharacter != null && 
+        if (currentActiveCharacter != null &&
         (currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.ENEMY ||
          currentActiveCharacter.characterData.CharType == CharacterBase.CharacterType.BOSS)
         )

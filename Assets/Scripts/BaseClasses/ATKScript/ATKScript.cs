@@ -18,7 +18,7 @@ public class ATKScript : MonoBehaviour
     public bool canStart = false;
 
     protected virtual void Update()
-    {}
+    { }
     protected void StateCheck()
     {
         // tbh idk why this is here.
@@ -33,7 +33,7 @@ public class ATKScript : MonoBehaviour
         {
             Debug.Log("Error : battleManager never initialized! On : " + gameObject.name);
             flag = true;
-        } 
+        }
         if (targetEnemy == null)
         {
             Debug.Log("Error : targetEnemy never initialized! On : " + gameObject.name);
@@ -52,13 +52,13 @@ public class ATKScript : MonoBehaviour
         parentMove.damage = caster.characterData.curATK;
 
         cooldownTimer = new Timer(parentMove.cooldownTime);
-        
+
         if (battleManager.battleManagerMoveQueue.Count != 0 && battleManager.battleManagerMoveQueueIndex != 0)
-            previousMoveType = battleManager.battleManagerMoveQueue[battleManager.battleManagerMoveQueueIndex-1].moveType;
+            previousMoveType = battleManager.battleManagerMoveQueue[battleManager.battleManagerMoveQueueIndex - 1].moveType;
         else
             previousMoveType = MoveType.NONE;
-    }  
-    
+    }
+
     ///<summary>
     /// When an attack is successful, the attack script will alert the current battle manager and 
     /// deal the appropriate damage and knockback to the entity. When creating a battle script, always have 
@@ -67,17 +67,19 @@ public class ATKScript : MonoBehaviour
 
     public virtual void OnSuccess()
     {
-        DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
+        DamagePopup.Create(battleManager.currentTargetCharacter.transform.position,
                             parentMove.damage - targetEnemy.characterData.curDEF);
 
         targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
         CheckForNullTimer(true);
+
+        Debug.Log(1);
         previousMoveType = MoveType.NONE;
 
     }
     public virtual void OnSuccess(int damageOverride)
     {
-        DamagePopup.Create(battleManager.currentTargetCharacter.transform.position, 
+        DamagePopup.Create(battleManager.currentTargetCharacter.transform.position,
                             damageOverride - targetEnemy.characterData.curDEF);
 
         targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity,
@@ -90,14 +92,15 @@ public class ATKScript : MonoBehaviour
     {
         CheckForNullTimer(false);
         BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.ANALYSIS;
+        Debug.Log(2);
         previousMoveType = MoveType.NONE;
     }
     public void CheckForNullTimer(bool success)
     {
         if (cooldownTimer == null || cooldownTimer.GetRemaingingSeconds() == 0)
         {
-            battleManager.AttackSuccess(); 
-            Debug.Log("No cooldown timer set for " + parentMove.moveName); 
+            battleManager.AttackSuccess();
+            Debug.Log("No cooldown timer set for " + parentMove.moveName);
         }
         else
         {

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b8f76eb9dac94ebd9d0b44f4d694ed5, type: 3}
+  m_Name: Overworld
+  m_EditorClassIdentifier: 
+  audioTracks:
+  - audioClipName: 9
+    audioClip: {fileID: 8300000, guid: a1a40f76f430a41bcbca2c15c972b900, type: 3}
+  - audioClipName: 14
+    audioClip: {fileID: 8300000, guid: 2797e613a0443428398ef890295fee0e, type: 3}
+  - audioClipName: 16
+    audioClip: {fileID: 8300000, guid: ce7ec8b1fbc774db5861559633c7fde5, type: 3}
