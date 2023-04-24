@@ -16,7 +16,7 @@ MonoBehaviour:
   itemSpriteLarge: {fileID: 21300000, guid: 47fe27c567f58734e8bca24b0541e364, type: 3}
   potency: 1
   itemName: Bandage
-  itemDesc: Even zombies get boo-boos. Temporarily adds 1 to your defense.
+  itemDesc: Even zombies get boo-boos. Temporarily adds 1 to your defense for 2 turns.
   statAffected: 1
-  duration: 1
+  duration: 2
   inflictsStatusEffect: 1

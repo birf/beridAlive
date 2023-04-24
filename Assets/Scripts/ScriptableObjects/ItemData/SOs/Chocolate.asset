@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa773eab705edff47bfbc5d653ad24d8, type: 3}
+  m_Name: Chocolate
+  m_EditorClassIdentifier: 
+  itemSpriteSmall: {fileID: 21300000, guid: 1815fb884a5c32245b3e0803ed6f5fe1, type: 3}
+  itemSpriteLarge: {fileID: 21300000, guid: ee0dfad831f2d434bb6d58ffe3733756, type: 3}
+  potency: 2
+  itemName: Dark Chocolate
+  itemDesc: Who said chocolate isn't healthy? Boosts your attack power by 2 for 2
+    turns.
+  statAffected: 0
+  duration: 2
+  inflictsStatusEffect: 1

@@ -11,6 +11,7 @@ public class OverworldPlayerMove : MonoBehaviour
     [SerializeField] [Range(0.1f, 25.0f)] float _movementSpeed = 5.0f;
     [SerializeField] LayerMask _validLayers;
     [SerializeField] CircleCollider2D _cirCol;
+    [SerializeField] Rigidbody2D _rb;
     Vector2 _internalPosition;
     Vector2 _internalVelocity;
     Collider2D[] _colliderBuffer = new Collider2D[3];
@@ -21,9 +22,10 @@ public class OverworldPlayerMove : MonoBehaviour
     void OnEnable()
     {
         controls = new PrimaryControls();
-        controls.Enable();
         _cirCol = GetComponent<CircleCollider2D>();
         _animator = GetComponent<Animator>();
+        _rb = GetComponent<Rigidbody2D>();
+        controls.Enable();
         _animator.Play("standSW");
     }
 
@@ -37,15 +39,11 @@ public class OverworldPlayerMove : MonoBehaviour
     {
         GetState();
 
-        //
-        _internalPosition += _internalVelocity;
-        //
         CheckCollisions();
         SetState();
     }
     void GetState()
     {
-        _internalPosition = transform.position;
         _internalVelocity = controls.Overworld.Move.ReadValue<Vector2>() * _movementSpeed * Time.deltaTime;
         _internalVelocity.y *= 0.5f;
         AnimationUpdate();
@@ -68,7 +66,7 @@ public class OverworldPlayerMove : MonoBehaviour
     }
     void SetState()
     {
-        transform.position = _internalPosition;
+        _rb.velocity = _internalVelocity * _movementSpeed;
     }
 
     void AnimationUpdate()

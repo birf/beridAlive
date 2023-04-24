@@ -24,4 +24,7 @@ MonoBehaviour:
   moveName: Tossup
   moveDescription: 'Grab an opponent and launch them upwards with the strength of
     10 zombies. '
+  moveHelp: Beri will launch her hand. When it is close to the target, press and
+    hold enter, she'll then drag the opponent back. Let go of the Enter key when
+    the opponent is close to Beri, then hit W or Up.
   isFinisher: 0

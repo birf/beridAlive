@@ -21,6 +21,12 @@ public class HudEnemyHealthBar : MonoBehaviour
     void Update()
     {
         curHealth = GetComponentInParent<CharacterGameBattleEntity>().characterData.curHP;
+        transform.position = new Vector3
+        (
+            transform.position.x,
+            transform.parent.position.y - GetComponentInParent<CharacterGameBattleEntity>().characterScriptable.battleHitBoxSize.y, 
+            transform.position.z
+        );
         curHealth = Mathf.Clamp(curHealth,0,maxHealth);
         float ratio = (float)curHealth/(float)maxHealth;
 

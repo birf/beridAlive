@@ -19,6 +19,7 @@ public class PlayerTurnUI : MonoBehaviour
     public UICursor cursor;
     public TextMeshPro playerActionIconDisplayText;
     public TextMeshPro descriptionDisplay;
+    public TextMeshPro helpDisplay;
     public BattleManager battleManager;
 
     public List<BattleMove> playerMoveQueue = new List<BattleMove>();
@@ -41,6 +42,7 @@ public class PlayerTurnUI : MonoBehaviour
         "Tactics",                  // 3
         "ItemUseSelection",         // 4
         "AttackTargetSelection",    // 5
+        "AttackHelpScreenDisplay",    // 6
         "NOSTATE"                   // n - 1 : unused
     };
     [SerializeField] GameObject _ActionIcons;
@@ -290,7 +292,9 @@ public class PlayerTurnUI : MonoBehaviour
         else
             goButton.isSelectable = false;
 
-        if (controls.Battle.Direction.triggered)
+
+        if (controls.Battle.Direction.triggered &&
+            (currentState == "Attack" || currentState == "AttackTargetSelection" ))
         {
             Navigate((int)controls.Battle.Direction.ReadValue<Vector2>().y);
         }
@@ -408,6 +412,7 @@ public class PlayerTurnUI : MonoBehaviour
                     }
                     break;
                 }
+
         }
     }
     #endregion
@@ -469,10 +474,12 @@ public class PlayerTurnUI : MonoBehaviour
 
                     if (controls.Battle.Primary.triggered && currentActiveUIElement.isSelectable)
                     {
-                        CharacterBase curChar = battleManager.currentActiveCharacter.characterData;
+                        CharacterGameEntity curChar = battleManager.currentActiveCharacter;
                         ItemData t = (ItemData)currentSelectedItem.displayable;
                         // only use an item if the value you are trying to change is actually different than it's base max value. 
-                        if ((curChar.GetStatValueByStatType(t.statAffected, false) != curChar.GetStatValueByStatType(t.statAffected, true)) || t.inflictsStatusEffect)
+                        if (
+                            (curChar.characterData.GetStatValueByStatType(t.statAffected, false) != 
+                             curChar.characterData.GetStatValueByStatType(t.statAffected, true)) || t.inflictsStatusEffect)
                         {
                             t.UseItem(curChar, t.statAffected);
                             battleManager.playerItems.RemoveAt(currentSelectedItem.index);
@@ -533,7 +540,7 @@ public class PlayerTurnUI : MonoBehaviour
 
                     battleManager.currentActiveCharacter.characterBattlePhysics.Jump();
                     battleManager.currentActiveCharacter.characterData.statusEffects.Add(new CharacterStatusEffect(
-                        2, 1, battleManager.currentActiveCharacter.characterData.baseATK, CharacterStat.ATK, battleManager.currentActiveCharacter.characterData
+                        2, 1, battleManager.currentActiveCharacter.characterData.baseATK, CharacterStat.ATK, battleManager.currentActiveCharacter
                     ));
 
                     BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
@@ -547,8 +554,25 @@ public class PlayerTurnUI : MonoBehaviour
                     gameObject.SetActive(false);
 
                     break;
-                case "Run Away":
+                case "Focus":
                     Debug.Log("run away!");
+                        Debug.Log("charge!");
+                    battleManager.GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.CHARGE);
+
+                    battleManager.currentActiveCharacter.characterBattlePhysics.Jump();
+                    battleManager.currentActiveCharacter.characterData.AddToStat(CharacterStat.STAMINA,1,false);
+
+                    BattleManager.CurrentBattleManagerState = BattleManager.BattleManagerState.WAIT;
+
+                    battleManager.waitTimer = new Timer(1.5f);
+                    battleManager.waitTimer.OnTimerEnd += battleManager.GetNextTurn;
+                    battleManager.GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.CHARGE);
+
+                    
+                    ClearCurrentSubMenu();
+                    currentState = _playerTurnUIStates[6];
+                    gameObject.SetActive(false);
+
                     break;
                 case "Do Nothing":
                     Debug.Log("do nothing!");

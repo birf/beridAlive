@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using BeriUtils.Core;
 public class OverworldManager : GameManager
 {
@@ -124,7 +125,11 @@ public class OverworldManager : GameManager
             generalTimer = new Timer(1);
             ChildObjects[1].GetComponent<Animator>().Play("fadeout");
             generalTimer.Tick(Time.deltaTime);
-            generalTimer.OnTimerEnd += ToggleLevelUpScreen;
+            
+            if (activeLevel.name == "test_level_3")
+                generalTimer.OnTimerEnd += LoadEndingScreen;
+            else
+                generalTimer.OnTimerEnd += ToggleLevelUpScreen;
         }
     }
     public void nextLevel()
@@ -161,5 +166,9 @@ public class OverworldManager : GameManager
     {
         ChildObjects[2].SetActive(true);
         gameObject.SetActive(!gameObject.activeSelf);
+    }
+    void LoadEndingScreen()
+    {
+        SceneManager.LoadScene("youwin");
     }
 }

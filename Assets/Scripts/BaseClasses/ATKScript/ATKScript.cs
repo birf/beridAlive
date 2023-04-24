@@ -70,7 +70,7 @@ public class ATKScript : MonoBehaviour
         DamagePopup.Create(battleManager.currentTargetCharacter.transform.position,
                             parentMove.damage - targetEnemy.characterData.curDEF);
 
-        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage);
+        targetEnemy.characterBattlePhysics.HitTarget(parentMove.mainLaunchVelocity, parentMove.damage - targetEnemy.characterData.curDEF);
         CheckForNullTimer(true);
 
         Debug.Log(1);

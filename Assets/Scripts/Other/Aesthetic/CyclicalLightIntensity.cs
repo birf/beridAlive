@@ -4,9 +4,9 @@ using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine;
 public class CyclicalLightIntensity : MonoBehaviour
 {
-    [SerializeField] Light2D targetLight;
-    [SerializeField] float startingIntensity;
-    [SerializeField][Range(0,2f)] float minIntensity = 0f;
+    public Light2D targetLight;
+    public float startingIntensity;
+    [Range(0,2f)] public float minIntensity = 0f;
     [SerializeField][Range(0.01f,100.0f)] float flashesPerSecond = 0.5f;
 
     float curTime;

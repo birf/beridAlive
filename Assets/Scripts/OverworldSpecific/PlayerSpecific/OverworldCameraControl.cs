@@ -15,7 +15,7 @@ public class OverworldCameraControl : MonoBehaviour
             target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
-    private void LateUpdate()
+    private void FixedUpdate() 
     {
         // MARKER traditional method
         //transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);

@@ -100,6 +100,11 @@ public class ATKScript_Beri_FryerBall : ATKScript
     public override void OnSuccess()
     {
         base.OnSuccess(localDamage);
+        for (int i = 0; i < battleManager.enemyCharacters.Count; i++)
+        {
+            if (battleManager.enemyCharacters[i] != targetEnemy)
+                battleManager.enemyCharacters[i].characterBattlePhysics.HitTarget(new Vector2(0.25f,2f),2);
+        }
         controls.Disable();
         Destroy(gameObject);
     }

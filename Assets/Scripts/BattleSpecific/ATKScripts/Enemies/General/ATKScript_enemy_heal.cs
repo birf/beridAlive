@@ -36,7 +36,10 @@ public class ATKScript_enemy_heal : ATKScript
     {
         FindObjectOfType<BattleManager>().GetComponent<AudioManager>().PlayTrack(AUDIOCLIPS.CHARGE);
         base.OnSuccess(0);
-        targetEnemy.characterData.AddToStat(CharacterStat.HP, 3, false);
+        if (targetEnemy.characterData.curHP == targetEnemy.characterData.baseHP)
+            targetEnemy.characterData.statusEffects.Add(new CharacterStatusEffect(1,1,1,CharacterStat.DEF,targetEnemy));
+        else
+            targetEnemy.characterData.AddToStat(CharacterStat.HP, 3, false);
         targetEnemy.characterBattlePhysics.Jump();
         Destroy(gameObject);
 

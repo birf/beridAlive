@@ -23,4 +23,6 @@ MonoBehaviour:
   staminaCost: 1
   moveName: Uppercut
   moveDescription: Punch a demon, square in the jaw.
+  moveHelp: When the opponent is near, press the Enter key for a short time. Let
+    go of enter to punch. Don't hold in the button too long!
   isFinisher: 0

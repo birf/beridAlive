@@ -13,7 +13,7 @@ public class BackgroundElementScroll : MonoBehaviour
         bool hasParent = transform.parent == null;
         Vector3 positionThisFrame = new Vector3(transform.position.x + scrollSpeed * Time.deltaTime,transform.position.y,0);
         
-        if (positionThisFrame.x > (hasParent ? endX + transform.parent.position.x : endX))
+        if (hasParent && positionThisFrame.x > (hasParent ? endX + transform.parent.position.x : endX))
             transform.position = new Vector3((hasParent ? startX + transform.position.x : startX),transform.position.y,0);
         else
             transform.position = positionThisFrame;

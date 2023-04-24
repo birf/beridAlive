@@ -22,5 +22,8 @@ MonoBehaviour:
   damage: 1
   staminaCost: 3
   moveName: Flurry Fury
-  moveDescription: They'll wish they never died.
+  moveDescription: Unleash the wrath of the undead.
+  moveHelp: Beri will jump when the opponent is nearby. When in the air, hit S or
+    Down and Enter to punch downwards. Keep hitting Enter in the air to repeatedly
+    punch the opponent.
   isFinisher: 1

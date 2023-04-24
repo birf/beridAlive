@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Satan
   m_EditorClassIdentifier: 
   characterSprites:
-  - {fileID: 21300000, guid: 090e7c05725e24d40abb024a1e5a8405, type: 3}
+  - {fileID: 21300000, guid: 76ad41c1b93d74449b21d8d8a8e69768, type: 3}
   characterData:
     items: []
     moves: []
     CharType: 2
-    curHP: 30
-    baseHP: 30
+    curHP: 25
+    baseHP: 25
     curATK: 4
     baseATK: 4
     curDEF: 0

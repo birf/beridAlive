@@ -41,6 +41,14 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Tertiary"",
+                    ""type"": ""Button"",
+                    ""id"": ""518284f7-7b26-4bcf-8865-8ced6504cf40"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -173,6 +181,17 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Secondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd5b7d17-efc3-46ae-8ab8-fadcb16edfc3"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tertiary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -373,6 +392,7 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         m_Battle_Direction = m_Battle.FindAction("Direction", throwIfNotFound: true);
         m_Battle_Primary = m_Battle.FindAction("Primary", throwIfNotFound: true);
         m_Battle_Secondary = m_Battle.FindAction("Secondary", throwIfNotFound: true);
+        m_Battle_Tertiary = m_Battle.FindAction("Tertiary", throwIfNotFound: true);
         // Overworld
         m_Overworld = asset.FindActionMap("Overworld", throwIfNotFound: true);
         m_Overworld_Move = m_Overworld.FindAction("Move", throwIfNotFound: true);
@@ -428,6 +448,7 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Battle_Direction;
     private readonly InputAction m_Battle_Primary;
     private readonly InputAction m_Battle_Secondary;
+    private readonly InputAction m_Battle_Tertiary;
     public struct BattleActions
     {
         private @PrimaryControls m_Wrapper;
@@ -435,6 +456,7 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         public InputAction @Direction => m_Wrapper.m_Battle_Direction;
         public InputAction @Primary => m_Wrapper.m_Battle_Primary;
         public InputAction @Secondary => m_Wrapper.m_Battle_Secondary;
+        public InputAction @Tertiary => m_Wrapper.m_Battle_Tertiary;
         public InputActionMap Get() { return m_Wrapper.m_Battle; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -453,6 +475,9 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                 @Secondary.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnSecondary;
                 @Secondary.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnSecondary;
                 @Secondary.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnSecondary;
+                @Tertiary.started -= m_Wrapper.m_BattleActionsCallbackInterface.OnTertiary;
+                @Tertiary.performed -= m_Wrapper.m_BattleActionsCallbackInterface.OnTertiary;
+                @Tertiary.canceled -= m_Wrapper.m_BattleActionsCallbackInterface.OnTertiary;
             }
             m_Wrapper.m_BattleActionsCallbackInterface = instance;
             if (instance != null)
@@ -466,6 +491,9 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
                 @Secondary.started += instance.OnSecondary;
                 @Secondary.performed += instance.OnSecondary;
                 @Secondary.canceled += instance.OnSecondary;
+                @Tertiary.started += instance.OnTertiary;
+                @Tertiary.performed += instance.OnTertiary;
+                @Tertiary.canceled += instance.OnTertiary;
             }
         }
     }
@@ -553,6 +581,7 @@ public class @PrimaryControls : IInputActionCollection, IDisposable
         void OnDirection(InputAction.CallbackContext context);
         void OnPrimary(InputAction.CallbackContext context);
         void OnSecondary(InputAction.CallbackContext context);
+        void OnTertiary(InputAction.CallbackContext context);
     }
     public interface IOverworldActions
     {

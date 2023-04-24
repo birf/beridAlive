@@ -40,6 +40,7 @@ public class BattleMove : ScriptableObject, IDisplayable
     public int staminaCost;
     public string moveName;
     public string moveDescription;
+    public string moveHelp;
     public bool isFinisher;
 
     public void SetupMainMoveGameObject(CharacterGameBattleEntity targetEnemy, BattleMove parentMove, BattleManager battleManager)
@@ -62,6 +63,6 @@ public class BattleMove : ScriptableObject, IDisplayable
         if (isFinisher)
             ints[3] = -1;
 
-        strings = new string[]{moveName,moveDescription};
+        strings = new string[]{moveName,moveDescription, moveHelp};
     }
 }
